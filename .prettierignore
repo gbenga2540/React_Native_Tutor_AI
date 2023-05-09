@@ -1,0 +1,9 @@
+.bundle
+.vscode
+android
+ios
+node_modules
+.vendor
+# Ignore artifacts:
+build
+coverage
