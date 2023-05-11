@@ -16,101 +16,18 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
-import {
-    sign_up,
-    update_display_picture,
-} from '../../Configs/Queries/Users/Users';
-import { useMutation, useQueryClient } from 'react-query';
-import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
-import SInfo from 'react-native-sensitive-info';
-import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { observer } from 'mobx-react';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
-import { query_id } from '../../Configs/Queries/Query_ID/Query_ID';
 
 const SelectDPPage: FunctionComponent = observer(() => {
-    const queryClient = useQueryClient();
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
 
     const [displayPicture, setDisplayPicture] = useState<string>('none');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
-
-    const { mutate: sign_up_mutate } = useMutation(sign_up, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setDisableButton(false);
-            setShowSpinner(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                try {
-                    await SInfo.setItem(
-                        SECURE_STORAGE_USER_INFO,
-                        JSON.stringify({
-                            ...data?.data,
-                        }),
-                        {
-                            sharedPreferencesName: SECURE_STORAGE_NAME,
-                            keychainService: SECURE_STORAGE_NAME,
-                        },
-                    )
-                        ?.catch(error => {
-                            if (error) {
-                                UserInfoStore.set_user_info({
-                                    data: { ...data?.data },
-                                });
-                                next_dp_action({ action: 1 });
-                            }
-                        })
-                        ?.then(() => {
-                            UserInfoStore.set_user_info({
-                                data: { ...data?.data },
-                            });
-                            next_dp_action({ action: 1 });
-                        });
-                } catch (err) {
-                    UserInfoStore.set_user_info({
-                        data: { ...data?.data },
-                    });
-                    next_dp_action({ action: 1 });
-                }
-            }
-        },
-    });
-
-    const { mutate: update_dp_mutate } = useMutation(update_display_picture, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setDisableButton(false);
-            setShowSpinner(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                queryClient.invalidateQueries([
-                    query_id({ id: UserInfoStore?.user_info?.uid })
-                        ?.user_with_id,
-                ]);
-                next_dp_action({ action: 2 });
-            }
-        },
-    });
 
     const next_dp_action = async ({ action }: { action?: number }) => {
         switch (action) {
@@ -141,17 +58,7 @@ const SelectDPPage: FunctionComponent = observer(() => {
     const upload_data = no_double_clicks({
         execFunc: () => {
             if (route?.params?.is_change_dp) {
-                update_dp_mutate({
-                    displayPicture: displayPicture,
-                    user_token: UserInfoStore?.user_info?.token as string,
-                });
             } else {
-                sign_up_mutate({
-                    email: route?.params?.email,
-                    username: route?.params?.username,
-                    password: route?.params?.password,
-                    displayPicture: displayPicture,
-                });
             }
         },
     });

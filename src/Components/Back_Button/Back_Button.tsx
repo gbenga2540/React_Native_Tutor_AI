@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Keyboard, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,7 +9,10 @@ const BackButton: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const go_back = no_double_clicks({
-        execFunc: () => navigation.canGoBack() && navigation.goBack(),
+        execFunc: () => {
+            Keyboard.dismiss();
+            navigation.canGoBack() && navigation.goBack();
+        },
     });
 
     if (navigation.canGoBack()) {

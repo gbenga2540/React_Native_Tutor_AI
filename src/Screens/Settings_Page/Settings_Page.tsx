@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
-    Image,
     Platform,
     ScrollView,
     StyleSheet,
@@ -16,9 +15,6 @@ import { useNavigation } from '@react-navigation/native';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { UserDataStore } from '../../MobX/User_Data/User_Data';
-import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
-import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { observer } from 'mobx-react';
 
 const SettingsPage: FunctionComponent = observer(() => {
@@ -125,51 +121,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                 setShowSpinner={setShowSpinner}
             />
             <ScrollView style={{ flex: 1 }}>
-                <View style={styles.pp_w_i_c}>
-                    {UserDataStore?.user_data?.dp_link &&
-                    UserDataStore?.user_data?.dp_link !== 'none' ? (
-                        <Image
-                            style={styles.pp_w_i}
-                            source={{
-                                uri: UserDataStore?.user_data?.dp_link,
-                                width: 170,
-                                height: 170,
-                            }}
-                        />
-                    ) : (
-                        <Image
-                            style={styles.pp_w_i}
-                            source={require('../../Images/Extra/default_user_dp_light.jpg')}
-                        />
-                    )}
-                </View>
                 <View style={styles.pp_cont}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginBottom: 30,
-                        }}>
-                        <Text style={styles.pp_c_n}>
-                            {shorten_text({
-                                text: UserDataStore?.user_data
-                                    ?.username as string,
-                                limit: 22,
-                            })}
-                        </Text>
-                        {UserDataStore?.user_data?.verified && (
-                            <Image
-                                source={require('../../Images/Icons/Verified_Icon.png')}
-                                style={{
-                                    width: 16,
-                                    height: 16,
-                                    marginLeft: 3,
-                                }}
-                            />
-                        )}
-                    </View>
-                    {/* START */}
                     <TouchableOpacity
                         onPress={change_password}
                         style={{
@@ -213,21 +165,21 @@ const SettingsPage: FunctionComponent = observer(() => {
                             Change Display Picture
                         </Text>
                     </TouchableOpacity>
-                    {!UserInfoStore?.user_info?.email_v && (
-                        <TouchableOpacity
-                            onPress={verify_email}
-                            style={{ margin: 20, marginVertical: 7 }}
-                            activeOpacity={0.65}>
-                            <Text
-                                style={{
-                                    color: Colors().Black,
-                                    fontSize: 18,
-                                    fontFamily: fonts.Urbanist_500,
-                                }}>
-                                Verify Email
-                            </Text>
-                        </TouchableOpacity>
-                    )}
+
+                    <TouchableOpacity
+                        onPress={verify_email}
+                        style={{ margin: 20, marginVertical: 7 }}
+                        activeOpacity={0.65}>
+                        <Text
+                            style={{
+                                color: Colors().Black,
+                                fontSize: 18,
+                                fontFamily: fonts.Urbanist_500,
+                            }}>
+                            Verify Email
+                        </Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity
                         onPress={handle_feedback}
                         style={{ margin: 20, marginVertical: 7 }}

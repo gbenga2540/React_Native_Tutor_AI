@@ -17,14 +17,7 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { UserInfoStore } from '../../MobX/User_Info/User_Info';
-import { UserDataStore } from '../../MobX/User_Data/User_Data';
-import { MutationCache, QueryCache, useMutation } from 'react-query';
-import { delete_account } from '../../Configs/Queries/Users/Users';
-import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
-import { delete_blog } from '../../Configs/Queries/Blogs/Blogs';
-import { CurrentCommentsStore } from '../../MobX/Current_Comments/Current_Comments';
-import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
+import { MutationCache, QueryCache } from 'react-query';
 
 const InfoPage: FunctionComponent = () => {
     const queryCache = new QueryCache();
@@ -40,8 +33,8 @@ const InfoPage: FunctionComponent = () => {
 
     const sign_out = async () => {
         const reset_data = () => {
-            UserInfoStore.clear_user_info();
-            UserDataStore.clear_user_data();
+            // UserInfoStore.clear_user_info();
+            // UserDataStore.clear_user_data();
             queryCache.clear();
             mutationCache.clear();
             navigation.dispatch(
@@ -67,50 +60,6 @@ const InfoPage: FunctionComponent = () => {
         }
     };
 
-    const { mutate: delete_account_mutate } = useMutation(delete_account, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setDisableButton(false);
-            setShowSpinner(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                sign_out();
-            }
-        },
-    });
-
-    const { mutate: delete_blog_mutate } = useMutation(delete_blog, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setDisableButton(false);
-            setShowSpinner(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                info_handler({
-                    navigation: navigation,
-                    hide_back_btn: true,
-                    success_mssg: 'Blog Post deleted Successfully!',
-                    proceed_type: 3,
-                    hide_header: false,
-                });
-            }
-        },
-    });
-
     const proceed = no_double_clicks({
         execFunc: async () => {
             switch (route?.params?.proceed_type) {
@@ -121,28 +70,6 @@ const InfoPage: FunctionComponent = () => {
                             routes: [{ name: 'AuthStack' }],
                         }),
                     );
-                    break;
-                case 2:
-                    sign_out();
-                    break;
-                case 3:
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [{ name: 'HomeStack' }],
-                        }),
-                    );
-                    break;
-                case 4:
-                    delete_account_mutate({
-                        user_token: UserInfoStore?.user_info?.token as string,
-                    });
-                    break;
-                case 5:
-                    delete_blog_mutate({
-                        user_token: UserInfoStore?.user_info?.token as string,
-                        blogID: CurrentCommentsStore.current_blog_id as string,
-                    });
                     break;
                 default:
                     navigation.dispatch(

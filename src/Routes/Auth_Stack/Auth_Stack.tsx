@@ -7,7 +7,6 @@ import ForgotPasswordPage from '../../Screens/Forgot_Password_Page/Forgot_Passwo
 import ChangePasswordPage from '../../Screens/Change_Password_Page/Change_Password_Page';
 import SelectDPPage from '../../Screens/Select_DP_Page/Select_DP_Page';
 import VerifyOTPPage from '../../Screens/Verify_OTP_Page/Verify_OTP_Page';
-import ChangeUsernamePage from '../../Screens/Change_Username_Page/Change_Username_Page';
 
 type AuthStackParamList = {
     SignInPage: {};
@@ -16,7 +15,6 @@ type AuthStackParamList = {
     ChangePasswordPage: {};
     SelectDPPage: {};
     VerifyOTPPage: {};
-    ChangeUsernamePage: {};
 };
 
 const Auth_Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -37,10 +35,6 @@ const AuthStack: FunctionComponent = () => {
             <Auth_Stack.Screen
                 name="ChangePasswordPage"
                 component={ChangePasswordPage}
-            />
-            <Auth_Stack.Screen
-                name="ChangeUsernamePage"
-                component={ChangeUsernamePage}
             />
             <Auth_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
         </Auth_Stack.Navigator>

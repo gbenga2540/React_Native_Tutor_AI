@@ -7,18 +7,13 @@ import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import SecureTextEntry from '../../Components/Secure_Text_Entry/Secure_Text_Entry';
 import TextButton from '../../Components/Text_Button/Text_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { sign_in } from '../../Configs/Queries/Users/Users';
-import { useMutation } from 'react-query';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
-import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
-import SInfo from 'react-native-sensitive-info';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { UserInfoStore } from '../../MobX/User_Info/User_Info';
-import { email_checker } from '../../Utils/Email_Checker/Email_Checker';
+import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 
 const SignInPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -27,77 +22,9 @@ const SignInPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
-    const { mutate: sign_in_mutate } = useMutation(sign_in, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setShowSpinner(false);
-            setDisableButton(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                try {
-                    await SInfo.setItem(
-                        SECURE_STORAGE_USER_INFO,
-                        JSON.stringify({
-                            ...data?.data,
-                        }),
-                        {
-                            sharedPreferencesName: SECURE_STORAGE_NAME,
-                            keychainService: SECURE_STORAGE_NAME,
-                        },
-                    )
-                        ?.catch(error => {
-                            if (error) {
-                                UserInfoStore.set_user_info({
-                                    data: { ...data?.data },
-                                });
-                                navigation.dispatch(
-                                    CommonActions.reset({
-                                        index: 0,
-                                        routes: [{ name: 'HomeStack' }],
-                                    }),
-                                );
-                            }
-                        })
-                        ?.then(() => {
-                            UserInfoStore.set_user_info({
-                                data: { ...data?.data },
-                            });
-                            navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 0,
-                                    routes: [{ name: 'HomeStack' }],
-                                }),
-                            );
-                        });
-                } catch (err) {
-                    UserInfoStore.set_user_info({
-                        data: { ...data?.data },
-                    });
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [{ name: 'HomeStack' }],
-                        }),
-                    );
-                }
-            }
-        },
-    });
-
     const sign_in_user = no_double_clicks({
         execFunc: () => {
-            if (email_checker({ email: email }) && password) {
-                sign_in_mutate({
-                    email: email,
-                    password: password,
-                });
+            if (regex_email_checker({ email: email }) && password) {
             } else {
                 error_handler({
                     navigation: navigation,

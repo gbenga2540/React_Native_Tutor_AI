@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/Fonts/OpenSans-Bold.ttf",
+      "sha1": "266b36edacf112b480a28f0f5acbbe0ebc01b18f"
+    },
+    {
+      "path": "src/Fonts/OpenSans-Light.ttf",
+      "sha1": "a5cb6aa02a978571be6ccb861bf500fec6a92914"
+    },
+    {
+      "path": "src/Fonts/OpenSans-Medium.ttf",
+      "sha1": "8fe852635316327356ca73b315e7820582fddf9a"
+    },
+    {
+      "path": "src/Fonts/OpenSans-Regular.ttf",
+      "sha1": "73b8e80d4ff1cf32806a12f296754819c17d4eff"
+    },
+    {
+      "path": "src/Fonts/Urbanist-Bold.ttf",
+      "sha1": "b25f6f60c22feaf33ec829c7ae6bb086af2f4d9e"
+    },
+    {
+      "path": "src/Fonts/Urbanist-Medium.ttf",
+      "sha1": "da11e2077535e358e004b439591d701f710918d2"
+    },
+    {
+      "path": "src/Fonts/Urbanist-SemiBold.ttf",
+      "sha1": "b5d08f8959820a3797d083cdf84e0e7304f85dc4"
+    }
+  ]
+}

@@ -1,3 +1,3 @@
 export const global_variables = {
-    debounceTime: 300,
+    debounceTime: 1000,
 };

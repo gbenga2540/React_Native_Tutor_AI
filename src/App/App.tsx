@@ -6,10 +6,14 @@
  */
 
 import React, { FunctionComponent, useEffect } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import CustomStatusBar from '../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import MainStack from '../Routes/Main_Stack/Main_Stack';
+import { OnlineManager } from '../Hooks/Online_Manager/Online_Manager';
+import { OnAppFocus } from '../Hooks/On_App_Focus/On_App_Focus';
+import { KeyboardManager } from '../Hooks/Keyboard_Manager/Keyboard_Manager';
 
 const App: FunctionComponent = () => {
     useEffect(() => {
@@ -23,18 +27,17 @@ const App: FunctionComponent = () => {
         }
     }, []);
 
+    OnlineManager();
+    OnAppFocus();
+    KeyboardManager();
+
     return (
-        <NavigationContainer>
-            <CustomStatusBar />
-            <View style={styles.app_main}>
-                <Text
-                    style={{
-                        color: 'black',
-                    }}>
-                    App
-                </Text>
-            </View>
-        </NavigationContainer>
+        <View style={styles.app_main}>
+            <NavigationContainer>
+                <CustomStatusBar />
+                <MainStack />
+            </NavigationContainer>
+        </View>
     );
 };
 
@@ -44,7 +47,5 @@ const styles = StyleSheet.create({
     app_main: {
         flex: 1,
         backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });

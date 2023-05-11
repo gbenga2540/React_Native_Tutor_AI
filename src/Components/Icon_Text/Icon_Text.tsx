@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { DebouncedFuncLeading } from 'lodash';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
 interface IconTextProps {
     buttonName: string;
@@ -17,8 +18,16 @@ const IconText: FunctionComponent<IconTextProps> = ({
     iconName,
     execFunc,
 }) => {
+    const exec_func = no_double_clicks({
+        execFunc: () => {
+            Keyboard.dismiss();
+            if (execFunc !== undefined) {
+                execFunc();
+            }
+        },
+    });
     return (
-        <TouchableOpacity style={styles.c_btn} onPress={execFunc}>
+        <TouchableOpacity style={styles.c_btn} onPress={exec_func}>
             <Feather
                 name={iconName}
                 size={21}

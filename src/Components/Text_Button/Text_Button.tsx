@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import {
     FlexAlignType,
+    Keyboard,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -8,6 +9,7 @@ import {
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
 import { DebouncedFuncLeading } from 'lodash';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
 interface TextButtonProps {
     buttonText: string;
@@ -36,11 +38,18 @@ const TextButton: FunctionComponent<TextButtonProps> = ({
     fontSize,
     alignItems,
 }) => {
+    const exec_func = no_double_clicks({
+        execFunc: () => {
+            Keyboard.dismiss();
+            execFunc();
+        },
+    });
+
     return (
         <TouchableOpacity
             disabled={disabled || false}
             activeOpacity={0.65}
-            onPress={execFunc}
+            onPress={exec_func}
             style={[
                 styles.t_b_main,
                 {

@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { DebouncedFuncLeading } from 'lodash';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
 interface BasicButtonProps {
     buttonHeight?: number | string;
@@ -27,10 +28,17 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
     disabled,
     backgroundColor,
 }) => {
+    const exec_func = no_double_clicks({
+        execFunc: () => {
+            Keyboard.dismiss();
+            execFunc();
+        },
+    });
+
     return (
         <TouchableOpacity
             disabled={disabled || false}
-            onPress={execFunc}
+            onPress={exec_func}
             style={[
                 styles.b_b_main,
                 {

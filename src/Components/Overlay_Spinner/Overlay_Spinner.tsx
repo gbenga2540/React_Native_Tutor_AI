@@ -1,5 +1,11 @@
 import React, { Dispatch, FunctionComponent, SetStateAction } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+    Platform,
+    StatusBar,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import Spinner, { SpinnerType } from 'react-native-spinkit';
 import { spinkit_types } from '../../Data/Spinkit_Types/SpinKit_Types';
 import Colors from '../../Configs/Colors/Colors';
@@ -16,6 +22,10 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
     if (showSpinner) {
         return (
             <View style={styles.overlay_spinner_main}>
+                <StatusBar
+                    barStyle={'light-content'}
+                    backgroundColor={Colors().BackgroundDim}
+                />
                 <TouchableOpacity
                     onPress={() => setShowSpinner(false)}
                     style={{
@@ -36,7 +46,7 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
                     size={80}
                     type={
                         spinkit_types[
-                            Platform.OS === 'ios' ? 12 : 6
+                            Platform.OS === 'ios' ? 12 : 1
                         ] as SpinnerType
                     }
                     color={Colors().Primary}

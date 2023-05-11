@@ -10,11 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
-import { useMutation } from 'react-query';
-import { forgot_password } from '../../Configs/Queries/Users/Users';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
-import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 
 const ForgotPasswordPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -22,32 +20,6 @@ const ForgotPasswordPage: FunctionComponent = () => {
     const [email, setEmail] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
-
-    const { mutate: forgot_password_mutate } = useMutation(forgot_password, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            setShowSpinner(false);
-            setDisableButton(false);
-            if (data?.error) {
-                error_handler({
-                    navigation: navigation,
-                    error_mssg: data?.data,
-                });
-            } else {
-                info_handler({
-                    navigation: navigation,
-                    success_mssg:
-                        'A New Password has been sent to your Email Address. Please check your Email for your new password and be sure to change your password once you are Signed In.',
-                    proceed_type: 1,
-                    hide_back_btn: true,
-                    hide_header: false,
-                });
-            }
-        },
-    });
 
     const nav_to_sign_in_page = no_double_clicks({
         execFunc: () =>
@@ -60,10 +32,15 @@ const ForgotPasswordPage: FunctionComponent = () => {
     });
 
     const send_mail = no_double_clicks({
-        execFunc: () =>
-            forgot_password_mutate({
-                email: email,
-            }),
+        execFunc: () => {
+            if (regex_email_checker({ email: email })) {
+            } else {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'Email field cannot be empty!',
+                });
+            }
+        },
     });
 
     return (

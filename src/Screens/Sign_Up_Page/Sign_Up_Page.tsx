@@ -10,7 +10,7 @@ import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
-import { email_checker } from '../../Utils/Email_Checker/Email_Checker';
+import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
@@ -24,7 +24,7 @@ const SignUpPage: FunctionComponent = () => {
     const proceed = no_double_clicks({
         execFunc: () => {
             if (username && email && password && cPassword) {
-                if (email_checker({ email: email })) {
+                if (regex_email_checker({ email: email })) {
                     if (password?.length >= 6) {
                         if (password === cPassword) {
                             navigation.push(
