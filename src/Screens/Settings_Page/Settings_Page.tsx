@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
-    Platform,
     ScrollView,
     StyleSheet,
     Text,
@@ -15,9 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { observer } from 'mobx-react';
 
-const SettingsPage: FunctionComponent = observer(() => {
+const SettingsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
@@ -113,7 +111,7 @@ const SettingsPage: FunctionComponent = observer(() => {
     return (
         <View style={styles.profile_main}>
             <CustomStatusBar
-                backgroundColor={Colors()?.Background}
+                backgroundColor={Colors.Background}
                 showSpinner={showSpinner}
             />
             <OverlaySpinner
@@ -121,7 +119,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                 setShowSpinner={setShowSpinner}
             />
             <ScrollView style={{ flex: 1 }}>
-                <View style={styles.pp_cont}>
+                <View style={[styles.pp_cont, { marginTop: 80 }]}>
                     <TouchableOpacity
                         onPress={change_password}
                         style={{
@@ -132,7 +130,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -145,7 +143,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -158,7 +156,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -172,7 +170,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -186,7 +184,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -199,7 +197,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -212,7 +210,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -225,7 +223,7 @@ const SettingsPage: FunctionComponent = observer(() => {
                         activeOpacity={0.65}>
                         <Text
                             style={{
-                                color: Colors().Black,
+                                color: Colors.Black,
                                 fontSize: 18,
                                 fontFamily: fonts.Urbanist_500,
                             }}>
@@ -237,29 +235,14 @@ const SettingsPage: FunctionComponent = observer(() => {
             </ScrollView>
         </View>
     );
-});
+};
 
 export default SettingsPage;
 
 const styles = StyleSheet.create({
     profile_main: {
         flex: 1,
-        backgroundColor: Colors().Background,
-    },
-    pp_w_i_c: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        borderRadius: 170,
-        padding: 3,
-        marginBottom: 20,
-        borderColor: Colors().Primary,
-        marginTop: Platform?.OS === 'ios' ? 100 : 75,
-        borderWidth: 2,
-    },
-    pp_w_i: {
-        borderRadius: 170,
-        width: 170,
-        height: 170,
+        backgroundColor: Colors.Background,
     },
     pp_cont: {
         flex: 1,
@@ -267,7 +250,7 @@ const styles = StyleSheet.create({
     },
     pp_c_n: {
         textAlign: 'center',
-        color: Colors()?.Dark,
+        color: Colors.Dark,
         fontFamily: fonts?.Urbanist_600,
         fontSize: 20,
     },

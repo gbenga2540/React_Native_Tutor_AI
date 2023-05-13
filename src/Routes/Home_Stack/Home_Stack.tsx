@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { observer } from 'mobx-react';
 import HomeTab from '../Home_Tab/Home_Tab';
 
 type HomeStackParamList = {
@@ -9,7 +8,7 @@ type HomeStackParamList = {
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
 
-const HomeStack: FunctionComponent = observer(() => {
+const HomeStack: FunctionComponent = () => {
     return (
         <Home_Stack.Navigator
             initialRouteName={'HomeTab'}
@@ -19,6 +18,6 @@ const HomeStack: FunctionComponent = observer(() => {
             <Home_Stack.Screen name="HomeTab" component={HomeTab} />
         </Home_Stack.Navigator>
     );
-});
+};
 
 export default HomeStack;

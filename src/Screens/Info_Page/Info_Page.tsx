@@ -87,8 +87,8 @@ const InfoPage: FunctionComponent = () => {
         <View style={{ flex: 1 }}>
             <CustomStatusBar
                 showSpinner={showSpinner}
-                backgroundColor={Colors().Background}
-                backgroundDimColor={Colors().BackgroundDim}
+                backgroundColor={Colors.Background}
+                backgroundDimColor={Colors.BackgroundDim}
             />
             <OverlaySpinner
                 showSpinner={showSpinner}
@@ -148,7 +148,7 @@ const InfoPage: FunctionComponent = () => {
                         styles.i_m_err_txt,
                         {
                             fontSize: 14,
-                            color: Colors().Primary,
+                            color: Colors.Primary,
                             marginTop: 50,
                         },
                     ]}>
@@ -180,7 +180,7 @@ export default InfoPage;
 const styles = StyleSheet.create({
     info_main: {
         flex: 1,
-        backgroundColor: Colors().Background,
+        backgroundColor: Colors.Background,
     },
     i_m_err_txt: {
         marginTop: 20,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontFamily: fonts.Urbanist_500,
         fontSize: 16,
-        color: Colors().Grey,
+        color: Colors.Grey,
     },
     i_m_err_txt_h: {
         fontFamily: fonts.Urbanist_700,

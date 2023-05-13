@@ -10,7 +10,7 @@ interface BasicButton2Props {
     buttonText: string;
     marginTop?: number | string;
     marginBottom?: number | string;
-    borderRaduis?: number;
+    borderRadius?: number;
     marginHorizontal?: number;
     paddingHorizontal?: number;
     execFunc: DebouncedFuncLeading<() => void>;
@@ -23,7 +23,7 @@ const BasicButton2: FunctionComponent<BasicButton2Props> = ({
     buttonText,
     marginTop,
     marginBottom,
-    borderRaduis,
+    borderRadius,
     marginHorizontal,
     paddingHorizontal,
     execFunc,
@@ -32,8 +32,12 @@ const BasicButton2: FunctionComponent<BasicButton2Props> = ({
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
-            Keyboard.dismiss();
-            execFunc();
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
+            if (execFunc !== undefined) {
+                execFunc();
+            }
         },
     });
 
@@ -49,15 +53,15 @@ const BasicButton2: FunctionComponent<BasicButton2Props> = ({
                     maxHeight: buttonHeight || 40,
                     marginTop: marginTop || 0,
                     marginBottom: marginBottom || 0,
-                    borderRadius: borderRaduis || 10,
+                    borderRadius: borderRadius || 10,
                     marginHorizontal: marginHorizontal || 0,
                     paddingHorizontal: paddingHorizontal || 10,
-                    borderColor: backgroundColor || Colors().Dark,
+                    borderColor: backgroundColor || Colors.Dark,
                     borderWidth: 1,
                 },
             ]}
             activeOpacity={0.65}>
-            <Text style={[styles.b_b_m_txt, { color: Colors().Dark }]}>
+            <Text style={[styles.b_b_m_txt, { color: Colors.Dark }]}>
                 {buttonText}
             </Text>
         </TouchableOpacity>

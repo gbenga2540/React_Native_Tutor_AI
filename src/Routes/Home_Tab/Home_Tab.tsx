@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
 import Feather from 'react-native-vector-icons/Feather';
-import { observer } from 'mobx-react';
 import HomePage from '../../Screens/Home_Page/Home_Page';
 import SettingsPage from '../../Screens/Settings_Page/Settings_Page';
 
@@ -15,14 +14,14 @@ type HomeTabParamList = {
 
 const Home_Tab = createBottomTabNavigator<HomeTabParamList>();
 
-const HomeTab: FunctionComponent = observer(() => {
+const HomeTab: FunctionComponent = () => {
     return (
         <Home_Tab.Navigator
             initialRouteName="HomePage"
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: Colors().Primary,
-                tabBarInactiveTintColor: Colors().DarkGrey,
+                tabBarActiveTintColor: Colors.Primary,
+                tabBarInactiveTintColor: Colors.DarkGrey,
                 tabBarStyle: styles.tabBar_main,
                 tabBarLabelStyle: styles.tabBar_label,
                 tabBarIconStyle: styles.tabBar_icon,
@@ -50,7 +49,7 @@ const HomeTab: FunctionComponent = observer(() => {
             />
         </Home_Tab.Navigator>
     );
-});
+};
 
 export default HomeTab;
 
@@ -58,8 +57,8 @@ const styles = StyleSheet.create({
     tabBar_main: {
         height: Platform.OS === 'ios' ? 92 : 75,
         paddingBottom: Platform.OS === 'ios' ? 30 : 13,
-        backgroundColor: Colors().Background,
-        shadowColor: Colors().Black,
+        backgroundColor: Colors.Background,
+        shadowColor: Colors.Black,
         shadowOffset: {
             width: 2,
             height: 2,

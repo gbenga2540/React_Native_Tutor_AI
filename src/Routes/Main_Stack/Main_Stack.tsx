@@ -6,7 +6,6 @@ import InfoPage from '../../Screens/Info_Page/Info_Page';
 import HomeStack from '../Home_Stack/Home_Stack';
 // import SInfo from 'react-native-sensitive-info';
 // import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
-import { observer } from 'mobx-react';
 
 type MainStackParamList = {
     AuthStack: {};
@@ -23,7 +22,7 @@ type MainStackParamList = {
 
 const Main_Stack = createNativeStackNavigator<MainStackParamList>();
 
-const MainStack: FunctionComponent = observer(() => {
+const MainStack: FunctionComponent = () => {
     const [render, setRender] = useState<boolean>(false);
     // const [userToken, setUserToken] = useState<string>('');
 
@@ -87,7 +86,7 @@ const MainStack: FunctionComponent = observer(() => {
     if (render) {
         return (
             <Main_Stack.Navigator
-                // initialRouteName={'HomeStack'}
+                initialRouteName={'AuthStack'}
                 screenOptions={{
                     headerShown: false,
                 }}>
@@ -112,6 +111,6 @@ const MainStack: FunctionComponent = observer(() => {
     } else {
         return null;
     }
-});
+};
 
 export default MainStack;

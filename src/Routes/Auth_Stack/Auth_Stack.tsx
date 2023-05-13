@@ -7,14 +7,22 @@ import ForgotPasswordPage from '../../Screens/Forgot_Password_Page/Forgot_Passwo
 import ChangePasswordPage from '../../Screens/Change_Password_Page/Change_Password_Page';
 import SelectDPPage from '../../Screens/Select_DP_Page/Select_DP_Page';
 import VerifyOTPPage from '../../Screens/Verify_OTP_Page/Verify_OTP_Page';
+import AuthSelectPage from '../../Screens/Auth_Select_Page/Auth_Select_Page';
+import CongratulationsPage from '../../Screens/Congratulations_Page/Congratulations_Page';
+import TCPage from '../../Screens/T_C_Page/T_C_Page';
+import OnboardingPage from '../../Screens/Onboarding_Page/Onboarding_Page';
 
 type AuthStackParamList = {
+    AuthSelectPage: {};
     SignInPage: {};
     SignUpPage: {};
     ForgotPasswordPage: {};
     ChangePasswordPage: {};
     SelectDPPage: {};
     VerifyOTPPage: {};
+    CongratulationsPage: {};
+    TCPage: {};
+    OnboardingPage: {};
 };
 
 const Auth_Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -25,6 +33,10 @@ const AuthStack: FunctionComponent = () => {
             screenOptions={{
                 headerShown: false,
             }}>
+            <Auth_Stack.Screen
+                name="AuthSelectPage"
+                component={AuthSelectPage}
+            />
             <Auth_Stack.Screen name="SignInPage" component={SignInPage} />
             <Auth_Stack.Screen name="SignUpPage" component={SignUpPage} />
             <Auth_Stack.Screen name="SelectDPPage" component={SelectDPPage} />
@@ -37,6 +49,15 @@ const AuthStack: FunctionComponent = () => {
                 component={ChangePasswordPage}
             />
             <Auth_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
+            <Auth_Stack.Screen
+                name="CongratulationsPage"
+                component={CongratulationsPage}
+            />
+            <Auth_Stack.Screen name="TCPage" component={TCPage} />
+            <Auth_Stack.Screen
+                name="OnboardingPage"
+                component={OnboardingPage}
+            />
         </Auth_Stack.Navigator>
     );
 };

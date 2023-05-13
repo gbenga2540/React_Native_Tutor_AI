@@ -6,24 +6,26 @@ interface CustomStatusBarProps {
     showSpinner?: boolean;
     backgroundColor?: string;
     backgroundDimColor?: string;
+    lightContent?: boolean;
 }
 
 const CustomStatusBar: FunctionComponent<CustomStatusBarProps> = ({
     showSpinner,
     backgroundColor,
     backgroundDimColor,
+    lightContent,
 }) => {
     return (
         <StatusBar
-            barStyle={'dark-content'}
+            barStyle={lightContent || false ? 'light-content' : 'dark-content'}
             backgroundColor={
                 showSpinner || false
                     ? backgroundDimColor
                         ? backgroundDimColor
-                        : Colors().BackgroundDim
+                        : Colors.BackgroundDim
                     : backgroundColor
                     ? backgroundColor
-                    : Colors().Background
+                    : Colors.Background
             }
         />
     );

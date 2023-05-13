@@ -18,10 +18,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { observer } from 'mobx-react';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 
-const SelectDPPage: FunctionComponent = observer(() => {
+const SelectDPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
 
@@ -151,8 +150,8 @@ const SelectDPPage: FunctionComponent = observer(() => {
         <View style={styles.select_dp_main}>
             <CustomStatusBar
                 showSpinner={showSpinner}
-                backgroundColor={Colors().Background}
-                backgroundDimColor={Colors().BackgroundDim}
+                backgroundColor={Colors.Background}
+                backgroundDimColor={Colors.BackgroundDim}
             />
             <OverlaySpinner
                 showSpinner={showSpinner}
@@ -197,34 +196,30 @@ const SelectDPPage: FunctionComponent = observer(() => {
                     onPress={select_image_from_camera}
                     style={[
                         styles.sdp_sp_i,
-                        { backgroundColor: Colors().Border },
+                        { backgroundColor: Colors.Border },
                     ]}>
-                    <Feather
-                        name="camera"
-                        size={28}
-                        color={Colors().DarkGrey}
-                    />
+                    <Feather name="camera" size={28} color={Colors.DarkGrey} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={select_image_from_gallery}
                     style={[
                         styles.sdp_sp_i,
-                        { backgroundColor: Colors().Border },
+                        { backgroundColor: Colors.Border },
                     ]}>
-                    <Feather name="image" size={28} color={Colors().DarkGrey} />
+                    <Feather name="image" size={28} color={Colors.DarkGrey} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={clear_image}
                     style={[
                         styles.sdp_sp_i,
-                        { backgroundColor: Colors().Border },
+                        { backgroundColor: Colors.Border },
                     ]}>
-                    <Feather name="x" size={28} color={Colors().DarkGrey} />
+                    <Feather name="x" size={28} color={Colors.DarkGrey} />
                 </TouchableOpacity>
             </View>
             <BasicButton
                 buttonText={route?.params?.is_change_dp ? 'Upload' : 'Register'}
-                borderRaduis={8}
+                borderRadius={8}
                 marginHorizontal={22}
                 execFunc={upload_data}
                 buttonHeight={56}
@@ -232,14 +227,14 @@ const SelectDPPage: FunctionComponent = observer(() => {
             />
         </View>
     );
-});
+};
 
 export default SelectDPPage;
 
 const styles = StyleSheet.create({
     select_dp_main: {
         flex: 1,
-        backgroundColor: Colors()?.Background,
+        backgroundColor: Colors.Background,
     },
     su_m_wt: {
         fontFamily: fonts.Urbanist_700,
@@ -247,7 +242,7 @@ const styles = StyleSheet.create({
         width: 320,
         lineHeight: 39,
         marginLeft: 22,
-        color: Colors().Dark,
+        color: Colors.Dark,
         marginBottom: 50,
     },
     sdp_w_i_c: {
@@ -256,7 +251,7 @@ const styles = StyleSheet.create({
         borderRadius: 130,
         padding: 2,
         marginBottom: 40,
-        borderColor: Colors().Grey,
+        borderColor: Colors.Grey,
         borderWidth: 2,
     },
     sdp_w_i: {

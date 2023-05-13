@@ -61,7 +61,7 @@ const SecureTextEntry: FunctionComponent<SecureTextEntryProps> = ({
                     },
                 ]}
                 placeholder={placeHolderText || 'password'}
-                placeholderTextColor={Colors().Grey}
+                placeholderTextColor={Colors.Grey}
                 onChangeText={(text: string) => setInputValue(text?.trim())}
                 value={inputValue}
                 secureTextEntry={hidePswd}
@@ -74,18 +74,14 @@ const SecureTextEntry: FunctionComponent<SecureTextEntryProps> = ({
                     activeOpacity={0.65}
                     onPress={() => setHidePswd(!hidePswd)}
                     style={{ marginRight: 18, marginLeft: 5 }}>
-                    <Feather name="eye" size={25} color={Colors().DarkGrey} />
+                    <Feather name="eye" size={25} color={Colors.DarkGrey} />
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity
                     activeOpacity={0.65}
                     onPress={() => setHidePswd(!hidePswd)}
                     style={{ marginRight: 18, marginLeft: 5 }}>
-                    <Feather
-                        name="eye-off"
-                        size={25}
-                        color={Colors().DarkGrey}
-                    />
+                    <Feather name="eye-off" size={25} color={Colors.DarkGrey} />
                 </TouchableOpacity>
             )}
         </KeyboardAvoidingView>
@@ -100,9 +96,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 56,
         borderRadius: 8,
-        borderColor: Colors().Border,
+        borderColor: Colors.Border,
         borderWidth: 1,
-        backgroundColor: Colors().InputBackground,
+        backgroundColor: Colors.InputBackground,
     },
     b_t_e_m_ti: {
         flex: 1,
@@ -112,7 +108,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
         textAlignVertical: 'center',
         letterSpacing: 0.2,
-        color: Colors().Dark,
+        color: Colors.Dark,
         borderWidth: 0,
     },
 });

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, Platform, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import OTPTextView from 'react-native-otp-textinput';
@@ -12,6 +12,7 @@ import BackButton from '../../Components/Back_Button/Back_Button';
 // import TextButton from '../../Components/Text_Button/Text_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import TextButton from '../../Components/Text_Button/Text_Button';
 
 const VerifyOTPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -19,6 +20,10 @@ const VerifyOTPPage: FunctionComponent = () => {
     const [OTP, setOTP] = useState<string>('');
     // const [token, setToken] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
+
+    const resend_mail = no_double_clicks({
+        execFunc: () => {},
+    });
 
     const verify_otp = no_double_clicks({
         execFunc: () => {
@@ -36,8 +41,8 @@ const VerifyOTPPage: FunctionComponent = () => {
         <View style={styles.v_otp_main}>
             <CustomStatusBar
                 showSpinner={showSpinner}
-                backgroundColor={Colors().Background}
-                backgroundDimColor={Colors().BackgroundDim}
+                backgroundColor={Colors.Background}
+                backgroundDimColor={Colors.BackgroundDim}
             />
             <OverlaySpinner
                 showSpinner={showSpinner}
@@ -60,31 +65,47 @@ const VerifyOTPPage: FunctionComponent = () => {
             <Text style={styles.vo_m_wt}>Let's Verify your Email Address</Text>
             <Text style={styles.v_o_m_info}>
                 {
-                    'Please input the One-Time-Password (OTP) sent to your Email Address.'
+                    'We have sent you your OTP code to change your Password. Check your mail or Spam Folder'
                 }
             </Text>
-            <View style={{ marginHorizontal: 26 }}>
+            <View
+                style={{
+                    maxWidth: 240,
+                    alignSelf: 'center',
+                }}>
                 <OTPTextView
-                    inputCount={6}
-                    handleTextChange={(text: string) => setOTP(text)}
-                    offTintColor={Colors().DarkBorder}
-                    tintColor={Colors().Primary}
+                    inputCount={4}
+                    handleTextChange={(text: string) => {
+                        setOTP(text);
+                        if (text?.length >= 4) {
+                            if (Keyboard.isVisible()) {
+                                Keyboard.dismiss();
+                            }
+                        }
+                    }}
+                    offTintColor={Colors.DarkBorder}
+                    tintColor={Colors.Primary}
                     textInputStyle={styles.roundedTextInput}
                 />
             </View>
-            {/* <TextButton
-                textColor={Colors().LightPink}
+            <Text
+                style={[styles.v_o_m_info, { marginTop: 30, marginBottom: 0 }]}>
+                {'Didn’t get an OTP? Click Resend in 30 seconds'}
+            </Text>
+            <TextButton
+                textColor={Colors.LightPink}
                 isFontLight={true}
+                fontSize={18}
                 marginTop={5}
                 marginLeft={'auto'}
-                marginRight={22}
+                marginRight={'auto'}
                 buttonText={'Resend Mail'}
                 marginBottom={'auto'}
                 execFunc={resend_mail}
-            /> */}
+            />
             <BasicButton
                 buttonText="Verify Email"
-                borderRaduis={8}
+                borderRadius={8}
                 marginHorizontal={22}
                 execFunc={verify_otp}
                 buttonHeight={56}
@@ -99,7 +120,7 @@ export default VerifyOTPPage;
 const styles = StyleSheet.create({
     v_otp_main: {
         flex: 1,
-        backgroundColor: Colors()?.Background,
+        backgroundColor: Colors.Background,
     },
     vo_m_wt: {
         fontFamily: fonts.Urbanist_700,
@@ -107,7 +128,7 @@ const styles = StyleSheet.create({
         width: 320,
         lineHeight: 39,
         marginLeft: 22,
-        color: Colors().Dark,
+        color: Colors.Dark,
         marginBottom: 50,
     },
     roundedTextInput: {
@@ -117,9 +138,9 @@ const styles = StyleSheet.create({
     },
     v_o_m_info: {
         fontFamily: fonts.Urbanist_500,
-        color: Colors().DarkGrey,
+        color: Colors.DarkGrey,
         textAlign: 'center',
-        width: 250,
+        width: 330,
         alignSelf: 'center',
         marginBottom: 12,
         fontSize: 15,

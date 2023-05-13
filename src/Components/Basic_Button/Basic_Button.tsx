@@ -10,11 +10,12 @@ interface BasicButtonProps {
     buttonText: string;
     marginTop?: number | string;
     marginBottom?: number | string;
-    borderRaduis?: number;
     marginHorizontal?: number;
+    borderRadius?: number;
     execFunc: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     backgroundColor?: string;
+    textColor?: string;
 }
 
 const BasicButton: FunctionComponent<BasicButtonProps> = ({
@@ -22,16 +23,21 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
     buttonText,
     marginTop,
     marginBottom,
-    borderRaduis,
     marginHorizontal,
+    borderRadius,
     execFunc,
     disabled,
     backgroundColor,
+    textColor,
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
-            Keyboard.dismiss();
-            execFunc();
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
+            if (execFunc !== undefined) {
+                execFunc();
+            }
         },
     });
 
@@ -47,13 +53,17 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
                     maxHeight: buttonHeight || 56,
                     marginTop: marginTop || 0,
                     marginBottom: marginBottom || 0,
-                    borderRadius: borderRaduis || 10,
+                    borderRadius: borderRadius || 10,
                     marginHorizontal: marginHorizontal || 0,
-                    backgroundColor: backgroundColor || Colors().Dark,
+                    backgroundColor: backgroundColor || Colors.Primary,
                 },
             ]}
             activeOpacity={0.65}>
-            <Text style={[styles.b_b_m_txt, { color: Colors().White }]}>
+            <Text
+                style={[
+                    styles.b_b_m_txt,
+                    { color: textColor || Colors.White },
+                ]}>
                 {buttonText}
             </Text>
         </TouchableOpacity>

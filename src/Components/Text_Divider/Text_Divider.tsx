@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     t_d_lines: {
-        borderColor: Colors().TextDivider,
+        borderColor: Colors.TextDivider,
         flex: 1,
         borderBottomWidth: 1,
     },
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
         fontFamily: fonts.Urbanist_700,
         fontSize: 16,
         lineHeight: 32,
-        color: Colors().TextDivider,
+        color: Colors.TextDivider,
     },
 });

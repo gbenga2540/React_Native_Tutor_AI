@@ -50,8 +50,8 @@ const ChangePasswordPage: FunctionComponent = () => {
         <View style={styles.cp_main}>
             <CustomStatusBar
                 showSpinner={showSpinner}
-                backgroundColor={Colors().Background}
-                backgroundDimColor={Colors().BackgroundDim}
+                backgroundColor={Colors.Background}
+                backgroundDimColor={Colors.BackgroundDim}
             />
             <OverlaySpinner
                 showSpinner={showSpinner}
@@ -73,7 +73,7 @@ const ChangePasswordPage: FunctionComponent = () => {
             </View>
             <Text style={styles.cp_m_wt}>Create New Password</Text>
             <Text style={styles.cp_m_wt2}>
-                Your new password must be unique from those previously used.
+                Create a new, safe and secured password for your account
             </Text>
             <SecureTextEntry
                 placeHolderText="Enter your old password"
@@ -95,7 +95,7 @@ const ChangePasswordPage: FunctionComponent = () => {
             />
             <BasicButton
                 buttonText="Reset Password"
-                borderRaduis={8}
+                borderRadius={8}
                 marginHorizontal={22}
                 execFunc={change_password_func}
                 buttonHeight={56}
@@ -110,14 +110,14 @@ export default ChangePasswordPage;
 const styles = StyleSheet.create({
     cp_main: {
         flex: 1,
-        backgroundColor: Colors()?.Background,
+        backgroundColor: Colors.Background,
     },
     cp_m_wt: {
         fontFamily: fonts.Urbanist_700,
         fontSize: 30,
         lineHeight: 39,
         marginLeft: 22,
-        color: Colors().Dark,
+        color: Colors.Dark,
     },
     cp_m_wt2: {
         fontFamily: fonts.Urbanist_500,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         marginLeft: 22,
         marginRight: 22,
-        color: Colors().Grey,
+        color: Colors.Grey,
         marginBottom: 32,
     },
 });

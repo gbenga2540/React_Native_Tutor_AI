@@ -24,7 +24,7 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
             <View style={styles.overlay_spinner_main}>
                 <StatusBar
                     barStyle={'light-content'}
-                    backgroundColor={Colors().BackgroundDim}
+                    backgroundColor={Colors.BackgroundDim}
                 />
                 <TouchableOpacity
                     onPress={() => setShowSpinner(false)}
@@ -38,7 +38,7 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
                     <Feather
                         name="chevron-left"
                         size={35}
-                        color={Colors().White}
+                        color={Colors.White}
                     />
                 </TouchableOpacity>
                 <Spinner
@@ -49,7 +49,7 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
                             Platform.OS === 'ios' ? 12 : 1
                         ] as SpinnerType
                     }
-                    color={Colors().Primary}
+                    color={Colors.Primary}
                 />
             </View>
         );

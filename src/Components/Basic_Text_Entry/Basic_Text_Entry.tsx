@@ -18,6 +18,7 @@ interface BasicTextEntryProps {
     inputMode?: InputModeOptions;
     onFocus?: () => void;
     autoFocus?: boolean;
+    editable?: boolean;
 }
 
 const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
@@ -30,6 +31,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
     inputMode,
     onFocus,
     autoFocus,
+    editable,
 }) => {
     return (
         <KeyboardAvoidingView
@@ -44,7 +46,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
             <TextInput
                 style={styles.s_t_e_m_ti}
                 placeholder={placeHolderText || ''}
-                placeholderTextColor={Colors().Grey}
+                placeholderTextColor={Colors.Grey}
                 onChangeText={(text: string) => setInputValue(text)}
                 value={inputValue}
                 autoCapitalize={'none'}
@@ -52,6 +54,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                 inputMode={inputMode || 'text'}
                 onFocus={() => onFocus !== undefined && (onFocus() as unknown)}
                 autoFocus={autoFocus || false}
+                editable={editable === false ? false : true}
             />
         </KeyboardAvoidingView>
     );
@@ -65,9 +68,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 56,
         borderRadius: 8,
-        borderColor: Colors().Border,
+        borderColor: Colors.Border,
         borderWidth: 1,
-        backgroundColor: Colors().InputBackground,
+        backgroundColor: Colors.InputBackground,
     },
     s_t_e_m_ti: {
         flex: 1,
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
         height: 56,
         marginHorizontal: 18,
         textAlignVertical: 'center',
-        color: Colors().Dark,
+        color: Colors.Dark,
         borderWidth: 0,
     },
 });

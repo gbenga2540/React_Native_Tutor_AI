@@ -20,22 +20,25 @@ const IconText: FunctionComponent<IconTextProps> = ({
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
-            Keyboard.dismiss();
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
             if (execFunc !== undefined) {
                 execFunc();
             }
         },
     });
+
     return (
         <TouchableOpacity style={styles.c_btn} onPress={exec_func}>
             <Feather
                 name={iconName}
                 size={21}
-                color={buttonColor || Colors().Black}
+                color={buttonColor || Colors.Black}
             />
             <Text
                 style={{
-                    color: buttonColor || Colors().Black,
+                    color: buttonColor || Colors.Black,
                     fontSize: 16,
                     fontFamily: fonts.OpenSans_500,
                     marginLeft: 3,

@@ -47,8 +47,8 @@ const ForgotPasswordPage: FunctionComponent = () => {
         <View style={styles.fp_main}>
             <CustomStatusBar
                 showSpinner={showSpinner}
-                backgroundColor={Colors().Background}
-                backgroundDimColor={Colors().BackgroundDim}
+                backgroundColor={Colors.Background}
+                backgroundDimColor={Colors.BackgroundDim}
             />
             <OverlaySpinner
                 showSpinner={showSpinner}
@@ -70,29 +70,28 @@ const ForgotPasswordPage: FunctionComponent = () => {
             </View>
             <Text style={styles.fp_m_wt}>Forgot Password?</Text>
             <Text style={styles.fp_m_wt2}>
-                Don't worry! It occurs. Please enter the email address linked
-                with your account.
+                Enter Your Email to receive reset link.
             </Text>
             <BasicTextEntry
                 placeHolderText="Enter your email"
                 inputValue={email}
                 setInputValue={setEmail}
-                marginTop={32}
-                marginBottom={38}
+                marginTop={20}
+                marginBottom={18}
                 inputMode="email"
             />
             <BasicButton
                 buttonText="Send Mail"
-                borderRaduis={8}
+                borderRadius={8}
                 marginHorizontal={22}
                 execFunc={send_mail}
                 buttonHeight={56}
                 disabled={disableButton}
             />
-            <View style={styles.si_reg_cont}>
+            <View style={styles.fp_reg_cont}>
                 <Text
                     style={{
-                        color: Colors().Dark,
+                        color: Colors.Dark,
                         fontFamily: fonts.Urbanist_500,
                         fontSize: 16,
                     }}>
@@ -115,14 +114,14 @@ export default ForgotPasswordPage;
 const styles = StyleSheet.create({
     fp_main: {
         flex: 1,
-        backgroundColor: Colors()?.Background,
+        backgroundColor: Colors.Background,
     },
     fp_m_wt: {
         fontFamily: fonts.Urbanist_700,
         fontSize: 30,
         lineHeight: 39,
         marginLeft: 22,
-        color: Colors().Dark,
+        color: Colors.Dark,
         width: 280,
         marginBottom: 2,
     },
@@ -130,11 +129,10 @@ const styles = StyleSheet.create({
         fontFamily: fonts.Urbanist_500,
         fontSize: 16,
         lineHeight: 24,
-        marginLeft: 22,
-        marginRight: 22,
-        color: Colors().Grey,
+        marginHorizontal: 22,
+        color: Colors.Grey,
     },
-    si_reg_cont: {
+    fp_reg_cont: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',

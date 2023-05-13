@@ -40,8 +40,12 @@ const TextButton: FunctionComponent<TextButtonProps> = ({
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
-            Keyboard.dismiss();
-            execFunc();
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
+            if (execFunc !== undefined) {
+                execFunc();
+            }
         },
     });
 
@@ -64,7 +68,7 @@ const TextButton: FunctionComponent<TextButtonProps> = ({
                 style={[
                     styles.t_b_m_txt,
                     {
-                        color: textColor || Colors().Primary,
+                        color: textColor || Colors.Primary,
                         fontFamily: isFontLight
                             ? fonts.Urbanist_600
                             : fonts.Urbanist_700,

@@ -21,7 +21,7 @@ const OverlaySpinner2: FunctionComponent<ShowSpinnerProps> = ({
                             Platform.OS === 'ios' ? 12 : 6
                         ] as SpinnerType
                     }
-                    color={Colors().Primary}
+                    color={Colors.Primary}
                 />
             </View>
         );

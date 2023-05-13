@@ -44,7 +44,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             ]}>
             <Feather
                 name="search"
-                color={Colors().DarkGrey}
+                color={Colors.DarkGrey}
                 size={26}
                 style={{
                     marginLeft: 13,
@@ -54,7 +54,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             <TextInput
                 style={styles.s_b_m_ti}
                 placeholder={placeHolderText || ''}
-                placeholderTextColor={Colors().Grey}
+                placeholderTextColor={Colors.Grey}
                 onChangeText={(text: string) => setInputValue(text)}
                 value={inputValue}
                 autoCapitalize={'none'}
@@ -82,10 +82,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 56,
         borderRadius: 12,
-        borderColor: Colors().Border,
+        borderColor: Colors.Border,
         borderWidth: 1,
         marginLeft: 22,
-        backgroundColor: Colors().SearchBarBG,
+        backgroundColor: Colors.SearchBarBG,
         flex: 1,
     },
     s_b_m_ti: {
@@ -95,6 +95,6 @@ const styles = StyleSheet.create({
         height: 56,
         marginRight: 18,
         textAlignVertical: 'center',
-        color: Colors().Dark,
+        color: Colors.Dark,
     },
 });

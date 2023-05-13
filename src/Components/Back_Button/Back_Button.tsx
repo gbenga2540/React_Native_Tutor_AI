@@ -10,7 +10,9 @@ const BackButton: FunctionComponent = () => {
 
     const go_back = no_double_clicks({
         execFunc: () => {
-            Keyboard.dismiss();
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
             navigation.canGoBack() && navigation.goBack();
         },
     });
@@ -43,9 +45,9 @@ const styles = StyleSheet.create({
         height: 41,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors()?.Background,
+        backgroundColor: Colors.Background,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: Colors().Border,
+        borderColor: Colors.Border,
     },
 });
