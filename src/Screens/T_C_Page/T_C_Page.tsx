@@ -81,6 +81,7 @@ const TCPage: FunctionComponent = () => {
                     otherwise commercially exploit the content without the
                     Company's prior written consent.
                 </Text>
+                <View style={{ marginBottom: 80 }}>{''}</View>
             </ScrollView>
         </View>
     );
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 26,
+        fontSize: 30,
         marginBottom: 10,
         color: Colors.Primary,
         fontFamily: fonts.Urbanist_700,

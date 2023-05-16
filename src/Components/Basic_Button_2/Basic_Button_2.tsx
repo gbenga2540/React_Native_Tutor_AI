@@ -16,6 +16,7 @@ interface BasicButton2Props {
     execFunc: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     backgroundColor?: string;
+    textColor?: string;
 }
 
 const BasicButton2: FunctionComponent<BasicButton2Props> = ({
@@ -29,6 +30,7 @@ const BasicButton2: FunctionComponent<BasicButton2Props> = ({
     execFunc,
     disabled,
     backgroundColor,
+    textColor,
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
@@ -61,7 +63,8 @@ const BasicButton2: FunctionComponent<BasicButton2Props> = ({
                 },
             ]}
             activeOpacity={0.65}>
-            <Text style={[styles.b_b_m_txt, { color: Colors.Dark }]}>
+            <Text
+                style={[styles.b_b_m_txt, { color: textColor || Colors.Dark }]}>
                 {buttonText}
             </Text>
         </TouchableOpacity>

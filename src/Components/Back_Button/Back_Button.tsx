@@ -5,7 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
-const BackButton: FunctionComponent = () => {
+interface BackButtonProps {
+    execFunc?: () => void;
+}
+const BackButton: FunctionComponent<BackButtonProps> = ({ execFunc }) => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const go_back = no_double_clicks({
@@ -13,7 +16,11 @@ const BackButton: FunctionComponent = () => {
             if (Keyboard.isVisible()) {
                 Keyboard.dismiss();
             }
-            navigation.canGoBack() && navigation.goBack();
+            if (execFunc === undefined) {
+                navigation.canGoBack() && navigation.goBack();
+            } else {
+                execFunc();
+            }
         },
     });
 

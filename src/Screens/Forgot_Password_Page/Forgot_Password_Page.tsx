@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
-import TextButton from '../../Components/Text_Button/Text_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,19 +20,13 @@ const ForgotPasswordPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
-    const nav_to_sign_in_page = no_double_clicks({
-        execFunc: () =>
-            navigation.navigate(
-                'AuthStack' as never,
-                {
-                    screen: 'SignInPage',
-                } as never,
-            ),
-    });
-
     const send_mail = no_double_clicks({
         execFunc: () => {
             if (regex_email_checker({ email: email })) {
+                navigation.push(
+                    'AuthStack' as never,
+                    { screen: 'ChangePasswordPage' } as never,
+                );
             } else {
                 error_handler({
                     navigation: navigation,
@@ -88,23 +81,17 @@ const ForgotPasswordPage: FunctionComponent = () => {
                 buttonHeight={56}
                 disabled={disableButton}
             />
-            <View style={styles.fp_reg_cont}>
-                <Text
-                    style={{
-                        color: Colors.Dark,
-                        fontFamily: fonts.Urbanist_500,
-                        fontSize: 16,
-                    }}>
-                    Remember Password?
-                </Text>
-                <TextButton
-                    buttonText="Login"
-                    isFontLight={true}
-                    execFunc={nav_to_sign_in_page}
-                    marginLeft={5}
-                    fontSize={16}
-                />
-            </View>
+            <Image
+                source={require('../../Images/Extra/Arrow_Curves_2.png')}
+                style={{
+                    width: 306,
+                    height: 262,
+                    position: 'absolute',
+                    bottom: -65,
+                    left: -75,
+                    transform: [{ scale: 0.5 }],
+                }}
+            />
         </View>
     );
 };

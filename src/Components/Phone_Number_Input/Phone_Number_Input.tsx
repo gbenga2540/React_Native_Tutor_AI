@@ -9,6 +9,7 @@ import React, {
 import { View } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
 import Colors from '../../Configs/Colors/Colors';
+import { fonts } from '../../Configs/Fonts/Fonts';
 
 interface PhoneNumberInputProps {
     defaultCode?:
@@ -295,31 +296,45 @@ const PhoneNumberInput: FunctionComponent<PhoneNumberInputProps> = ({
     return (
         <View
             style={{
-                justifyContent: 'center',
-                alignItems: 'center',
                 marginTop: marginTop || 32,
                 marginBottom: marginBottom || 12,
                 marginHorizontal: marginHorizontal || 22,
-                borderColor: Colors.Border,
                 borderWidth: 1,
+                borderColor: Colors.Border,
                 backgroundColor: Colors.InputBackground,
                 borderRadius: 8,
-                height: height || 56,
+                height: height ? height + 2 : 58,
             }}>
             <PhoneInput
-                ref={phoneRef}
                 containerStyle={{
                     width: '100%',
                     backgroundColor: Colors.InputBackground,
                     borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: Colors.Border,
+                    height: height || 56,
+                    // shadowColor: 'rgba(0 ,0 ,0 , 0.25)',
+                    // shadowOffset: {
+                    //     width: 1,
+                    //     height: 5,
+                    // },
+                    // shadowOpacity: 0.34,
+                    // shadowRadius: 3.27,
+                    // elevation: 5,
                 }}
                 textContainerStyle={{
                     backgroundColor: Colors.InputBackground,
                     borderTopRightRadius: 8,
                     borderBottomRightRadius: 8,
                 }}
+                textInputStyle={{
+                    color: Colors.Black,
+                    height: height || 56,
+                    fontFamily: fonts.OpenSans_400,
+                }}
+                codeTextStyle={{
+                    color: Colors.Black,
+                    fontFamily: fonts.OpenSans_400,
+                }}
+                ref={phoneRef}
                 defaultValue={phoneValue}
                 defaultCode={defaultCode || 'US'}
                 layout="first"

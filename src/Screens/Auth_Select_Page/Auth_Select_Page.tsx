@@ -64,7 +64,11 @@ const AuthSelectPage: FunctionComponent = () => {
                             }}>
                             <Image
                                 source={item?.image}
-                                style={{ width: 130, height: 130 }}
+                                style={{
+                                    width: 130,
+                                    height: 130,
+                                    resizeMode: 'contain',
+                                }}
                             />
                         </View>
                     ))}

@@ -1,12 +1,12 @@
 import { number_to_month } from '../Number_To_Month/Number_To_Month';
 
 export const mongo_date_converter_1 = ({
-    input_mongo_date,
+    input_date,
 }: {
-    input_mongo_date: string;
+    input_date: string;
 }) => {
-    if (input_mongo_date) {
-        const _date = new Date(input_mongo_date);
+    if (input_date) {
+        const _date = new Date(input_date);
         const date = _date.getDate();
         const month = _date.getMonth() + 1;
         const year = _date.getFullYear();
@@ -20,12 +20,12 @@ export const mongo_date_converter_1 = ({
 };
 
 export const mongo_date_converter_2 = ({
-    input_mongo_date,
+    input_date,
 }: {
-    input_mongo_date: string;
+    input_date: string;
 }) => {
-    if (input_mongo_date) {
-        const _date = new Date(input_mongo_date);
+    if (input_date) {
+        const _date = new Date(input_date);
         const date = _date.getDate();
         const month = _date.getMonth() + 1;
         const year = _date.getFullYear();
@@ -36,12 +36,12 @@ export const mongo_date_converter_2 = ({
 };
 
 export const mongo_date_converter_3 = ({
-    input_mongo_date,
+    input_date,
 }: {
-    input_mongo_date: string;
+    input_date: string;
 }) => {
-    if (input_mongo_date) {
-        const _date = new Date(input_mongo_date);
+    if (input_date) {
+        const _date = new Date(input_date);
         const date = _date.getDate();
         const month = _date.getMonth() + 1;
         const year = _date.getFullYear();
@@ -55,12 +55,12 @@ export const mongo_date_converter_3 = ({
 };
 
 export const mongo_date_converter_4 = ({
-    input_mongo_date,
+    input_date,
 }: {
-    input_mongo_date: string;
+    input_date: string;
 }) => {
-    if (input_mongo_date) {
-        const _date = new Date(input_mongo_date);
+    if (input_date) {
+        const _date = new Date(input_date);
         const date = _date.getDate();
         const month = _date.getMonth() + 1;
         const year = _date.getFullYear();

@@ -7,7 +7,7 @@ import {
     Text,
     View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
@@ -18,13 +18,30 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 
 const CongratulationsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const route = useRoute<RouteProp<any>>();
 
     const proceed = no_double_clicks({
         execFunc: () => {
-            navigation.navigate(
-                'AuthStack' as never,
-                { screen: 'OnboardingPage' } as never,
-            );
+            switch (route?.params?.nextPage) {
+                case 1:
+                    navigation.push(
+                        'AuthStack' as never,
+                        { screen: 'OnboardingPage' } as never,
+                    );
+                    break;
+                case 2:
+                    navigation.push(
+                        'HomeStack' as never,
+                        { screen: 'HomePage' } as never,
+                    );
+                    break;
+                default:
+                    navigation.push(
+                        'AuthStack' as never,
+                        { screen: 'OnboardingPage' } as never,
+                    );
+                    break;
+            }
         },
     });
 
@@ -77,7 +94,7 @@ const CongratulationsPage: FunctionComponent = () => {
                                 styles.e_m_err_txt_h,
                                 { fontSize: 28 },
                             ]}>
-                            Congratulations
+                            {route?.params?.header_txt || ''}
                         </Text>
                         <Image
                             style={{ width: 30, height: 30, marginLeft: 4 }}
@@ -89,16 +106,16 @@ const CongratulationsPage: FunctionComponent = () => {
                             styles.e_m_err_txt,
                             { marginTop: 10, maxWidth: 280 },
                         ]}>
-                        Your account has been created. Now set up your profile
+                        {route?.params?.message_txt || ''}
                     </Text>
-                    <BasicButton
-                        buttonText="Continue"
-                        marginHorizontal={22}
-                        marginTop={100}
-                        execFunc={proceed}
-                    />
                 </View>
             </ScrollView>
+            <BasicButton
+                buttonText="Continue"
+                marginHorizontal={22}
+                execFunc={proceed}
+                marginBottom={Platform?.OS === 'ios' ? 50 : 40}
+            />
         </View>
     );
 };

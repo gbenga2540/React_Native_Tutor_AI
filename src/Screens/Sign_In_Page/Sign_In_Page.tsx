@@ -58,17 +58,9 @@ const SignInPage: FunctionComponent = () => {
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>
-            <View
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                }}>
-                <Text style={styles.si_m_wt}>Welcome Back Captain</Text>
-                <Image
-                    style={{ width: 30, height: 30 }}
-                    source={require('../../Images/Icons/Captain.png')}
-                />
-            </View>
+            <Text style={[styles.si_m_wt, { fontSize: 25 }]}>
+                Welcome Back Oluwagbemiga
+            </Text>
             <BasicTextEntry
                 placeHolderText="johndoe@gmail.com"
                 inputValue={email}
@@ -96,6 +88,17 @@ const SignInPage: FunctionComponent = () => {
                 marginHorizontal={22}
                 execFunc={proceed}
                 buttonHeight={56}
+            />
+            <Image
+                source={require('../../Images/Extra/Arrow_Curves_1.png')}
+                style={{
+                    width: 306,
+                    height: 262,
+                    position: 'absolute',
+                    bottom: -65,
+                    left: -75,
+                    transform: [{ scale: 0.5 }],
+                }}
             />
         </View>
     );

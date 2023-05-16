@@ -19,6 +19,7 @@ interface BasicTextEntryProps {
     onFocus?: () => void;
     autoFocus?: boolean;
     editable?: boolean;
+    textColor?: string;
 }
 
 const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
@@ -32,6 +33,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
     onFocus,
     autoFocus,
     editable,
+    textColor,
 }) => {
     return (
         <KeyboardAvoidingView
@@ -44,7 +46,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                 },
             ]}>
             <TextInput
-                style={styles.s_t_e_m_ti}
+                style={[styles.s_t_e_m_ti, { color: textColor || Colors.Dark }]}
                 placeholder={placeHolderText || ''}
                 placeholderTextColor={Colors.Grey}
                 onChangeText={(text: string) => setInputValue(text)}
@@ -79,7 +81,6 @@ const styles = StyleSheet.create({
         height: 56,
         marginHorizontal: 18,
         textAlignVertical: 'center',
-        color: Colors.Dark,
         borderWidth: 0,
     },
 });

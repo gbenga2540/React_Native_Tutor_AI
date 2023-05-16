@@ -5,67 +5,85 @@ import Colors from '../../Configs/Colors/Colors';
 import Feather from 'react-native-vector-icons/Feather';
 import { DebouncedFuncLeading } from 'lodash';
 
+const width = '100%';
+const height = 200;
 interface MiniAvatarProps {
     isMale: boolean;
     onPressVoice?: DebouncedFuncLeading<() => void>;
+    marginHorizontal?: number | string;
+    marginTop?: number | string;
+    marginBottom?: number | string;
 }
 const MiniAvatar: FunctionComponent<MiniAvatarProps> = ({
     isMale,
     onPressVoice,
+    marginHorizontal,
+    marginTop,
+    marginBottom,
 }) => {
-    if (isMale) {
-        return (
-            <View style={styles.avatar_bg}>
-                <Image
-                    source={avatars_data[6]?.image}
-                    style={{
-                        width: 140,
-                        height: 140,
-                    }}
-                />
-                <TouchableOpacity
-                    onPress={onPressVoice}
-                    style={styles.voice}
-                    activeOpacity={0.75}>
-                    <View style={styles.voice_icon}>
-                        <Feather
-                            name="volume-2"
-                            size={23}
-                            color={Colors.Primary}
-                        />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
-    } else {
-        return (
-            <View
-                style={[
-                    styles.avatar_bg,
-                    { backgroundColor: Colors.LightPink },
-                ]}>
-                <Image
-                    source={avatars_data[0]?.image}
-                    style={{
-                        width: 140,
-                        height: 140,
-                    }}
-                />
-                <TouchableOpacity
-                    onPress={onPressVoice}
-                    style={styles.voice}
-                    activeOpacity={0.75}>
-                    <View style={styles.voice_icon}>
-                        <Feather
-                            name="volume-2"
-                            size={23}
-                            color={Colors.Primary}
-                        />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
-    }
+    return (
+        <View
+            style={{
+                marginHorizontal: marginHorizontal || 0,
+                marginTop: marginTop || 0,
+                marginBottom: marginBottom || 0,
+            }}>
+            {isMale && (
+                <View style={styles.avatar_bg}>
+                    <Image
+                        source={avatars_data[6]?.image}
+                        style={{
+                            width: width,
+                            height: height,
+                            borderRadius: 20,
+                            resizeMode: 'contain',
+                        }}
+                    />
+                    <TouchableOpacity
+                        onPress={onPressVoice}
+                        style={styles.voice}
+                        activeOpacity={0.75}>
+                        <View style={styles.voice_icon}>
+                            <Feather
+                                name="volume-2"
+                                size={22}
+                                color={Colors.Primary}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )}
+            {!isMale && (
+                <View
+                    style={[
+                        styles.avatar_bg,
+                        { backgroundColor: Colors.LightPink },
+                    ]}>
+                    <Image
+                        source={avatars_data[0]?.image}
+                        style={{
+                            width: width,
+                            height: height,
+                            borderRadius: 20,
+                            resizeMode: 'contain',
+                        }}
+                    />
+                    <TouchableOpacity
+                        onPress={onPressVoice}
+                        style={styles.voice}
+                        activeOpacity={0.75}>
+                        <View style={styles.voice_icon}>
+                            <Feather
+                                name="volume-2"
+                                size={22}
+                                color={Colors.Primary}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )}
+        </View>
+    );
 };
 
 export default MiniAvatar;
@@ -74,25 +92,25 @@ const styles = StyleSheet.create({
     avatar_bg: {
         backgroundColor: Colors.Primary,
         borderRadius: 20,
-        width: 140,
-        height: 140,
+        width: width,
+        height: height,
     },
     voice: {
         position: 'absolute',
         right: -9,
         bottom: -2,
         backgroundColor: Colors.White,
-        width: 42,
-        height: 42,
-        borderRadius: 42,
+        width: 40,
+        height: 40,
+        borderRadius: 40,
         justifyContent: 'center',
         alignItems: 'center',
     },
     voice_icon: {
         backgroundColor: Colors.LightPurple,
-        width: 36,
-        height: 36,
-        borderRadius: 36,
+        width: 35,
+        height: 35,
+        borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
     },

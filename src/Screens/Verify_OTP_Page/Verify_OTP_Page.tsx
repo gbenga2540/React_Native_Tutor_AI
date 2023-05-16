@@ -1,5 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Keyboard, Platform, StyleSheet, Text, View } from 'react-native';
+import {
+    Image,
+    Keyboard,
+    Platform,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import OTPTextView from 'react-native-otp-textinput';
@@ -27,7 +34,19 @@ const VerifyOTPPage: FunctionComponent = () => {
 
     const verify_otp = no_double_clicks({
         execFunc: () => {
-            if (OTP?.length === 6) {
+            if (OTP?.length === 4) {
+                navigation.push(
+                    'AuthStack' as never,
+                    {
+                        screen: 'CongratulationsPage',
+                        params: {
+                            header_txt: 'Congratulations',
+                            message_txt:
+                                "Your account has been created, Now let's set up your profile.",
+                            nextPage: 1,
+                        },
+                    } as never,
+                );
             } else {
                 error_handler({
                     navigation: navigation,
@@ -95,7 +114,7 @@ const VerifyOTPPage: FunctionComponent = () => {
             <TextButton
                 textColor={Colors.LightPink}
                 isFontLight={true}
-                fontSize={18}
+                fontSize={17}
                 marginTop={5}
                 marginLeft={'auto'}
                 marginRight={'auto'}

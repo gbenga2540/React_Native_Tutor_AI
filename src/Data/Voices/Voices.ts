@@ -1,14 +1,15 @@
+export const Avatars = {
+    Male: ['Mark', 'David', 'Brian'],
+    Female: ['Susan', 'Lilly', 'Debby'],
+};
+
 export const AvatarVoices = {
     Male: [
         { label: 'Choose Voice', value: 'Choose Voice' },
-        { label: 'Mark', value: 'Mark' },
-        { label: 'David', value: 'David' },
-        { label: 'Brian', value: 'Brian' },
+        ...(Avatars?.Male?.map(item => ({ label: item, value: item })) || []),
     ],
     Female: [
         { label: 'Choose Voice', value: 'Choose Voice' },
-        { label: 'Susan', value: 'Susan' },
-        { label: 'Lilly', value: 'Lilly' },
-        { label: 'Debby', value: 'Debby' },
+        ...(Avatars?.Female?.map(item => ({ label: item, value: item })) || []),
     ],
 };

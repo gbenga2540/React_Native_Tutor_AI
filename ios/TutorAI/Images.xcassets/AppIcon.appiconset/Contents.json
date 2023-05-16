@@ -50,14 +50,14 @@
       "size" : "40x40"
     },
     {
-      "filename" : "Icon-App-40x40@3x 1.png",
+      "filename" : "Icon-App-40x40@3x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "Icon-App-40x40@3x.png",
+      "filename" : "Icon-App-40x40@3x 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",

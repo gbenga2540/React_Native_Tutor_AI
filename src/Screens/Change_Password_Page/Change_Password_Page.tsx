@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import { fonts } from '../../Configs/Fonts/Fonts';
@@ -100,6 +100,17 @@ const ChangePasswordPage: FunctionComponent = () => {
                 execFunc={change_password_func}
                 buttonHeight={56}
                 disabled={disableButton}
+            />
+            <Image
+                source={require('../../Images/Extra/Arrow_Curves_4.png')}
+                style={{
+                    width: 306,
+                    height: 262,
+                    position: 'absolute',
+                    bottom: -65,
+                    right: -70,
+                    transform: [{ scale: 0.5 }],
+                }}
             />
         </View>
     );
