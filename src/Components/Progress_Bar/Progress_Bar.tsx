@@ -16,6 +16,8 @@ interface ProgressBarProps {
     marginBottom?: number | string;
     height?: number;
     borderRadius?: number;
+    backgroundColor?: string;
+    progressBackgroundColor?: string;
 }
 const ProgressBar: FunctionComponent<ProgressBarProps> = ({
     progress,
@@ -25,6 +27,8 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({
     marginBottom,
     height,
     borderRadius,
+    backgroundColor,
+    progressBackgroundColor,
 }) => {
     const progressAnimation = useSharedValue(0);
 
@@ -51,15 +55,18 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({
                     height: height || 10,
                     maxHeight: height || 10,
                     borderRadius: borderRadius || 4,
+                    backgroundColor:
+                        backgroundColor || Colors.ProgressBackground,
                 },
             ]}>
             <Animated.View
                 style={[
                     StyleSheet.absoluteFill,
-                    styles.progress,
                     {
                         height: height || 10,
                         borderRadius: borderRadius || 4,
+                        backgroundColor:
+                            progressBackgroundColor || Colors.Primary,
                     },
                     reanimatedStyle,
                 ]}
@@ -71,10 +78,6 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({
 const styles = StyleSheet.create({
     progressBar: {
         flex: 1,
-        backgroundColor: Colors.ProgressBackground,
-    },
-    progress: {
-        backgroundColor: Colors.Primary,
     },
 });
 

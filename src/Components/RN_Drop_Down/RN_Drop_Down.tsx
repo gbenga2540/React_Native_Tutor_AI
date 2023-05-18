@@ -13,6 +13,7 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 interface DropDownProps {
     borderColor?: string;
     backgroundColor?: string;
+    textColor?: string;
     showLabel?: boolean;
     labelTitle?: string;
     dropdownData: { label: string; value: string }[];
@@ -21,6 +22,8 @@ interface DropDownProps {
     value: any;
     setValue: Dispatch<SetStateAction<any>>;
     height?: number;
+    width?: number;
+    borderRadius?: number;
     marginTop?: number | string;
     marginLeft?: number | string;
     marginRight?: number | string;
@@ -33,6 +36,7 @@ interface DropDownProps {
 const RNDropDown: FunctionComponent<DropDownProps> = ({
     borderColor,
     backgroundColor,
+    textColor,
     showLabel,
     labelTitle,
     dropdownData,
@@ -41,6 +45,8 @@ const RNDropDown: FunctionComponent<DropDownProps> = ({
     value,
     setValue,
     height,
+    width,
+    borderRadius,
     marginTop,
     marginBottom,
     marginHorizontal,
@@ -83,6 +89,8 @@ const RNDropDown: FunctionComponent<DropDownProps> = ({
                     marginLeft: marginLeft || 0,
                     marginRight: marginRight || 0,
                 },
+                width ? { width: width } : {},
+                borderRadius ? { borderRadius: borderRadius } : {},
             ]}>
             {(showLabel || false) && renderLabel()}
             <Dropdown
@@ -95,12 +103,28 @@ const RNDropDown: FunctionComponent<DropDownProps> = ({
                         paddingRight: paddingHorizontal || 12,
                     },
                     isFocus && { borderColor: borderColor || Colors.Primary },
+                    borderRadius ? { borderRadius: borderRadius } : {},
+                    backgroundColor ? { borderColor: backgroundColor } : {},
                 ]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                itemTextStyle={styles.itemTextStyle}
-                iconStyle={styles.iconStyle}
+                placeholderStyle={[styles.placeholderStyle]}
+                selectedTextStyle={[
+                    styles.selectedTextStyle,
+                    textColor ? { color: textColor } : {},
+                ]}
+                inputSearchStyle={[styles.inputSearchStyle]}
+                itemTextStyle={[
+                    styles.itemTextStyle,
+                    textColor ? { color: textColor } : {},
+                ]}
+                iconStyle={[styles.iconStyle]}
+                containerStyle={[
+                    borderRadius
+                        ? {
+                              borderRadius: borderRadius,
+                          }
+                        : {},
+                    backgroundColor ? { backgroundColor: backgroundColor } : {},
+                ]}
                 data={dropdownData}
                 search={false}
                 maxHeight={300}

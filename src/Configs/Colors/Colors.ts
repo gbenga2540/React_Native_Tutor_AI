@@ -23,6 +23,9 @@ const Colors = {
     ArcInner_I: '#6949FF',
     ArcOuter_A: '#CEC3FF',
     ArcOuter_I: '#9D88FF',
+    DarkPurple: '#271C5A',
+    Pink: '#C549FF',
+    DeepBlue: '#1B0583',
 };
 
 export default Colors;

@@ -14,9 +14,65 @@ const ConversationPage: FunctionComponent = () => {
             <View
                 style={{
                     paddingHorizontal: 4,
-                    marginTop: 40,
+                    marginTop: 14,
                     paddingBottom: 20,
                 }}>
+                <Text
+                    style={{
+                        fontFamily: fonts.Urbanist_700,
+                        color: Colors.Black,
+                        fontSize: 20,
+                        marginHorizontal: 22,
+                    }}>
+                    Assigned Class
+                </Text>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        marginBottom: 30,
+                    }}>
+                    <View
+                        style={{
+                            backgroundColor: Colors.Primary,
+                            width: 131,
+                            height: 40,
+                            marginTop: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 15,
+                            marginHorizontal: 22,
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.White,
+                                fontFamily: fonts.Urbanist_600,
+                                fontSize: 18,
+                            }}>
+                            Confident
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            backgroundColor: Colors.LightPrimary,
+                            width: 131,
+                            height: 40,
+                            marginTop: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 15,
+                            marginLeft: 'auto',
+                            marginRight: 22,
+                        }}>
+                        <Text
+                            style={{
+                                color: Colors.Primary,
+                                fontFamily: fonts.Urbanist_600,
+                                fontSize: 18,
+                            }}>
+                            20:00 Mins
+                        </Text>
+                    </View>
+                </View>
                 <FlatList
                     data={test_conversation}
                     keyExtractor={item => item.topic_id as any}
@@ -25,6 +81,7 @@ const ConversationPage: FunctionComponent = () => {
                     )}
                     style={{
                         paddingHorizontal: 18,
+                        marginBottom: 100,
                     }}
                 />
             </View>
