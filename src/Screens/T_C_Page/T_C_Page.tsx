@@ -31,55 +31,61 @@ const TCPage: FunctionComponent = () => {
             </View>
             <ScrollView style={styles.container}>
                 <Text style={styles.title}>Terms and Conditions</Text>
+                <Text style={styles.heading}>Welcome to Tutor.AI</Text>
                 <Text style={styles.text}>
-                    By accessing or using the Tutor AI application, you agree to
-                    be bound by these Terms and Conditions. If you do not agree
-                    with any part of these Terms and Conditions, you must not
-                    use the App.
+                    These terms and conditions outline the rules and regulations
+                    for the use of Tutor.ai's Website, located at tutor.ai. By
+                    accessing this website we assume you accept these terms and
+                    conditions. Do not continue to use Tutor.ai if you do not
+                    agree to take all of the terms and conditions stated on this
+                    page. The following terminology applies to these Terms and
+                    Conditions, Privacy Statement and Disclaimer Notice and all
+                    Agreements: "Client", "You" and "Your" refers to you, the
+                    person log on this website and compliant to the Company's
+                    terms and conditions. "The Company", "Ourselves", "We",
+                    "Our" and "Us", refers to our Company. "Party", "Parties",
+                    or "Us", refers to both the Client and ourselves. All terms
+                    refer to the offer, acceptance and consideration of payment
+                    necessary to undertake the process of our assistance to the
+                    Client in the most appropriate manner for the express
+                    purpose of meeting the Client's needs in respect of
+                    provision of the Company's stated services, in accordance
+                    with and subject to, prevailing law of us. Any use of the
+                    above terminology or other words in the singular, plural,
+                    capitalization and/or he/she or they, are taken as
+                    interchangeable and therefore as referring to same.
                 </Text>
-                <Text style={styles.heading}>Services Offered</Text>
+                <Text style={styles.heading}>Cookies</Text>
                 <Text style={styles.text}>
-                    The Tutor AI application provides online tutoring services,
-                    academic resources, and educational content to registered
-                    users for their educational purposes. The App may include
-                    features such as live chat, video lessons, study materials,
-                    and interactive quizzes.
+                    We employ the use of cookies. By accessing Tutor.ai, you
+                    agreed to use cookies in agreement with the Tutor.ai's
+                    Privacy Policy. Most interactive websites use cookies to let
+                    us retrieve the user's details for each visit. Cookies are
+                    used by our website to enable the functionality of certain
+                    areas to make it easier for people visiting our website.
+                    Some of our affiliate/ advertising partners may also use
+                    cookies.
                 </Text>
-                <Text style={styles.heading}>User Responsibilities</Text>
+                <Text style={styles.heading}>License</Text>
                 <Text style={styles.text}>
-                    1. Eligibility: By using the App, you represent that you are
-                    at least 15 years old or have obtained parental consent to
-                    use the App if you are under the age of 15.
-                </Text>
-                <Text style={styles.text}>
-                    2. Account Security: You are responsible for maintaining the
-                    confidentiality of your account login credentials and are
-                    solely responsible for any activity that occurs under your
-                    account.
-                </Text>
-                <Text style={styles.text}>
-                    3. Appropriate Use: You agree to use the App in compliance
-                    with all applicable laws and regulations. You must not use
-                    the App for any illegal, fraudulent, or unauthorized
-                    purposes. You shall not engage in any activities that may
-                    disrupt or interfere with the functioning of the App or
-                    compromise its security.
-                </Text>
-                <Text style={styles.heading}>Usage Limitations</Text>
-                <Text style={styles.text}>
-                    1. Prohibited Activities: You shall not engage in any of the
-                    following activities while using the App: Attempt to gain
-                    unauthorized access to the App or its related systems or
-                    networks. Modify, adapt, translate, or reverse-engineer the
-                    App. Use the App for any illegal, harmful, or offensive
-                    purposes. Violate any applicable laws or regulations.
+                    Unless otherwise stated, Tutor.ai and/or its licensors own
+                    the intellectual property rights for all material on
+                    Tutor.ai. All intellectual property rights are reserved. You
+                    may access this from Tutor.ai for your own personal use
+                    subjected to restrictions set in these terms and conditions.
+                    You must not:
                 </Text>
                 <Text style={styles.text}>
-                    2. Content Usage: You may access and use the educational
-                    content provided through the App solely for your personal
-                    educational purposes. You must not distribute, sell, or
-                    otherwise commercially exploit the content without the
-                    Company's prior written consent.
+                    - Republish material from Tutor.ai
+                </Text>
+                <Text style={styles.text}>
+                    - Sell, rent or sub-license material from Tutor.ai
+                </Text>
+                <Text style={styles.text}>
+                    - Reproduce, duplicate or copy material from Tutor.ai
+                </Text>
+                <Text style={styles.text}>
+                    - Redistribute content from Tutor.ai
                 </Text>
                 <View style={{ marginBottom: 80 }}>{''}</View>
             </ScrollView>

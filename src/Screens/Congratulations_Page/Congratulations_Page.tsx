@@ -7,7 +7,12 @@ import {
     Text,
     View,
 } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+    CommonActions,
+    RouteProp,
+    useNavigation,
+    useRoute,
+} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
@@ -33,6 +38,14 @@ const CongratulationsPage: FunctionComponent = () => {
                     navigation.push(
                         'HomeStack' as never,
                         { screen: 'HomePage' } as never,
+                    );
+                    break;
+                case 3:
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: 'HomeStack' }],
+                        }),
                     );
                     break;
                 default:

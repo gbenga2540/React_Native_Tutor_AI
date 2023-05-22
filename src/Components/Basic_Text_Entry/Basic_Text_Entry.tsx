@@ -17,9 +17,11 @@ interface BasicTextEntryProps {
     marginHorizontal?: string | number;
     inputMode?: InputModeOptions;
     onFocus?: () => void;
+    onChange?: () => void;
     autoFocus?: boolean;
     editable?: boolean;
     textColor?: string;
+    maxLength?: number;
 }
 
 const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
@@ -31,9 +33,11 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
     marginHorizontal,
     inputMode,
     onFocus,
+    onChange,
     autoFocus,
     editable,
     textColor,
+    maxLength,
 }) => {
     return (
         <KeyboardAvoidingView
@@ -49,7 +53,10 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                 style={[styles.s_t_e_m_ti, { color: textColor || Colors.Dark }]}
                 placeholder={placeHolderText || ''}
                 placeholderTextColor={Colors.Grey}
-                onChangeText={(text: string) => setInputValue(text)}
+                onChangeText={(text: string) => {
+                    setInputValue(text);
+                    onChange !== undefined && (onChange() as unknown);
+                }}
                 value={inputValue}
                 autoCapitalize={'none'}
                 autoCorrect={false}
@@ -57,6 +64,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                 onFocus={() => onFocus !== undefined && (onFocus() as unknown)}
                 autoFocus={autoFocus || false}
                 editable={editable === false ? false : true}
+                maxLength={maxLength}
             />
         </KeyboardAvoidingView>
     );

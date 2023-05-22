@@ -1,9 +1,16 @@
 import React, { FunctionComponent } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { test_lessons } from '../../../test/Data/Lessons';
+import Feather from 'react-native-vector-icons/Feather';
 
 const LessonPage: FunctionComponent = () => {
     return (
@@ -31,35 +38,43 @@ const LessonPage: FunctionComponent = () => {
                         flexDirection: 'row',
                         marginBottom: 30,
                     }}>
-                    <View
+                    <TouchableOpacity
+                        activeOpacity={0.6}
                         style={{
                             backgroundColor: Colors.Primary,
-                            width: 131,
-                            height: 40,
+                            width: 133,
+                            height: 42,
                             marginTop: 10,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            borderRadius: 15,
-                            marginHorizontal: 22,
+                            borderRadius: 11,
+                            flexDirection: 'row',
+                            marginLeft: 22,
                         }}>
                         <Text
                             style={{
                                 color: Colors.White,
                                 fontFamily: fonts.Urbanist_600,
                                 fontSize: 18,
+                                marginRight: 3,
                             }}>
                             Confident
                         </Text>
-                    </View>
+                        <Feather
+                            name="chevron-down"
+                            size={21}
+                            color={Colors.White}
+                        />
+                    </TouchableOpacity>
                     <View
                         style={{
                             backgroundColor: Colors.LightPrimary,
                             width: 131,
-                            height: 40,
+                            height: 42,
                             marginTop: 10,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            borderRadius: 15,
+                            borderRadius: 11,
                             marginLeft: 'auto',
                             marginRight: 22,
                         }}>

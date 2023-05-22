@@ -26,6 +26,14 @@ const Colors = {
     DarkPurple: '#271C5A',
     Pink: '#C549FF',
     DeepBlue: '#1B0583',
+    LightYellow: '#FFF2DD',
+    LightYellow2: '#FFDF54',
+    Yellow: '#FFCF23',
+    Orange: '#FF4949',
+    LightOrange: '#FFDCDC',
+    Amber: '#EFA83C',
+    Green: '#13CB5C',
+    LightGreen: '#DDFFEB',
 };
 
 export default Colors;

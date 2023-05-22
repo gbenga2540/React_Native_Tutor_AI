@@ -9,6 +9,8 @@ interface TextDividerProps {
     marginBottom?: number;
     marginHorizontal?: number;
     singleLine?: boolean;
+    lineColor?: string;
+    textColor?: string;
 }
 
 const TextDivider: FunctionComponent<TextDividerProps> = ({
@@ -17,6 +19,8 @@ const TextDivider: FunctionComponent<TextDividerProps> = ({
     marginBottom,
     marginHorizontal,
     singleLine,
+    lineColor,
+    textColor,
 }) => {
     return (
         <View
@@ -29,9 +33,31 @@ const TextDivider: FunctionComponent<TextDividerProps> = ({
                     maxHeight: 10,
                 },
             ]}>
-            <View style={styles.t_d_lines}>{''}</View>
-            {!singleLine && <Text style={styles.t_d_text}>{text || 'or'}</Text>}
-            {!singleLine && <View style={styles.t_d_lines}>{''}</View>}
+            <View
+                style={[
+                    styles.t_d_lines,
+                    { borderColor: lineColor || Colors.TextDivider },
+                ]}>
+                {''}
+            </View>
+            {!singleLine && (
+                <Text
+                    style={[
+                        styles.t_d_text,
+                        { color: textColor || Colors.TextDivider },
+                    ]}>
+                    {text || 'or'}
+                </Text>
+            )}
+            {!singleLine && (
+                <View
+                    style={[
+                        styles.t_d_lines,
+                        { borderColor: lineColor || Colors.TextDivider },
+                    ]}>
+                    {''}
+                </View>
+            )}
         </View>
     );
 };
@@ -46,7 +72,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     t_d_lines: {
-        borderColor: Colors.TextDivider,
         flex: 1,
         borderBottomWidth: 1,
     },
@@ -55,6 +80,5 @@ const styles = StyleSheet.create({
         fontFamily: fonts.Urbanist_700,
         fontSize: 16,
         lineHeight: 32,
-        color: Colors.TextDivider,
     },
 });

@@ -5,6 +5,7 @@ import React, {
     useState,
 } from 'react';
 import {
+    InputModeOptions,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -23,7 +24,10 @@ interface SecureTextEntryProps {
     marginBottom?: string | number;
     marginHorizontal?: string | number;
     onFocus?: () => void;
+    onChange?: () => void;
+    inputMode?: InputModeOptions;
     autoFocus?: boolean;
+    maxLength?: number;
 }
 
 const SecureTextEntry: FunctionComponent<SecureTextEntryProps> = ({
@@ -34,7 +38,10 @@ const SecureTextEntry: FunctionComponent<SecureTextEntryProps> = ({
     marginBottom,
     marginHorizontal,
     onFocus,
+    onChange,
+    inputMode,
     autoFocus,
+    maxLength,
 }) => {
     const [hidePswd, setHidePswd] = useState<boolean>(true);
 
@@ -61,13 +68,18 @@ const SecureTextEntry: FunctionComponent<SecureTextEntryProps> = ({
                     },
                 ]}
                 placeholder={placeHolderText || 'password'}
+                inputMode={inputMode || 'text'}
                 placeholderTextColor={Colors.Grey}
-                onChangeText={(text: string) => setInputValue(text?.trim())}
+                onChangeText={(text: string) => {
+                    setInputValue(text?.trim());
+                    onChange !== undefined && (onChange() as unknown);
+                }}
                 value={inputValue}
                 secureTextEntry={hidePswd}
                 keyboardType="default"
                 onFocus={() => onFocus !== undefined && (onFocus() as unknown)}
                 autoFocus={autoFocus || false}
+                maxLength={maxLength}
             />
             {hidePswd ? (
                 <TouchableOpacity

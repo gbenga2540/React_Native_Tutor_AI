@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import ArcInner from '../../Images/SVGs/Arc_Inner.svg';
-import ArcOuter from '../../Images/SVGs/Arc_Outer.svg';
+import ArcInnerIcon from '../../Images/SVGs/Arc_Inner_Icon.svg';
+import ArcOuterIcon from '../../Images/SVGs/Arc_Outer_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 
@@ -18,11 +18,11 @@ const ConversationCard: FunctionComponent<ConversationCardProps> = ({
                 styles.conversation_main,
                 { backgroundColor: Colors.LightPurple3 },
             ]}>
-            <ArcInner
+            <ArcInnerIcon
                 style={{ position: 'absolute', right: 0 }}
                 color={Colors.ArcInner_I}
             />
-            <ArcOuter
+            <ArcOuterIcon
                 style={{ position: 'absolute', right: 0 }}
                 color={Colors.ArcOuter_I}
             />

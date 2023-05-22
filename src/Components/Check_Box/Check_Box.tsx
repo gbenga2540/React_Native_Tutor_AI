@@ -48,6 +48,7 @@ const CheckBox: FunctionComponent<CheckBoxProps> = ({
                         backgroundColor: Colors.Primary,
                         width: '100%',
                         height: '100%',
+                        borderRadius: 2,
                     }}>
                     {''}
                 </View>

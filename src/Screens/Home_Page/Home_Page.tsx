@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
-import Star from '../../Images/SVGs/Star.svg';
+import StarIcon from '../../Images/SVGs/Star_Icon.svg';
 import ProgressBar from '../../Components/Progress_Bar/Progress_Bar';
-import SimpleB from '../../Images/SVGs/Simple_B.svg';
-import Fire from '../../Images/SVGs/Fire.svg';
+import SimpleBIcon from '../../Images/SVGs/Simple_B_Icon.svg';
+import FireIcon from '../../Images/SVGs/Fire_Icon.svg';
 import { test_assignments } from '../../../test/Data/Assignments';
 import CheckMark from '../../Components/Check_Mark/Check_Mark';
+import Feather from 'react-native-vector-icons/Feather';
 
 const HomePage: FunctionComponent = () => {
     return (
@@ -56,25 +57,33 @@ const HomePage: FunctionComponent = () => {
                             }}>
                             Assigned Class
                         </Text>
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.6}
                             style={{
                                 backgroundColor: Colors.Primary,
-                                width: 131,
-                                height: 40,
+                                width: 133,
+                                height: 42,
                                 marginTop: 10,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                borderRadius: 15,
+                                borderRadius: 11,
+                                flexDirection: 'row',
                             }}>
                             <Text
                                 style={{
                                     color: Colors.White,
                                     fontFamily: fonts.Urbanist_600,
                                     fontSize: 18,
+                                    marginRight: 3,
                                 }}>
                                 Confident
                             </Text>
-                        </View>
+                            <Feather
+                                name="chevron-down"
+                                size={21}
+                                color={Colors.White}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <Image
                         source={require('../../Images/Home/HPA_1.png')}
@@ -149,7 +158,7 @@ const HomePage: FunctionComponent = () => {
                                     right: 10,
                                 }}
                             />
-                            <Star
+                            <StarIcon
                                 width={35}
                                 height={35}
                                 color={Colors.White}
@@ -206,7 +215,7 @@ const HomePage: FunctionComponent = () => {
                                     right: 10,
                                 }}
                             />
-                            <Star
+                            <StarIcon
                                 width={35}
                                 height={35}
                                 color={Colors.Primary}
@@ -285,7 +294,7 @@ const HomePage: FunctionComponent = () => {
                         borderRadius: 20,
                         flexDirection: 'row',
                     }}>
-                    <SimpleB
+                    <SimpleBIcon
                         width={60}
                         height={60}
                         color={Colors.Primary}
@@ -313,7 +322,7 @@ const HomePage: FunctionComponent = () => {
                                 alignItems: 'center',
                                 marginTop: 5,
                             }}>
-                            <Fire width={22} height={22} />
+                            <FireIcon width={22} height={22} />
                             <Text
                                 style={{
                                     fontFamily: fonts.OpenSans_700,
