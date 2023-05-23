@@ -34,7 +34,7 @@ const HomePage: FunctionComponent = () => {
                 style={{
                     flex: 1,
                     paddingHorizontal: 20,
-                    marginTop: 30,
+                    paddingTop: 30,
                     marginHorizontal: 2,
                 }}>
                 <View
@@ -347,7 +347,7 @@ const HomePage: FunctionComponent = () => {
                         </View>
                     </View>
                 </View>
-                <View style={{ marginBottom: 25 }}>{''}</View>
+                <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
         </View>
     );

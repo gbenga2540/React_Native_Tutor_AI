@@ -3,4 +3,5 @@ export interface INTF_ProfileMenu {
     name: string;
     stack: string;
     screen: string;
+    params: object;
 }

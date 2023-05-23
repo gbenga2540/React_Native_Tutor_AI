@@ -13,6 +13,7 @@ interface MenuMakerProps {
     menu: INTF_ProfileMenu[];
     backgroundColor?: string;
     textColor?: string;
+    lineColor?: string;
     arrowColor?: string;
     marginTop?: string | number;
     marginBottom?: string | number;
@@ -23,6 +24,7 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
     menu,
     backgroundColor,
     textColor,
+    lineColor,
     arrowColor,
     marginTop,
     marginBottom,
@@ -47,7 +49,10 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                         execFunc: () => {
                             navigation.push(
                                 menu[0].stack as never,
-                                { screen: menu[0].screen } as never,
+                                {
+                                    screen: menu[0].screen,
+                                    ...menu[0].params,
+                                } as never,
                             );
                         },
                     })}
@@ -85,7 +90,10 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                                 execFunc: () => {
                                     navigation.push(
                                         item.stack as never,
-                                        { screen: item.screen } as never,
+                                        {
+                                            screen: item.screen,
+                                            ...item.params,
+                                        } as never,
                                     );
                                 },
                             })}
@@ -118,7 +126,9 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                             <TextDivider
                                 singleLine
                                 marginHorizontal={15}
-                                lineColor="rgba(255, 255, 255, 0.8)"
+                                lineColor={
+                                    lineColor || 'rgba(255, 255, 255, 0.8)'
+                                }
                             />
                         )}
                     </View>

@@ -264,30 +264,6 @@ const SignUpPage: FunctionComponent = () => {
                             marginBottom={12}
                             inputMode="text"
                         />
-                        <Text style={styles.su_m_wt}>
-                            What is your Mobile Number?
-                        </Text>
-                        <PhoneNumberInput
-                            setInputValue={setPhoneNo}
-                            setIsValid={setPhoneNoValid}
-                            defaultCode="US"
-                            marginTop={15}
-                        />
-                        <Text style={styles.su_m_wt}>
-                            What is your Email Address?
-                        </Text>
-                        <BasicTextEntry
-                            placeHolderText="johndoe@gmail.com"
-                            inputValue={email}
-                            setInputValue={setEmail}
-                            marginTop={15}
-                            marginBottom={12}
-                            inputMode="text"
-                        />
-                    </Fragment>
-                )}
-                {question === 2 && (
-                    <Fragment>
                         <Text style={styles.su_m_wt}>Your Date of Birth?</Text>
                         <BasicTextEntry
                             placeHolderText={mongo_date_converter_4({
@@ -323,6 +299,35 @@ const SignUpPage: FunctionComponent = () => {
                             execFunc={open_dob}
                             textColor={Colors.LightPink}
                         />
+                        {(get_age({ input_date: dob?.toString() }) as number) >=
+                            15 && (
+                            <Fragment>
+                                <Text style={styles.su_m_wt}>
+                                    What is your Email Address?
+                                </Text>
+                                <BasicTextEntry
+                                    placeHolderText="johndoe@gmail.com"
+                                    inputValue={email}
+                                    setInputValue={setEmail}
+                                    marginTop={15}
+                                    marginBottom={12}
+                                    inputMode="text"
+                                />
+                            </Fragment>
+                        )}
+                    </Fragment>
+                )}
+                {question === 2 && (
+                    <Fragment>
+                        <Text style={styles.su_m_wt}>
+                            What is your Mobile Number?
+                        </Text>
+                        <PhoneNumberInput
+                            setInputValue={setPhoneNo}
+                            setIsValid={setPhoneNoValid}
+                            defaultCode="US"
+                            marginTop={15}
+                        />
                         {(get_age({ input_date: dob?.toString() }) as number) <
                             15 && (
                             <Fragment>
@@ -343,7 +348,7 @@ const SignUpPage: FunctionComponent = () => {
                         <View
                             style={{
                                 flexDirection: 'row',
-                                marginTop: 10,
+                                marginTop: 15,
                                 marginBottom: 40,
                             }}>
                             <View
@@ -358,28 +363,28 @@ const SignUpPage: FunctionComponent = () => {
                                         alignSelf: 'center',
                                         borderWidth: 2,
                                         padding: 3,
-                                        borderRadius: 230,
+                                        borderRadius: 220,
                                         borderColor: Colors.Grey,
                                     }}>
                                     {displayPicture ? (
                                         <Image
                                             style={{
-                                                borderRadius: 230,
-                                                width: 230,
-                                                height: 230,
+                                                borderRadius: 220,
+                                                width: 220,
+                                                height: 220,
                                             }}
                                             source={{
                                                 uri: displayPicture,
-                                                width: 120,
-                                                height: 120,
+                                                width: 220,
+                                                height: 220,
                                             }}
                                         />
                                     ) : (
                                         <Image
                                             style={{
-                                                borderRadius: 230,
-                                                width: 230,
-                                                height: 230,
+                                                borderRadius: 220,
+                                                width: 220,
+                                                height: 220,
                                             }}
                                             source={require('../../Images/Logos/Default_User_Logo.jpg')}
                                         />

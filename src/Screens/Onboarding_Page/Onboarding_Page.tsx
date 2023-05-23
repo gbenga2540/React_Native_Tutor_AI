@@ -393,6 +393,9 @@ const OnboardingPage: FunctionComponent = () => {
                                     marginHorizontal: 22,
                                     marginTop: test2Answers.a ? 10 : 0,
                                     marginBottom: test2Answers.a ? 15 : 0,
+                                    justifyContent: test2Answers?.d
+                                        ? 'space-evenly'
+                                        : undefined,
                                 }}>
                                 {test2Answers.a && (
                                     <TestRadioButton

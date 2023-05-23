@@ -28,6 +28,7 @@ const Colors = {
     DeepBlue: '#1B0583',
     LightYellow: '#FFF2DD',
     LightYellow2: '#FFDF54',
+    LightYellow3: '#FFF2CD',
     Yellow: '#FFCF23',
     Orange: '#FF4949',
     LightOrange: '#FFDCDC',

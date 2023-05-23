@@ -29,8 +29,8 @@ const ProfilePage: FunctionComponent = () => {
                                     uri: http_link_fix({
                                         http_link: '',
                                     }),
-                                    width: 28,
-                                    height: 28,
+                                    width: 150,
+                                    height: 150,
                                 }}
                             />
                         ) : (
@@ -91,14 +91,14 @@ const ProfilePage: FunctionComponent = () => {
                 </View>
                 <MenuMaker
                     borderRadius={15}
-                    backgroundColor={Colors.LightYellow2}
+                    backgroundColor={Colors.LightYellow3}
                     menu={profile_menu_2}
                 />
                 <View style={styles.p_menu_headers}>
                     <View style={styles.p_menu_img}>
                         <ProfileSecurityIcon
-                            width={28}
-                            height={28}
+                            width={30}
+                            height={30}
                             color={Colors.Primary}
                         />
                     </View>
