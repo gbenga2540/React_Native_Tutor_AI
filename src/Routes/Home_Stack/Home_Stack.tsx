@@ -12,63 +12,39 @@ import BlockAppsPage from '../../Screens/Block_Apps_Page/Block_Apps_Page';
 import HelpCenterPage from '../../Screens/Help_Center_Page/Help_Center_Page';
 
 type HomeStackParamList = {
-    HomeTab: {};
-    SubscriptionPage: {};
-    SelectPaymentPage: {};
-    AddPaymentPage: {};
-    ParentalControlPage: {};
-    PersonalDetailsPage: {};
-    AvatarCustomizationPage: {};
-    CustomizeVoicePage: {};
-    BlockAppsPage: {};
-    HelpCenterPage: {};
+        HomeTab: {};
+        SubscriptionPage: {};
+        SelectPaymentPage: {};
+        AddPaymentPage: {};
+        ParentalControlPage: {};
+        PersonalDetailsPage: {};
+        AvatarCustomizationPage: {};
+        CustomizeVoicePage: {};
+        BlockAppsPage: {};
+        HelpCenterPage: {};
 };
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeStack: FunctionComponent = () => {
-    return (
-        <Home_Stack.Navigator
-            initialRouteName={'HomeTab'}
-            screenOptions={{
-                headerShown: false,
-            }}>
-            <Home_Stack.Screen name="HomeTab" component={HomeTab} />
-            <Home_Stack.Screen
-                name="SubscriptionPage"
-                component={SubscriptionPage}
-            />
-            <Home_Stack.Screen
-                name="SelectPaymentPage"
-                component={SelectPaymentPage}
-            />
-            <Home_Stack.Screen
-                name="AddPaymentPage"
-                component={AddPaymentPage}
-            />
-            <Home_Stack.Screen
-                name="ParentalControlPage"
-                component={ParentalControlPage}
-            />
-            <Home_Stack.Screen
-                name="PersonalDetailsPage"
-                component={PersonalDetailsPage}
-            />
-            <Home_Stack.Screen
-                name="AvatarCustomizationPage"
-                component={AvatarCustomizationPage}
-            />
-            <Home_Stack.Screen
-                name="CustomizeVoicePage"
-                component={CustomizeVoicePage}
-            />
-            <Home_Stack.Screen name="BlockAppsPage" component={BlockAppsPage} />
-            <Home_Stack.Screen
-                name="HelpCenterPage"
-                component={HelpCenterPage}
-            />
-        </Home_Stack.Navigator>
-    );
+        return (
+                <Home_Stack.Navigator
+                        initialRouteName={'HomeTab'}
+                        screenOptions={{
+                                headerShown: false,
+                        }}>
+                        <Home_Stack.Screen name="HomeTab" component={HomeTab} />
+                        <Home_Stack.Screen name="SubscriptionPage" component={SubscriptionPage} />
+                        <Home_Stack.Screen name="SelectPaymentPage" component={SelectPaymentPage} />
+                        <Home_Stack.Screen name="AddPaymentPage" component={AddPaymentPage} />
+                        <Home_Stack.Screen name="ParentalControlPage" component={ParentalControlPage} />
+                        <Home_Stack.Screen name="PersonalDetailsPage" component={PersonalDetailsPage} />
+                        <Home_Stack.Screen name="AvatarCustomizationPage" component={AvatarCustomizationPage} />
+                        <Home_Stack.Screen name="CustomizeVoicePage" component={CustomizeVoicePage} />
+                        <Home_Stack.Screen name="BlockAppsPage" component={BlockAppsPage} />
+                        <Home_Stack.Screen name="HelpCenterPage" component={HelpCenterPage} />
+                </Home_Stack.Navigator>
+        );
 };
 
 export default HomeStack;

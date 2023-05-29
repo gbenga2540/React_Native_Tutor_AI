@@ -13,14 +13,14 @@ import en from 'javascript-time-ago/locale/en';
 TimeAgo.addDefaultLocale(en);
 
 const Root = () => {
-    const queryClient = new QueryClient();
-    return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <QueryClientProvider client={queryClient}>
-                <App />
-            </QueryClientProvider>
-        </GestureHandlerRootView>
-    );
+        const queryClient = new QueryClient();
+        return (
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                        <QueryClientProvider client={queryClient}>
+                                <App />
+                        </QueryClientProvider>
+                </GestureHandlerRootView>
+        );
 };
 
 AppRegistry.registerComponent(appName, () => Root);

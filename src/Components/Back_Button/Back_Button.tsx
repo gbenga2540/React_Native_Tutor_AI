@@ -7,65 +7,56 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import Feather from 'react-native-vector-icons/Feather';
 
 interface BackButtonProps {
-    execFunc?: () => void;
-    backgroundColor?: string;
-    borderColor?: string;
-    arrowColor?: string;
+        execFunc?: () => void;
+        backgroundColor?: string;
+        borderColor?: string;
+        arrowColor?: string;
 }
-const BackButton: FunctionComponent<BackButtonProps> = ({
-    execFunc,
-    backgroundColor,
-    borderColor,
-    arrowColor,
-}) => {
-    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+const BackButton: FunctionComponent<BackButtonProps> = ({ execFunc, backgroundColor, borderColor, arrowColor }) => {
+        const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const go_back = no_double_clicks({
-        execFunc: () => {
-            if (Keyboard.isVisible()) {
-                Keyboard.dismiss();
-            }
-            if (execFunc === undefined) {
-                navigation.canGoBack() && navigation.goBack();
-            } else {
-                execFunc();
-            }
-        },
-    });
+        const go_back = no_double_clicks({
+                execFunc: () => {
+                        if (Keyboard.isVisible()) {
+                                Keyboard.dismiss();
+                        }
+                        if (execFunc === undefined) {
+                                navigation.canGoBack() && navigation.goBack();
+                        } else {
+                                execFunc();
+                        }
+                },
+        });
 
-    if (navigation.canGoBack()) {
-        return (
-            <TouchableOpacity
-                style={[
-                    styles.bb_main,
-                    {
-                        backgroundColor: backgroundColor || Colors.Background,
-                        borderColor: borderColor || Colors.Border,
-                    },
-                ]}
-                activeOpacity={0.65}
-                onPress={go_back}>
-                <Feather
-                    name="chevron-left"
-                    size={25}
-                    color={arrowColor || Colors.Dark}
-                />
-            </TouchableOpacity>
-        );
-    } else {
-        return null;
-    }
+        if (navigation.canGoBack()) {
+                return (
+                        <TouchableOpacity
+                                style={[
+                                        styles.bb_main,
+                                        {
+                                                backgroundColor: backgroundColor || Colors.Background,
+                                                borderColor: borderColor || Colors.Border,
+                                        },
+                                ]}
+                                activeOpacity={0.65}
+                                onPress={go_back}>
+                                <Feather name="chevron-left" size={25} color={arrowColor || Colors.Dark} />
+                        </TouchableOpacity>
+                );
+        } else {
+                return null;
+        }
 };
 
 export default BackButton;
 
 const styles = StyleSheet.create({
-    bb_main: {
-        width: 41,
-        height: 41,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 12,
-        borderWidth: 1,
-    },
+        bb_main: {
+                width: 41,
+                height: 41,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 12,
+                borderWidth: 1,
+        },
 });

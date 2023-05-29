@@ -1,16 +1,1 @@
-export const spinkit_types: string[] = [
-    'CircleFlip',
-    'Bounce',
-    'Wave',
-    'WanderingCubes',
-    'Pulse',
-    'ChasingDots',
-    'ThreeBounce',
-    'Circle',
-    '9CubeGrid',
-    'WordPress',
-    'FadingCircle',
-    'FadingCircleAlt',
-    'Arc',
-    'ArcAlt',
-];
+export const spinkit_types: string[] = ['CircleFlip', 'Bounce', 'Wave', 'WanderingCubes', 'Pulse', 'ChasingDots', 'ThreeBounce', 'Circle', '9CubeGrid', 'WordPress', 'FadingCircle', 'FadingCircleAlt', 'Arc', 'ArcAlt'];
