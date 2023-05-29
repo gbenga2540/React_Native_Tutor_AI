@@ -71,7 +71,7 @@ const ConversationCard: FunctionComponent<ConversationCardProps> = ({
                     <Text
                         style={{
                             color: Colors.Black,
-                            fontFamily: fonts.Urbanist_700,
+                            fontFamily: fonts.Urbanist_600,
                             fontSize: 18,
                         }}>
                         {conversation?.title}

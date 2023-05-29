@@ -46,3 +46,11 @@ export const native_languages = [
     { name: 'Vietnamese', code: 'vi' },
     { name: 'Yoruba', code: 'yo' },
 ];
+
+export const NativeLanguagesChooser = [
+    { label: 'Choose Language', value: 'Choose Language' },
+    ...(native_languages?.map(item => ({
+        label: item?.name,
+        value: item?.name,
+    })) || []),
+];

@@ -25,7 +25,7 @@ const ParentalControlPage: FunctionComponent = () => {
     const [newPassword, setNewPassword] = useState<string>('');
     const [newCPassword, setNewCPassword] = useState<string>('');
 
-    const nav_to_home_page = no_double_clicks({
+    const save_parental_control = no_double_clicks({
         execFunc: () => {
             navigation.dispatch(
                 CommonActions.reset({
@@ -37,7 +37,14 @@ const ParentalControlPage: FunctionComponent = () => {
     });
 
     const nav_to_block_apps = no_double_clicks({
-        execFunc: () => {},
+        execFunc: () => {
+            navigation.push(
+                'HomeStack' as never,
+                {
+                    screen: 'BlockAppsPage',
+                } as never,
+            );
+        },
     });
 
     return (
@@ -162,7 +169,7 @@ const ParentalControlPage: FunctionComponent = () => {
                 marginHorizontal={22}
                 marginTop={'auto'}
                 marginBottom={50}
-                execFunc={nav_to_home_page}
+                execFunc={save_parental_control}
             />
         </View>
     );

@@ -37,7 +37,6 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({ lesson }) => {
                         : Colors.ArcOuter_I
                 }
             />
-
             <Text
                 style={{
                     color:
@@ -102,7 +101,7 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({ lesson }) => {
                                 lesson?.progress === 100
                                     ? Colors.White
                                     : Colors.Black,
-                            fontFamily: fonts.Urbanist_700,
+                            fontFamily: fonts.Urbanist_600,
                             fontSize: 18,
                         }}>
                         {lesson?.title}

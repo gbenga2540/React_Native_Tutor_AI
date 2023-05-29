@@ -22,7 +22,7 @@ interface DropDownProps {
     value: any;
     setValue: Dispatch<SetStateAction<any>>;
     height?: number;
-    width?: number;
+    width?: number | string;
     borderRadius?: number;
     marginTop?: number | string;
     marginLeft?: number | string;

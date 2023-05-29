@@ -52,8 +52,9 @@ const SignUpPage: FunctionComponent = () => {
     const [openDateModal, setOpenDateModal] = useState<boolean>(false);
     const [phoneNo, setPhoneNo] = useState<string>('');
     const [phoneNoValid, setPhoneNoValid] = useState<boolean>(false);
-    const [p_PhoneNo, setP_PhoneNo] = useState<string>('');
-    const [p_PhoneNoValid, setP_PhoneNoValid] = useState<boolean>(false);
+    const [parentPhoneNo, setParentPhoneNo] = useState<string>('');
+    const [parentPhoneNoValid, setParentPhoneNoValid] =
+        useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [displayPicture, setDisplayPicture] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -63,7 +64,7 @@ const SignUpPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [agePHColor, setAgePHColor] = useState<string>(Colors.Grey);
 
-    console.log(phoneNo, phoneNoValid, p_PhoneNo, p_PhoneNoValid);
+    console.log(phoneNo, phoneNoValid, parentPhoneNo, parentPhoneNoValid);
 
     const submit_data = no_double_clicks({
         execFunc: () => {
@@ -335,8 +336,8 @@ const SignUpPage: FunctionComponent = () => {
                                     Your Parent's WhatsApp Number?
                                 </Text>
                                 <PhoneNumberInput
-                                    setInputValue={setP_PhoneNo}
-                                    setIsValid={setP_PhoneNoValid}
+                                    setInputValue={setParentPhoneNo}
+                                    setIsValid={setParentPhoneNoValid}
                                     defaultCode="US"
                                     marginTop={15}
                                 />

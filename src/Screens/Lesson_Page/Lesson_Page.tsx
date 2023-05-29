@@ -11,10 +11,12 @@ import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { test_lessons } from '../../../test/Data/Lessons';
 import Feather from 'react-native-vector-icons/Feather';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const LessonPage: FunctionComponent = () => {
     return (
         <View style={styles.lesson_main}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.l_header_cont}>
                 <Text style={styles.l_header}>Lessons</Text>
             </View>

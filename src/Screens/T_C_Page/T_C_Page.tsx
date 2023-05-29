@@ -1,36 +1,33 @@
 import React, { FunctionComponent } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import { fonts } from '../../Configs/Fonts/Fonts';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const TCPage: FunctionComponent = () => {
-    const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
     return (
         <View style={styles.sign_in_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginLeft: 22,
-                    marginTop: navigation?.canGoBack()
-                        ? Platform?.OS === 'ios'
-                            ? 56
-                            : 40
-                        : Platform.OS === 'ios'
-                        ? 70
-                        : 40,
-                    marginBottom: 28,
+                    marginTop: 65,
+                    marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                {navigation.canGoBack() && <BackButton />}
+                <BackButton />
+                <Text
+                    style={{
+                        marginLeft: 10,
+                        fontFamily: fonts.Urbanist_700,
+                        color: Colors.Primary,
+                        fontSize: 20,
+                    }}>
+                    Terms and Conditions
+                </Text>
             </View>
             <ScrollView style={styles.container}>
-                <Text style={styles.title}>Terms and Conditions</Text>
                 <Text style={styles.heading}>Welcome to Tutor.AI</Text>
                 <Text style={styles.text}>
                     These terms and conditions outline the rules and regulations
@@ -110,12 +107,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-    },
-    title: {
-        fontSize: 30,
-        marginBottom: 10,
-        color: Colors.Primary,
-        fontFamily: fonts.Urbanist_700,
     },
     heading: {
         fontSize: 20,

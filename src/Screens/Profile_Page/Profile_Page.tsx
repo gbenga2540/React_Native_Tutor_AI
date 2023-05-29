@@ -14,10 +14,12 @@ import {
     profile_menu_3,
     profile_menu_4,
 } from '../../Data/Profile_Menu/Profile_Menu';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const ProfilePage: FunctionComponent = () => {
     return (
         <View style={styles.profile_main}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <Text style={styles.p_header}>Profile</Text>
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.p_i_c_w}>

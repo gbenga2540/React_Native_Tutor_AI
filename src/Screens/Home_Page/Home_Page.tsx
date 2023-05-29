@@ -16,10 +16,14 @@ import FireIcon from '../../Images/SVGs/Fire_Icon.svg';
 import { test_assignments } from '../../../test/Data/Assignments';
 import CheckMark from '../../Components/Check_Mark/Check_Mark';
 import Feather from 'react-native-vector-icons/Feather';
+import VocabularyIcon from '../../Images/SVGs/Vocabulary_Icon.svg';
+import StatsReportIcon from '../../Images/SVGs/Stats_Report_Icon.svg';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const HomePage: FunctionComponent = () => {
     return (
         <View style={styles.home_main}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.h_header_cont}>
                 <View style={styles.h_header_txt_c}>
                     <Text style={styles.h_header}>Hello, Oluwagbemiga</Text>
@@ -113,7 +117,8 @@ const HomePage: FunctionComponent = () => {
                         marginBottom: 40,
                     }}>
                     <View style={{ flex: 1, marginRight: 11 }}>
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.Primary,
                                 height: 145,
@@ -168,8 +173,9 @@ const HomePage: FunctionComponent = () => {
                                     left: 20,
                                 }}
                             />
-                        </View>
-                        <View
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.LightPrimary,
                                 marginTop: 25,
@@ -225,48 +231,74 @@ const HomePage: FunctionComponent = () => {
                                     left: 20,
                                 }}
                             />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, marginLeft: 11 }}>
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.Pink,
                                 height: 206,
                                 borderRadius: 15,
                             }}>
-                            <Text
+                            <View
                                 style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.White,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                     marginTop: 15,
                                     marginLeft: 17,
-                                    fontSize: 20,
                                 }}>
-                                Conversation
-                            </Text>
-                            <Text
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.Urbanist_700,
+                                        color: Colors.White,
+                                        fontSize: 20,
+                                    }}>
+                                    Vocabulary
+                                </Text>
+                                <Feather
+                                    name="chevron-right"
+                                    color={Colors.White}
+                                    size={25}
+                                    style={{
+                                        marginTop: 2,
+                                    }}
+                                />
+                            </View>
+                            <View
                                 style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.White,
-                                    marginTop: 10,
-                                    marginHorizontal: 17,
-                                    fontSize: 12,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginTop: 5,
+                                    marginLeft: 17,
                                 }}>
-                                Talk with your Ai Avatar and Practice your
-                                English more
-                            </Text>
-                            <Image
-                                source={require('../../Images/Home/HPA_2.png')}
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.Urbanist_700,
+                                        color: Colors.White,
+                                        fontSize: 12,
+                                    }}>
+                                    Learn new English Words
+                                </Text>
+                                <Feather
+                                    name="chevron-right"
+                                    color={Colors.White}
+                                    size={18}
+                                    style={{
+                                        marginTop: 2,
+                                    }}
+                                />
+                            </View>
+                            <VocabularyIcon
                                 style={{
                                     width: 100,
                                     height: 100,
-                                    resizeMode: 'contain',
                                     position: 'absolute',
-                                    bottom: 8,
                                     alignSelf: 'center',
+                                    bottom: -3,
                                 }}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{
                                 backgroundColor: Colors.LightPrimary,
@@ -276,14 +308,52 @@ const HomePage: FunctionComponent = () => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                            <Text
+                            <View
                                 style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.Primary,
-                                    fontSize: 22,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                 }}>
-                                Report
-                            </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.Urbanist_700,
+                                        color: Colors.Primary,
+                                        fontSize: 20,
+                                        marginRight: 3,
+                                    }}>
+                                    View Report
+                                </Text>
+                                <StatsReportIcon
+                                    color={Colors.Primary}
+                                    width={25}
+                                    height={25}
+                                />
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginTop: 5,
+                                    justifyContent: 'center',
+                                    marginLeft: 5,
+                                }}>
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.Urbanist_500,
+                                        color: Colors.Primary,
+                                        fontSize: 12,
+                                    }}>
+                                    Download your result here
+                                </Text>
+                                <Feather
+                                    name="chevron-right"
+                                    color={Colors.Primary}
+                                    size={18}
+                                    style={{
+                                        marginTop: 2,
+                                        marginLeft: -2,
+                                    }}
+                                />
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>

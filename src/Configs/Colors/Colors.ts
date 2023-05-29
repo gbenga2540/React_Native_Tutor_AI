@@ -17,6 +17,7 @@ const Colors = {
     LightPurple: '#CDC2FF',
     LightPurple2: '#CEC3FF',
     LightPurple3: '#C4B6FF',
+    LightPurple4: '#E4D6FF',
     ProgressBackground: '#D9D9D9',
     TestRed: '#FF0000',
     ArcInner_A: '#9D88FF',

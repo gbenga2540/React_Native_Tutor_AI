@@ -24,7 +24,7 @@ const SelectDPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
 
-    const [displayPicture, setDisplayPicture] = useState<string>('none');
+    const [displayPicture, setDisplayPicture] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
@@ -65,7 +65,7 @@ const SelectDPPage: FunctionComponent = () => {
     const clear_image = no_double_clicks({
         execFunc: () => {
             setShowSpinner(false);
-            setDisplayPicture('none');
+            setDisplayPicture('');
             ImagePicker.clean();
         },
     });
@@ -84,7 +84,7 @@ const SelectDPPage: FunctionComponent = () => {
                     forceJpg: true,
                 })
                     .catch(err => {
-                        setDisplayPicture('none');
+                        setDisplayPicture('');
                         if (err) {
                             clear_image();
                         }
@@ -95,12 +95,12 @@ const SelectDPPage: FunctionComponent = () => {
                             const processed_image = `data:${res?.mime};base64,${res?.data}`;
                             setDisplayPicture(processed_image);
                         } else {
-                            setDisplayPicture('none');
+                            setDisplayPicture('');
                             clear_image();
                         }
                     });
             } catch (error) {
-                setDisplayPicture('none');
+                setDisplayPicture('');
                 clear_image();
             }
         },
@@ -120,7 +120,7 @@ const SelectDPPage: FunctionComponent = () => {
                     forceJpg: true,
                 })
                     .catch(err => {
-                        setDisplayPicture('none');
+                        setDisplayPicture('');
                         if (err) {
                             clear_image();
                         }
@@ -131,12 +131,12 @@ const SelectDPPage: FunctionComponent = () => {
                             const processed_image = `data:${res?.mime};base64,${res?.data}`;
                             setDisplayPicture(processed_image);
                         } else {
-                            setDisplayPicture('none');
+                            setDisplayPicture('');
                             clear_image();
                         }
                     });
             } catch (error) {
-                setDisplayPicture('none');
+                setDisplayPicture('');
                 clear_image();
             }
         },
@@ -175,7 +175,7 @@ const SelectDPPage: FunctionComponent = () => {
                 Select a Display Picture to Proceed
             </Text>
             <View style={styles.sdp_w_i_c}>
-                {displayPicture === 'none' ? (
+                {displayPicture === '' ? (
                     <Image
                         style={styles.sdp_w_i}
                         source={require('../../Images/Logos/Default_User_Logo.jpg')}

@@ -6,6 +6,7 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BackButton from '../../Components/Back_Button/Back_Button';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const ErrorPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -13,6 +14,7 @@ const ErrorPage: FunctionComponent = () => {
 
     return (
         <View style={{ flex: 1 }}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <ScrollView style={{ flex: 1, backgroundColor: Colors.Background }}>
                 <View style={styles.error_main}>
                     <View

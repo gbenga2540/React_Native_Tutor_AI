@@ -20,6 +20,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const CongratulationsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -60,6 +61,7 @@ const CongratulationsPage: FunctionComponent = () => {
 
     return (
         <View style={{ flex: 1 }}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <ScrollView style={{ flex: 1, backgroundColor: Colors.Background }}>
                 <View style={styles.error_main}>
                     <View

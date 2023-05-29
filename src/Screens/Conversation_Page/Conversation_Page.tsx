@@ -11,10 +11,12 @@ import { test_conversation } from '../../../test/Data/Lessons';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import ConversationCard from '../../Components/Conversation_Card/Conversation_Card';
 import Feather from 'react-native-vector-icons/Feather';
+import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 
 const ConversationPage: FunctionComponent = () => {
     return (
         <View style={styles.conversation_main}>
+            <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.c_header_cont}>
                 <Text style={styles.c_header}>Conversation</Text>
             </View>

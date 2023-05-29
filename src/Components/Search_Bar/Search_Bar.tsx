@@ -14,8 +14,6 @@ interface SearchBarProps {
     marginRight?: string | number;
     inputMode?: InputModeOptions;
     onFocus?: () => void;
-    onSearch?: () => void;
-    onClearText?: () => void;
 }
 
 const SearchBar: FunctionComponent<SearchBarProps> = ({
@@ -28,11 +26,10 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
     marginRight,
     inputMode,
     onFocus,
-    onSearch,
-    onClearText,
 }) => {
     return (
         <View
+            focusable
             style={[
                 styles.s_b_main,
                 {
@@ -55,20 +52,14 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
                 style={styles.s_b_m_ti}
                 placeholder={placeHolderText || ''}
                 placeholderTextColor={Colors.Grey}
-                onChangeText={(text: string) => setInputValue(text)}
+                onChangeText={(text: string) => {
+                    setInputValue(text);
+                }}
                 value={inputValue}
                 autoCapitalize={'none'}
                 autoCorrect={false}
                 inputMode={inputMode || 'text'}
                 onFocus={() => onFocus !== undefined && (onFocus() as unknown)}
-                onSubmitEditing={() =>
-                    onSearch !== undefined && (onSearch() as unknown)
-                }
-                onTextInput={() => {
-                    if (inputValue === '' || inputValue?.length <= 1) {
-                        onClearText !== undefined && (onClearText() as unknown);
-                    }
-                }}
             />
         </View>
     );
