@@ -7,93 +7,124 @@ import ArcOuterIcon from '../../Images/SVGs/Arc_Outer_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
 
 interface LessonCardProps {
-        lesson: INTF_Lesson;
-        index: number;
-        last_index: number;
+    lesson: INTF_Lesson;
+    index: number;
+    last_index: number;
 }
-const LessonCard: FunctionComponent<LessonCardProps> = ({ lesson, index, last_index }) => {
-        return (
+const LessonCard: FunctionComponent<LessonCardProps> = ({
+    lesson,
+    index,
+    last_index,
+}) => {
+    return (
+        <View
+            style={[
+                styles.lesson_main,
+                {
+                    backgroundColor:
+                        lesson?.progress === 100
+                            ? Colors.Primary
+                            : Colors.LightPurple3,
+                    marginBottom: index === last_index ? 67 : 17,
+                },
+            ]}>
+            <ArcInnerIcon
+                style={{ position: 'absolute', right: 0 }}
+                color={
+                    lesson?.progress === 100
+                        ? Colors.ArcInner_A
+                        : Colors.ArcInner_I
+                }
+            />
+            <ArcOuterIcon
+                style={{ position: 'absolute', right: 0 }}
+                color={
+                    lesson?.progress === 100
+                        ? Colors.ArcOuter_A
+                        : Colors.ArcOuter_I
+                }
+            />
+            <Text
+                style={{
+                    color:
+                        lesson?.progress === 100 ? Colors.White : Colors.Black,
+                    fontFamily: fonts.Urbanist_600,
+                    fontSize: 15,
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                }}>{`${lesson?.progress}%`}</Text>
+            <View style={{ flexDirection: 'row' }}>
                 <View
-                        style={[
-                                styles.lesson_main,
-                                {
-                                        backgroundColor: lesson?.progress === 100 ? Colors.Primary : Colors.LightPurple3,
-                                        marginBottom: index === last_index ? 67 : 17,
-                                },
-                        ]}>
-                        <ArcInnerIcon style={{ position: 'absolute', right: 0 }} color={lesson?.progress === 100 ? Colors.ArcInner_A : Colors.ArcInner_I} />
-                        <ArcOuterIcon style={{ position: 'absolute', right: 0 }} color={lesson?.progress === 100 ? Colors.ArcOuter_A : Colors.ArcOuter_I} />
-                        <Text
-                                style={{
-                                        color: lesson?.progress === 100 ? Colors.White : Colors.Black,
-                                        fontFamily: fonts.Urbanist_600,
-                                        fontSize: 15,
-                                        position: 'absolute',
-                                        right: 10,
-                                        top: 10,
-                                }}>{`${lesson?.progress}%`}</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                                <View
-                                        style={{
-                                                marginLeft: 12,
-                                                marginTop: 10,
-                                                marginRight: 4,
-                                                width: 100,
-                                                height: 100,
-                                                borderRadius: 100,
-                                                borderWidth: 2,
-                                                borderColor: lesson?.progress === 100 ? Colors.ArcInner_A : Colors.ArcInner_I,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                        }}>
-                                        <Image
-                                                source={{
-                                                        uri: lesson?.imageURL,
-                                                        width: 88,
-                                                        height: 88,
-                                                }}
-                                                style={{
-                                                        borderRadius: 90,
-                                                        width: 90,
-                                                        height: 90,
-                                                }}
-                                        />
-                                </View>
-
-                                <View
-                                        style={{
-                                                width: 200,
-                                                paddingTop: 26,
-                                                paddingBottom: 12,
-                                        }}>
-                                        <Text
-                                                style={{
-                                                        color: lesson?.progress === 100 ? Colors.White : Colors.Black,
-                                                        fontFamily: fonts.Urbanist_500,
-                                                        fontSize: 15,
-                                                }}>
-                                                {`Lesson ${lesson?.lesson_id}`}
-                                        </Text>
-                                        <Text
-                                                style={{
-                                                        color: lesson?.progress === 100 ? Colors.White : Colors.Black,
-                                                        fontFamily: fonts.Urbanist_600,
-                                                        fontSize: 18,
-                                                }}>
-                                                {lesson?.title}
-                                        </Text>
-                                </View>
-                        </View>
+                    style={{
+                        marginLeft: 12,
+                        marginTop: 10,
+                        marginRight: 4,
+                        width: 100,
+                        height: 100,
+                        borderRadius: 100,
+                        borderWidth: 2,
+                        borderColor:
+                            lesson?.progress === 100
+                                ? Colors.ArcInner_A
+                                : Colors.ArcInner_I,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                    <Image
+                        source={{
+                            uri: lesson?.imageURL,
+                            width: 88,
+                            height: 88,
+                        }}
+                        style={{
+                            borderRadius: 90,
+                            width: 90,
+                            height: 90,
+                        }}
+                    />
                 </View>
-        );
+
+                <View
+                    style={{
+                        width: 200,
+                        paddingTop: 26,
+                        paddingBottom: 12,
+                    }}>
+                    <Text
+                        style={{
+                            color:
+                                lesson?.progress === 100
+                                    ? Colors.White
+                                    : Colors.Black,
+                            fontFamily: fonts.Urbanist_500,
+                            fontSize: 15,
+                        }}>
+                        {`Lesson ${lesson?.lesson_id}`}
+                    </Text>
+                    <Text
+                        style={{
+                            color:
+                                lesson?.progress === 100
+                                    ? Colors.White
+                                    : Colors.Black,
+                            fontFamily: fonts.Urbanist_600,
+                            fontSize: 18,
+                        }}>
+                        {lesson?.title}
+                    </Text>
+                </View>
+            </View>
+        </View>
+    );
 };
 
 export default LessonCard;
 
 const styles = StyleSheet.create({
-        lesson_main: {
-                minHeight: 120,
-                borderRadius: 15,
-                marginBottom: 17,
-        },
+    lesson_main: {
+        minHeight: 120,
+        borderRadius: 15,
+        marginBottom: 17,
+    },
 });

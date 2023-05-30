@@ -13,6 +13,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		19B1E02F3855431C9774973C /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 648F9845EA364DA9B4504E55 /* Urbanist-Medium.ttf */; };
+		3D8407282A25B0D400289027 /* MyAppInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8407272A25B0D400289027 /* MyAppInfoModule.m */; };
+		3DA438052A267B1A00CD90DB /* MyAppHideModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA438042A267B1A00CD90DB /* MyAppHideModule.m */; };
 		5DE7E44E167047AA87BD2429 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87C393BD1E8A4EF1A825C74A /* OpenSans-Bold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-TutorAI-TutorAITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-TutorAI-TutorAITests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -45,7 +47,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = TutorAI/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-TutorAI-TutorAITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TutorAI-TutorAITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-TutorAI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutorAI.debug.xcconfig"; path = "Target Support Files/Pods-TutorAI/Pods-TutorAI.debug.xcconfig"; sourceTree = "<group>"; };
-		3BD29EE9F1A949F7ADB36684 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../src/Fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		3BD29EE9F1A949F7ADB36684 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../src/Fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		3D8407272A25B0D400289027 /* MyAppInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAppInfoModule.m; sourceTree = "<group>"; };
 		3D97AAFD2A0ABA230015A060 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		3D97AAFE2A0ABA230015A060 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		3D97AAFF2A0ABA230015A060 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -62,18 +65,20 @@
 		3D97AB0A2A0ABA230015A060 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		3D97AB0B2A0ABA230015A060 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		3D97AB0C2A0ABA230015A060 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		3DA438032A26721900CD90DB /* TutorAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TutorAI.entitlements; path = TutorAI/TutorAI.entitlements; sourceTree = "<group>"; };
+		3DA438042A267B1A00CD90DB /* MyAppHideModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAppHideModule.m; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-TutorAI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutorAI.release.xcconfig"; path = "Target Support Files/Pods-TutorAI/Pods-TutorAI.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-TutorAI-TutorAITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutorAI-TutorAITests.debug.xcconfig"; path = "Target Support Files/Pods-TutorAI-TutorAITests/Pods-TutorAI-TutorAITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-TutorAI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TutorAI.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		648F9845EA364DA9B4504E55 /* Urbanist-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Medium.ttf"; path = "../src/Fonts/Urbanist-Medium.ttf"; sourceTree = "<group>"; };
-		65FE348D1B434C9A8BD99D20 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../src/Fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		648F9845EA364DA9B4504E55 /* Urbanist-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Medium.ttf"; path = "../src/Fonts/Urbanist-Medium.ttf"; sourceTree = "<group>"; };
+		65FE348D1B434C9A8BD99D20 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../src/Fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TutorAI/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		87C393BD1E8A4EF1A825C74A /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../src/Fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		87C393BD1E8A4EF1A825C74A /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../src/Fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-TutorAI-TutorAITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutorAI-TutorAITests.release.xcconfig"; path = "Target Support Files/Pods-TutorAI-TutorAITests/Pods-TutorAI-TutorAITests.release.xcconfig"; sourceTree = "<group>"; };
-		EB6D3D7A41B94F2BA63D7A57 /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../src/Fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
-		ECF3FA6BBDBF40B083A3A4D6 /* Urbanist-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Bold.ttf"; path = "../src/Fonts/Urbanist-Bold.ttf"; sourceTree = "<group>"; };
+		EB6D3D7A41B94F2BA63D7A57 /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../src/Fonts/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
+		ECF3FA6BBDBF40B083A3A4D6 /* Urbanist-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Bold.ttf"; path = "../src/Fonts/Urbanist-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FBF62FE94EA44AC984AD7397 /* Urbanist-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-SemiBold.ttf"; path = "../src/Fonts/Urbanist-SemiBold.ttf"; sourceTree = "<group>"; };
+		FBF62FE94EA44AC984AD7397 /* Urbanist-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-SemiBold.ttf"; path = "../src/Fonts/Urbanist-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +121,7 @@
 		13B07FAE1A68108700A75B9A /* TutorAI */ = {
 			isa = PBXGroup;
 			children = (
+				3DA438032A26721900CD90DB /* TutorAI.entitlements */,
 				3D97AAFC2A0ABA230015A060 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -123,6 +129,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				3D8407272A25B0D400289027 /* MyAppInfoModule.m */,
+				3DA438042A267B1A00CD90DB /* MyAppHideModule.m */,
 			);
 			name = TutorAI;
 			sourceTree = "<group>";
@@ -139,7 +147,6 @@
 				FBF62FE94EA44AC984AD7397 /* Urbanist-SemiBold.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -489,8 +496,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D8407282A25B0D400289027 /* MyAppInfoModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				3DA438052A267B1A00CD90DB /* MyAppHideModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,9 +571,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TutorAI/TutorAI.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8WTBG75C7D;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TutorAI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TutorAI;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -589,8 +602,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TutorAI/TutorAI.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8WTBG75C7D;
 				INFOPLIST_FILE = TutorAI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TutorAI;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

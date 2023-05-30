@@ -17,36 +17,36 @@ import MainStack from '../Routes/Main_Stack/Main_Stack';
 import { observer } from 'mobx-react';
 
 const App: FunctionComponent = observer(() => {
-        useEffect(() => {
-                if (Platform.OS === 'android') {
-                        const time_out = setTimeout(() => {
-                                SplashScreen.hide();
-                        }, 1000);
-                        return () => {
-                                clearTimeout(time_out);
-                        };
-                }
-        }, []);
+    useEffect(() => {
+        if (Platform.OS === 'android') {
+            const time_out = setTimeout(() => {
+                SplashScreen.hide();
+            }, 1000);
+            return () => {
+                clearTimeout(time_out);
+            };
+        }
+    }, []);
 
-        OnlineManager();
-        OnAppFocus();
-        KeyboardManager();
+    OnlineManager();
+    OnAppFocus();
+    KeyboardManager();
 
-        return (
-                <View style={styles.app_main}>
-                        <NavigationContainer>
-                                <CustomStatusBar />
-                                <MainStack />
-                        </NavigationContainer>
-                </View>
-        );
+    return (
+        <View style={styles.app_main}>
+            <NavigationContainer>
+                <CustomStatusBar />
+                <MainStack />
+            </NavigationContainer>
+        </View>
+    );
 });
 
 export default App;
 
 const styles = StyleSheet.create({
-        app_main: {
-                flex: 1,
-                backgroundColor: 'white',
-        },
+    app_main: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
 });

@@ -20,6 +20,7 @@ public class MyAppPackages implements ReactPackage {
         public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
                 List<NativeModule> modules = new ArrayList<>();
                 modules.add(new MyAppInfoModule(reactContext));
+                modules.add(new MyAppHideModule(reactContext));
                 return modules;
         }
 }

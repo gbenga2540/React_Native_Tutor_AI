@@ -1,6 +1,6 @@
 export interface INTF_Subscription {
-        id: number;
-        months: number;
-        discount: number;
-        price: number;
+    id: number;
+    months: number;
+    discount: number;
+    price: number;
 }

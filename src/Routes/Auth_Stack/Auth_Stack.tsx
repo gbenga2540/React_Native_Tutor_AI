@@ -13,38 +13,53 @@ import TCPage from '../../Screens/T_C_Page/T_C_Page';
 import OnboardingPage from '../../Screens/Onboarding_Page/Onboarding_Page';
 
 type AuthStackParamList = {
-        AuthSelectPage: {};
-        SignInPage: {};
-        SignUpPage: {};
-        ForgotPasswordPage: {};
-        ChangePasswordPage: {};
-        SelectDPPage: {};
-        VerifyOTPPage: {};
-        CongratulationsPage: {};
-        TCPage: {};
-        OnboardingPage: {};
+    AuthSelectPage: {};
+    SignInPage: {};
+    SignUpPage: {};
+    ForgotPasswordPage: {};
+    ChangePasswordPage: {};
+    SelectDPPage: {};
+    VerifyOTPPage: {};
+    CongratulationsPage: {};
+    TCPage: {};
+    OnboardingPage: {};
 };
 
 const Auth_Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack: FunctionComponent = () => {
-        return (
-                <Auth_Stack.Navigator
-                        screenOptions={{
-                                headerShown: false,
-                        }}>
-                        <Auth_Stack.Screen name="AuthSelectPage" component={AuthSelectPage} />
-                        <Auth_Stack.Screen name="SignInPage" component={SignInPage} />
-                        <Auth_Stack.Screen name="SignUpPage" component={SignUpPage} />
-                        <Auth_Stack.Screen name="SelectDPPage" component={SelectDPPage} />
-                        <Auth_Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} />
-                        <Auth_Stack.Screen name="ChangePasswordPage" component={ChangePasswordPage} />
-                        <Auth_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
-                        <Auth_Stack.Screen name="CongratulationsPage" component={CongratulationsPage} />
-                        <Auth_Stack.Screen name="TCPage" component={TCPage} />
-                        <Auth_Stack.Screen name="OnboardingPage" component={OnboardingPage} />
-                </Auth_Stack.Navigator>
-        );
+    return (
+        <Auth_Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}>
+            <Auth_Stack.Screen
+                name="AuthSelectPage"
+                component={AuthSelectPage}
+            />
+            <Auth_Stack.Screen name="SignInPage" component={SignInPage} />
+            <Auth_Stack.Screen name="SignUpPage" component={SignUpPage} />
+            <Auth_Stack.Screen name="SelectDPPage" component={SelectDPPage} />
+            <Auth_Stack.Screen
+                name="ForgotPasswordPage"
+                component={ForgotPasswordPage}
+            />
+            <Auth_Stack.Screen
+                name="ChangePasswordPage"
+                component={ChangePasswordPage}
+            />
+            <Auth_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
+            <Auth_Stack.Screen
+                name="CongratulationsPage"
+                component={CongratulationsPage}
+            />
+            <Auth_Stack.Screen name="TCPage" component={TCPage} />
+            <Auth_Stack.Screen
+                name="OnboardingPage"
+                component={OnboardingPage}
+            />
+        </Auth_Stack.Navigator>
+    );
 };
 
 export default AuthStack;
