@@ -38,7 +38,6 @@ public class MyAppInfoModule extends ReactContextBaseJavaModule {
                         WritableArray appsArray = Arguments.createArray();
 
                         for (ApplicationInfo appInfo : installedApplications) {
-                                if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                                         String appName = appInfo.loadLabel(packageManager).toString();
                                         String packageName = appInfo.packageName;
                                         boolean isAppEnabled = appInfo.enabled;
@@ -66,7 +65,6 @@ public class MyAppInfoModule extends ReactContextBaseJavaModule {
                                         appMap.putBoolean("isEnabled", isAppEnabled);
 
                                         appsArray.pushMap(appMap);
-                                }
                         }
                         promise.resolve(appsArray);
                 } catch (Exception e) {
