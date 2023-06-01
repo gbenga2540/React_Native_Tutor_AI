@@ -16,13 +16,17 @@ import { faq_types, faqs } from '../../Data/FAQ/FAQ';
 import FAQReader from '../../Components/FAQ_Reader/FAQ_Reader';
 import { contact_us } from '../../Data/Contact_Us/Contact_Us';
 import ContactUsButton from '../../Components/Contact_Us_Button/Contact_Us_Button';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
 
 const HelpCenterPage: FunctionComponent = () => {
+    const route = useRoute<RouteProp<any>>();
     const [search, setSearch] = useState<string>('');
     const [activeFAQ, setActiveFAQ] = useState<number>(0);
 
-    const [currentTAB, setCurrentTAB] = useState<number>(1);
-
+    const [currentTAB, setCurrentTAB] = useState<number>(
+        route.params?.is_contact_page ? 2 : 1,
+    );
     return (
         <View style={styles.hcp_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -34,15 +38,16 @@ const HelpCenterPage: FunctionComponent = () => {
                     alignItems: 'center',
                 }}>
                 <BackButton />
-                <Text
-                    style={{
-                        marginLeft: 30,
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Help Center
-                </Text>
+                <BasicText
+                    inputText={
+                        currentTAB === 2
+                            ? 'Contact Us'
+                            : 'Frequently Asked Questions'
+                    }
+                    textWeight={700}
+                    marginLeft={15}
+                    textSize={20}
+                />
             </View>
             <ScrollView style={{ flex: 1, marginHorizontal: 24 }}>
                 <HeaderTab
@@ -53,6 +58,7 @@ const HelpCenterPage: FunctionComponent = () => {
                     marginBetween={4}
                     execFunc_Header_1={() => setCurrentTAB(1)}
                     execFunc_Header_2={() => setCurrentTAB(2)}
+                    secondIsInitialTab={currentTAB === 2}
                 />
                 {currentTAB === 1 && (
                     <View>

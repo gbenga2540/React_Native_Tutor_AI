@@ -19,7 +19,7 @@ export const profile_menu_1: INTF_ProfileMenu[] = [
         id: 3,
         name: 'Schedule Next Class',
         stack: 'HomeStack',
-        screen: '',
+        screen: 'ScheduleClassPage',
         params: {},
     },
 ];
@@ -70,14 +70,22 @@ export const profile_menu_4: INTF_ProfileMenu[] = [
         id: 3,
         name: 'Contact us',
         stack: 'HomeStack',
-        screen: '',
-        params: {},
+        screen: 'HelpCenterPage',
+        params: {
+            is_contact_page: true,
+        },
     },
     {
         id: 4,
         name: 'Sign Out',
-        stack: 'HomeStack',
+        stack: 'InfoPage',
         screen: '',
-        params: {},
+        params: {
+            success_mssg: 'Are you sure you want to sign out?',
+            svr_success_mssg: '',
+            proceed_type: 1,
+            hide_back_btn: false,
+            hide_header: true,
+        },
     },
 ];

@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     acp_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-        marginBottom: Platform.OS === 'ios' ? 25 : 5,
+        paddingBottom: Platform.OS === 'ios' ? 25 : 5,
     },
     acp_m_wt2: {
         fontFamily: fonts.Urbanist_500,

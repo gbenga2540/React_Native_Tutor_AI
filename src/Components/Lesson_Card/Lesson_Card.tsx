@@ -1,23 +1,45 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
 import ArcInnerIcon from '../../Images/SVGs/Arc_Inner_Icon.svg';
 import ArcOuterIcon from '../../Images/SVGs/Arc_Outer_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface LessonCardProps {
     lesson: INTF_Lesson;
     index: number;
     last_index: number;
+    disabled?: boolean;
 }
 const LessonCard: FunctionComponent<LessonCardProps> = ({
     lesson,
     index,
     last_index,
+    disabled,
 }) => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
     return (
-        <View
+        <TouchableOpacity
+            onPress={no_double_clicks({
+                execFunc: () => {
+                    navigation.push(
+                        'HomeStack' as never,
+                        {
+                            screen: 'LessonConvPage',
+                            params: {
+                                topic: lesson?.title,
+                            },
+                        } as never,
+                    );
+                },
+            })}
+            disabled={disabled || false}
+            activeOpacity={0.5}
             style={[
                 styles.lesson_main,
                 {
@@ -115,7 +137,7 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                     </Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

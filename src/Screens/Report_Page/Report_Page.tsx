@@ -1,5 +1,12 @@
 import React, { FunctionComponent } from 'react';
-import { ScrollView, StyleSheet, Text, View, Platform } from 'react-native';
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    Platform,
+    Image,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import SimpleBIcon from '../../Images/SVGs/Simple_B_Icon.svg';
@@ -10,8 +17,14 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Feather from 'react-native-vector-icons/Feather';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 const ReportPage: FunctionComponent = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
     const download_results = no_double_clicks({
         execFunc: () => {},
     });
@@ -46,7 +59,7 @@ const ReportPage: FunctionComponent = () => {
                 }}>
                 <View
                     style={{
-                        height: 140,
+                        height: 150,
                         backgroundColor: Colors.DarkPurple,
                         borderRadius: 20,
                         flexDirection: 'row',
@@ -105,10 +118,181 @@ const ReportPage: FunctionComponent = () => {
                                 />
                             ))}
                         </View>
+                        <Text
+                            style={{
+                                fontFamily: fonts.Urbanist_600,
+                                color: Colors.White,
+                                fontSize: 12,
+                                marginTop: 7,
+                            }}>
+                            Keep Going!
+                        </Text>
                     </View>
                 </View>
-                <Text>Completed Lessons</Text>
-                <Text>Completed Homework</Text>
+                <Text
+                    style={{
+                        fontFamily: fonts.Urbanist_700,
+                        marginTop: 40,
+                        color: Colors.Dark,
+                        fontSize: 20,
+                    }}>
+                    Completed Lessons
+                </Text>
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                    <View
+                        style={{
+                            backgroundColor: Colors.Yellow,
+                            borderRadius: 10,
+                            padding: 10,
+                            flexDirection: 'row',
+                            height: 100,
+                            flex: 1,
+                        }}>
+                        <Image
+                            source={require('../../Images/Lessons/Lessons.png')}
+                            style={{
+                                width: 155,
+                                height: 80,
+                                alignSelf: 'center',
+                            }}
+                        />
+                        <View
+                            style={{
+                                alignSelf: 'center',
+                                marginLeft: 'auto',
+                                marginRight: 20,
+                            }}>
+                            <Text
+                                style={{
+                                    fontFamily: fonts.Urbanist_500,
+                                    color: Colors.Dark,
+                                    fontSize: 14,
+                                }}>
+                                100 Lessons Done
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: fonts.Urbanist_700,
+                                    color: Colors.Dark,
+                                    fontSize: 16,
+                                    marginTop: 10,
+                                }}>
+                                Total: 300mins
+                            </Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={no_double_clicks({
+                            execFunc: () => {
+                                navigation.push(
+                                    'HomeStack' as never,
+                                    {
+                                        screen: 'LessonArchivePage',
+                                    } as never,
+                                );
+                            },
+                        })}
+                        activeOpacity={0.5}
+                        style={{
+                            width: 22,
+                            height: 50,
+                            backgroundColor: Colors.Yellow,
+                            marginLeft: 10,
+                            marginTop: 'auto',
+                            marginBottom: 'auto',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 5,
+                        }}>
+                        <Feather
+                            name="chevron-right"
+                            color={Colors.Dark}
+                            size={23}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <Text
+                    style={{
+                        fontFamily: fonts.Urbanist_700,
+                        marginTop: 40,
+                        color: Colors.Dark,
+                        fontSize: 20,
+                    }}>
+                    Completed Homework
+                </Text>
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                    <View
+                        style={{
+                            backgroundColor: Colors.Primary,
+                            borderRadius: 10,
+                            padding: 10,
+                            flexDirection: 'row',
+                            height: 100,
+                            flex: 1,
+                        }}>
+                        <Image
+                            source={require('../../Images/Lessons/Lessons.png')}
+                            style={{
+                                width: 155,
+                                height: 80,
+                                alignSelf: 'center',
+                            }}
+                        />
+                        <View
+                            style={{
+                                alignSelf: 'center',
+                                marginLeft: 'auto',
+                                marginRight: 20,
+                            }}>
+                            <Text
+                                style={{
+                                    fontFamily: fonts.Urbanist_500,
+                                    color: Colors.White,
+                                    fontSize: 14,
+                                }}>
+                                100 Homework Done
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: fonts.Urbanist_700,
+                                    color: Colors.Green2,
+                                    fontSize: 16,
+                                    marginTop: 10,
+                                }}>
+                                Success Rate: 80%
+                            </Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={no_double_clicks({
+                            execFunc: () => {
+                                navigation.push(
+                                    'HomeStack' as never,
+                                    {
+                                        screen: 'HomeWorkArchivePage',
+                                    } as never,
+                                );
+                            },
+                        })}
+                        activeOpacity={0.5}
+                        style={{
+                            width: 22,
+                            height: 50,
+                            backgroundColor: Colors.Primary,
+                            marginLeft: 10,
+                            marginTop: 'auto',
+                            marginBottom: 'auto',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 5,
+                        }}>
+                        <Feather
+                            name="chevron-right"
+                            color={Colors.White}
+                            size={23}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
             <BasicButton

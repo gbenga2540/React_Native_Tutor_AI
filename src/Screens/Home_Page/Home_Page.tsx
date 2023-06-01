@@ -23,6 +23,9 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
+import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
+import { Observer } from 'mobx-react';
 
 const HomePage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -58,6 +61,7 @@ const HomePage: FunctionComponent = () => {
                         style={{
                             marginLeft: 25,
                             marginTop: 30,
+                            zIndex: 1,
                         }}>
                         <Text
                             style={{
@@ -68,26 +72,42 @@ const HomePage: FunctionComponent = () => {
                             Assigned Class
                         </Text>
                         <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    BottomSheetStore.open_bottom_sheet({
+                                        component_type: 1,
+                                    });
+                                },
+                            })}
                             activeOpacity={0.6}
                             style={{
                                 backgroundColor: Colors.Primary,
-                                width: 133,
+                                minWidth: 133,
                                 height: 42,
                                 marginTop: 10,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 borderRadius: 11,
                                 flexDirection: 'row',
+                                paddingLeft: 10,
+                                paddingRight: 4,
                             }}>
-                            <Text
-                                style={{
-                                    color: Colors.White,
-                                    fontFamily: fonts.Urbanist_600,
-                                    fontSize: 18,
-                                    marginRight: 3,
-                                }}>
-                                Confident
-                            </Text>
+                            <Observer>
+                                {() => (
+                                    <Text
+                                        style={{
+                                            color: Colors.White,
+                                            fontFamily: fonts.Urbanist_600,
+                                            fontSize: 18,
+                                            marginRight: 3,
+                                        }}>
+                                        {
+                                            StudentInfoStore?.student_info
+                                                ?.assigned_class
+                                        }
+                                    </Text>
+                                )}
+                            </Observer>
                             <Feather
                                 name="chevron-down"
                                 size={21}
@@ -128,6 +148,16 @@ const HomePage: FunctionComponent = () => {
                             marginRight: 11,
                         }}>
                         <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    navigation.navigate(
+                                        'HomeTab' as never,
+                                        {
+                                            screen: 'LessonPage',
+                                        } as never,
+                                    );
+                                },
+                            })}
                             activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.Primary,
@@ -185,6 +215,16 @@ const HomePage: FunctionComponent = () => {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    navigation.navigate(
+                                        'HomeTab' as never,
+                                        {
+                                            screen: 'HomeWorkPage',
+                                        } as never,
+                                    );
+                                },
+                            })}
                             activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.LightPrimary,
@@ -249,6 +289,16 @@ const HomePage: FunctionComponent = () => {
                             marginLeft: 11,
                         }}>
                         <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    navigation.push(
+                                        'HomeStack' as never,
+                                        {
+                                            screen: 'VocabularyPage',
+                                        } as never,
+                                    );
+                                },
+                            })}
                             activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.Pink,

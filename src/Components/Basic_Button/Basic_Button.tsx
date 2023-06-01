@@ -16,6 +16,7 @@ interface BasicButtonProps {
     disabled?: boolean;
     backgroundColor?: string;
     textColor?: string;
+    textSize?: number;
 }
 
 const BasicButton: FunctionComponent<BasicButtonProps> = ({
@@ -29,6 +30,7 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
     disabled,
     backgroundColor,
     textColor,
+    textSize,
 }) => {
     const exec_func = no_double_clicks({
         execFunc: () => {
@@ -62,7 +64,10 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
             <Text
                 style={[
                     styles.b_b_m_txt,
-                    { color: textColor || Colors.White },
+                    {
+                        color: textColor || Colors.White,
+                        fontSize: textSize || 14,
+                    },
                 ]}>
                 {buttonText}
             </Text>

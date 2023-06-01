@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactElement } from 'react';
 import {
     FlatList,
     Platform,
@@ -13,6 +13,10 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 import { test_lessons } from '../../../test/Data/Lessons';
 import Feather from 'react-native-vector-icons/Feather';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
+import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
+import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { Observer } from 'mobx-react';
 
 const LessonPage: FunctionComponent = () => {
     return (
@@ -39,13 +43,20 @@ const LessonPage: FunctionComponent = () => {
                 <View
                     style={{
                         flexDirection: 'row',
-                        marginBottom: 30,
+                        marginBottom: 3,
                     }}>
                     <TouchableOpacity
+                        onPress={no_double_clicks({
+                            execFunc: () => {
+                                BottomSheetStore.open_bottom_sheet({
+                                    component_type: 1,
+                                });
+                            },
+                        })}
                         activeOpacity={0.6}
                         style={{
                             backgroundColor: Colors.Primary,
-                            width: 133,
+                            minWidth: 133,
                             height: 42,
                             marginTop: 10,
                             justifyContent: 'center',
@@ -53,16 +64,25 @@ const LessonPage: FunctionComponent = () => {
                             borderRadius: 11,
                             flexDirection: 'row',
                             marginLeft: 22,
+                            paddingLeft: 10,
+                            paddingRight: 4,
                         }}>
-                        <Text
-                            style={{
-                                color: Colors.White,
-                                fontFamily: fonts.Urbanist_600,
-                                fontSize: 18,
-                                marginRight: 3,
-                            }}>
-                            Confident
-                        </Text>
+                        <Observer>
+                            {() => (
+                                <Text
+                                    style={{
+                                        color: Colors.White,
+                                        fontFamily: fonts.Urbanist_600,
+                                        fontSize: 18,
+                                        marginRight: 3,
+                                    }}>
+                                    {
+                                        StudentInfoStore?.student_info
+                                            ?.assigned_class
+                                    }
+                                </Text>
+                            )}
+                        </Observer>
                         <Feather
                             name="chevron-down"
                             size={21}
@@ -92,6 +112,11 @@ const LessonPage: FunctionComponent = () => {
                     </View>
                 </View>
                 <FlatList
+                    ListHeaderComponent={() =>
+                        (
+                            <View style={{ marginTop: 20 }}>{''}</View>
+                        ) as ReactElement<any>
+                    }
                     data={test_lessons}
                     keyExtractor={item => item.lesson_id as any}
                     renderItem={({ item, index }) => (
@@ -107,8 +132,12 @@ const LessonPage: FunctionComponent = () => {
                     )}
                     style={{
                         paddingHorizontal: 18,
-                        marginBottom: 20,
                     }}
+                    ListFooterComponent={() =>
+                        (
+                            <View style={{ marginBottom: 130 }}>{''}</View>
+                        ) as ReactElement<any>
+                    }
                 />
             </View>
         </View>
@@ -121,7 +150,6 @@ const styles = StyleSheet.create({
     lesson_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-        marginBottom: 100,
     },
     l_header_cont: {
         height: Platform.OS === 'ios' ? 120 : 80,

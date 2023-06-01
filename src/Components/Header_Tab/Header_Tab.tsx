@@ -16,6 +16,7 @@ interface HeaderTabProps {
     show_numbers?: boolean;
     number_1?: number;
     number_2?: number;
+    secondIsInitialTab?: boolean;
 }
 const HeaderTab: FunctionComponent<HeaderTabProps> = ({
     marginTop,
@@ -29,8 +30,11 @@ const HeaderTab: FunctionComponent<HeaderTabProps> = ({
     show_numbers,
     number_1,
     number_2,
+    secondIsInitialTab,
 }) => {
-    const [isFirstTab, setIsFirstTab] = useState<boolean>(true);
+    const [isFirstTab, setIsFirstTab] = useState<boolean>(
+        secondIsInitialTab ? false : true,
+    );
 
     const exec_func_1 = no_double_clicks({
         execFunc: () => {

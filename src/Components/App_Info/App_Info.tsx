@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import React, { FunctionComponent } from 'react';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import { INTF_AppInfo } from '../../Interface/App_Info/App_Info';
-import CheckBox from '../Check_Box/Check_Box';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 
@@ -9,16 +8,14 @@ interface AppInfoProps {
     app: INTF_AppInfo;
 }
 const AppInfo: FunctionComponent<AppInfoProps> = ({ app }) => {
-    const [marked, setMarked] = useState<boolean>(false);
-
     return (
-        <View
+        <TouchableOpacity
+            activeOpacity={0.5}
             style={{
                 flexDirection: 'row',
                 marginBottom: 10,
                 alignItems: 'center',
             }}>
-            <CheckBox active={marked} setActive={setMarked} size={25} />
             <Image
                 style={{
                     marginLeft: 10,
@@ -40,7 +37,7 @@ const AppInfo: FunctionComponent<AppInfoProps> = ({ app }) => {
                 }}>
                 {app?.name?.replace('.app', '')}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 

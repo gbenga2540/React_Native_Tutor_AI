@@ -1,119 +1,163 @@
-import React, { FunctionComponent } from 'react';
+import React, {
+    FunctionComponent,
+    ReactElement,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import {
     FlatList,
+    KeyboardAvoidingView,
     Platform,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { test_conversation } from '../../../test/Data/Lessons';
 import { fonts } from '../../Configs/Fonts/Fonts';
-import ConversationCard from '../../Components/Conversation_Card/Conversation_Card';
-import Feather from 'react-native-vector-icons/Feather';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
+import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
+import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
+import ChatCard from '../../Components/Chat_Card/Chat_Card';
+import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
+import { observer } from 'mobx-react';
 
-const ConversationPage: FunctionComponent = () => {
+const ConversationPage: FunctionComponent = observer(() => {
+    const [chats, setChats] = useState<INTF_Conversation[]>([]);
+    const [micText, setMicText] = useState<string>('');
+    const flatListRef = useRef<FlatList<any> | null>(null);
+
+    useEffect(() => {
+        setChats([
+            {
+                isAI: true,
+                chat: 'Hello, Dominion How’s life going?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+            {
+                isAI: true,
+                chat: 'Have you been paying close attention to your lectures both online and offline?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+            {
+                isAI: true,
+                chat: 'Hello, Dominion How’s life going?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+            {
+                isAI: true,
+                chat: 'Hello, Dominion How’s life going?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+            {
+                isAI: true,
+                chat: 'Hello, Dominion How’s life going?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+            {
+                isAI: true,
+                chat: 'Hello, Dominion How’s life going?',
+            },
+            {
+                isAI: false,
+                chat: 'I am fine.',
+            },
+        ]);
+    }, []);
+
+    useEffect(() => {
+        const first_timer = setTimeout(() => {
+            flatListRef.current !== null && flatListRef.current?.scrollToEnd();
+        }, 500);
+        return () => clearTimeout(first_timer);
+    }, []);
+
     return (
         <View style={styles.conversation_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.c_header_cont}>
                 <Text style={styles.c_header}>Conversation</Text>
             </View>
-            <View
+            <MiniAvatar
+                isMale={false}
+                marginTop={15}
+                marginBottom={4}
+                marginHorizontal={22}
+            />
+            <KeyboardAvoidingView
                 style={{
-                    paddingHorizontal: 4,
-                    marginTop: 14,
-                    paddingBottom: 20,
-                }}>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Black,
-                        fontSize: 20,
-                        marginHorizontal: 22,
-                    }}>
-                    Assigned Class
-                </Text>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        marginBottom: 30,
-                    }}>
-                    <TouchableOpacity
-                        activeOpacity={0.6}
-                        style={{
-                            backgroundColor: Colors.Primary,
-                            width: 133,
-                            height: 42,
-                            marginTop: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 11,
-                            flexDirection: 'row',
-                            marginLeft: 22,
-                        }}>
-                        <Text
-                            style={{
-                                color: Colors.White,
-                                fontFamily: fonts.Urbanist_600,
-                                fontSize: 18,
-                                marginRight: 3,
-                            }}>
-                            Confident
-                        </Text>
-                        <Feather
-                            name="chevron-down"
-                            size={21}
-                            color={Colors.White}
-                        />
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            backgroundColor: Colors.LightPrimary,
-                            width: 131,
-                            height: 42,
-                            marginTop: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 11,
-                            marginLeft: 'auto',
-                            marginRight: 22,
-                        }}>
-                        <Text
-                            style={{
-                                color: Colors.Primary,
-                                fontFamily: fonts.Urbanist_600,
-                                fontSize: 18,
-                            }}>
-                            20:00 Mins
-                        </Text>
-                    </View>
-                </View>
+                    flex: 1,
+                }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <FlatList
-                    data={test_conversation}
-                    keyExtractor={item => item.topic_id as any}
+                    ref={flatListRef}
+                    ListHeaderComponent={() =>
+                        (
+                            <View style={{ marginTop: 16 }}>{''}</View>
+                        ) as ReactElement<any>
+                    }
+                    data={chats}
+                    keyExtractor={(item, index) =>
+                        item?.chat?.slice(0, 6) + index
+                    }
                     renderItem={({ item, index }) => (
-                        <ConversationCard
-                            conversation={item}
+                        <ChatCard
+                            key={index}
+                            chat={item}
                             index={index}
-                            last_index={
-                                test_conversation?.length <= 1
-                                    ? 0
-                                    : test_conversation?.length - 1
-                            }
+                            last_index={chats?.length - 1}
                         />
                     )}
                     style={{
-                        paddingHorizontal: 18,
-                        marginBottom: 20,
+                        paddingHorizontal: 22,
+                    }}
+                    ListFooterComponent={() =>
+                        (
+                            <View
+                                style={{
+                                    marginBottom: 1,
+                                }}>
+                                {''}
+                            </View>
+                        ) as ReactElement<any>
+                    }
+                />
+                <MicAndTextInput
+                    inputMode="text"
+                    marginTop={3}
+                    marginLeft={10}
+                    marginRight={10}
+                    paddingBottom={7}
+                    paddingTop={3}
+                    placeHolderText="Type.."
+                    inputValue={micText}
+                    setInputValue={setMicText}
+                    onChange={() => {
+                        flatListRef?.current?.scrollToEnd();
+                    }}
+                    onFocus={() => {
+                        flatListRef?.current?.scrollToEnd();
                     }}
                 />
-            </View>
+            </KeyboardAvoidingView>
         </View>
     );
-};
+});
 
 export default ConversationPage;
 
@@ -121,7 +165,6 @@ const styles = StyleSheet.create({
     conversation_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-        marginBottom: 100,
     },
     c_header_cont: {
         height: Platform.OS === 'ios' ? 120 : 80,

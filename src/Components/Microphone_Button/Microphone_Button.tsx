@@ -18,6 +18,8 @@ interface MicrophoneButtonProps {
     microphoneSize?: number;
     marginTop?: number | string;
     marginBottom?: number | string;
+    marginLeft?: number | string;
+    marginRight?: number | string;
     marginHorizontal?: number;
     execFunc?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
@@ -29,6 +31,8 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
     microphoneSize,
     marginTop,
     marginBottom,
+    marginLeft,
+    marginRight,
     marginHorizontal,
     execFunc,
     disabled,
@@ -109,6 +113,8 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
                 {
                     marginTop: marginTop || 0,
                     marginBottom: marginBottom || 0,
+                    marginLeft: marginLeft || 0,
+                    marginRight: marginRight || 0,
                     marginHorizontal: marginHorizontal || 0,
                     width: microphoneSize || mic_size,
                     height: microphoneSize || mic_size,

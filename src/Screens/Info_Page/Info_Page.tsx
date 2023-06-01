@@ -25,6 +25,8 @@ const InfoPage: FunctionComponent = () => {
 
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
+
+    console.log(route.params);
     const hide_header: boolean = route?.params?.hide_header || false;
     const hide_back_btn: boolean = route?.params?.hide_back_btn || false;
 
@@ -33,8 +35,6 @@ const InfoPage: FunctionComponent = () => {
 
     const sign_out = async () => {
         const reset_data = () => {
-            // UserInfoStore.clear_user_info();
-            // UserDataStore.clear_user_data();
             queryCache.clear();
             mutationCache.clear();
             navigation.dispatch(

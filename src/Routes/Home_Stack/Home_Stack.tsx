@@ -11,6 +11,12 @@ import CustomizeVoicePage from '../../Screens/Customize_Voice_Page/Customize_Voi
 import BlockAppsPage from '../../Screens/Block_Apps_Page/Block_Apps_Page';
 import HelpCenterPage from '../../Screens/Help_Center_Page/Help_Center_Page';
 import ReportPage from '../../Screens/Report_Page/Report_Page';
+import VocabularyPage from '../../Screens/Vocabulary_Page/Vocabulary_Page';
+import GlossaryPage from '../../Screens/Glossary_Page/Glossary_Page';
+import LessonArchivePage from '../../Screens/Lesson_Archive_Page/Lesson_Archive_Page';
+import HomeWorkArchivePage from '../../Screens/Home_Work_Archive_Page/Home_Work_Archive_Page';
+import LessonConvPage from '../../Screens/Lesson_Conv_Page/Lesson_Conv_Page';
+import ScheduleClassPage from '../../Screens/Schedule_Class_Page/Schedule_Class_Page';
 
 type HomeStackParamList = {
     HomeTab: {};
@@ -24,6 +30,12 @@ type HomeStackParamList = {
     BlockAppsPage: {};
     HelpCenterPage: {};
     ReportPage: {};
+    VocabularyPage: {};
+    GlossaryPage: {};
+    LessonArchivePage: {};
+    HomeWorkArchivePage: {};
+    LessonConvPage: {};
+    ScheduleClassPage: {};
 };
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -70,6 +82,27 @@ const HomeStack: FunctionComponent = () => {
                 component={HelpCenterPage}
             />
             <Home_Stack.Screen name="ReportPage" component={ReportPage} />
+            <Home_Stack.Screen
+                name="VocabularyPage"
+                component={VocabularyPage}
+            />
+            <Home_Stack.Screen name="GlossaryPage" component={GlossaryPage} />
+            <Home_Stack.Screen
+                name="LessonArchivePage"
+                component={LessonArchivePage}
+            />
+            <Home_Stack.Screen
+                name="HomeWorkArchivePage"
+                component={HomeWorkArchivePage}
+            />
+            <Home_Stack.Screen
+                name="LessonConvPage"
+                component={LessonConvPage}
+            />
+            <Home_Stack.Screen
+                name="ScheduleClassPage"
+                component={ScheduleClassPage}
+            />
         </Home_Stack.Navigator>
     );
 };

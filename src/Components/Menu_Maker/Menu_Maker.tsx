@@ -47,13 +47,24 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                     key={menu[0].id}
                     onPress={no_double_clicks({
                         execFunc: () => {
-                            navigation.push(
-                                menu[0].stack as never,
-                                {
-                                    screen: menu[0].screen,
-                                    ...menu[0].params,
-                                } as never,
-                            );
+                            if (menu[0]?.screen) {
+                                navigation.push(
+                                    menu[0].stack as never,
+                                    {
+                                        screen: menu[0].screen,
+                                        params: {
+                                            ...menu[0].params,
+                                        },
+                                    } as never,
+                                );
+                            } else {
+                                navigation.push(
+                                    menu[0].stack as never,
+                                    {
+                                        ...menu[0].params,
+                                    } as never,
+                                );
+                            }
                         },
                     })}
                     activeOpacity={0.55}
@@ -88,13 +99,24 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                         <TouchableOpacity
                             onPress={no_double_clicks({
                                 execFunc: () => {
-                                    navigation.push(
-                                        item.stack as never,
-                                        {
-                                            screen: item.screen,
-                                            ...item.params,
-                                        } as never,
-                                    );
+                                    if (item?.screen) {
+                                        navigation.push(
+                                            item.stack as never,
+                                            {
+                                                screen: item.screen,
+                                                params: {
+                                                    ...item.params,
+                                                },
+                                            } as never,
+                                        );
+                                    } else {
+                                        navigation.push(
+                                            item.stack as never,
+                                            {
+                                                ...item.params,
+                                            } as never,
+                                        );
+                                    }
                                 },
                             })}
                             activeOpacity={0.55}
