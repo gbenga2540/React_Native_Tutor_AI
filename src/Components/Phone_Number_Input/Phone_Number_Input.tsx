@@ -311,14 +311,6 @@ const PhoneNumberInput: FunctionComponent<PhoneNumberInputProps> = ({
                     backgroundColor: Colors.InputBackground,
                     borderRadius: 8,
                     height: height || 56,
-                    // shadowColor: 'rgba(0 ,0 ,0 , 0.25)',
-                    // shadowOffset: {
-                    //     width: 1,
-                    //     height: 5,
-                    // },
-                    // shadowOpacity: 0.34,
-                    // shadowRadius: 3.27,
-                    // elevation: 5,
                 }}
                 textContainerStyle={{
                     backgroundColor: Colors.InputBackground,

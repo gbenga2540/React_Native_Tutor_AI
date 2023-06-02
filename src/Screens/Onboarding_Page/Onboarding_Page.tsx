@@ -737,7 +737,7 @@ const OnboardingPage: FunctionComponent = () => {
                     question === total_pages ? submit_data : next_question
                 }
                 buttonHeight={56}
-                marginBottom={Platform.OS === 'ios' ? 50 : 40}
+                marginBottom={Platform.OS === 'ios' ? 50 : 20}
             />
         </View>
     );

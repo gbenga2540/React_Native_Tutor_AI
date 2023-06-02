@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     p_header: {
         fontFamily: fonts.Urbanist_700,
         fontSize: 25,
-        marginTop: Platform.OS === 'ios' ? 60 : 30,
+        marginTop: Platform.OS === 'ios' ? 60 : 25,
         marginLeft: 22,
         marginBottom: 18,
         color: Colors.Dark,

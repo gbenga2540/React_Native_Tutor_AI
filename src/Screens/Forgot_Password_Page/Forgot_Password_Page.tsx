@@ -55,11 +55,11 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     marginTop: navigation?.canGoBack()
                         ? Platform.OS === 'ios'
                             ? 56
-                            : 40
+                            : 25
                         : Platform.OS === 'ios'
                         ? 70
-                        : 40,
-                    marginBottom: 28,
+                        : 25,
+                    marginBottom: 15,
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>

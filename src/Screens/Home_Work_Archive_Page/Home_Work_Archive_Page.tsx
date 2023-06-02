@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import BackButton from '../../Components/Back_Button/Back_Button';
@@ -18,7 +18,7 @@ const HomeWorkArchivePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -89,7 +89,7 @@ const HomeWorkArchivePage: FunctionComponent = () => {
                 marginHorizontal={20}
                 buttonHeight={56}
                 marginTop={5}
-                marginBottom={40}
+                marginBottom={Platform.OS === 'ios' ? 25 : 10}
             />
         </View>
     );

@@ -46,7 +46,7 @@ const HomePage: FunctionComponent = () => {
             <ScrollView
                 style={{
                     flex: 1,
-                    paddingHorizontal: 20,
+                    paddingHorizontal: 18,
                     paddingTop: 30,
                     marginHorizontal: 2,
                 }}>
@@ -509,13 +509,16 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     h_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 80,
+        height: Platform.OS === 'ios' ? 120 : 75,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
-        shadowColor: 'rgba(0 ,0 ,0 , 0.35)',
+        shadowColor:
+            Platform.OS === 'ios'
+                ? 'rgba(0 ,0 ,0 , 0.35)'
+                : 'rgba(0 ,0 ,0 , 0.9)',
         shadowOffset: {
             width: 1,
-            height: 2,
+            height: Platform.OS === 'ios' ? 1 : 2,
         },
         shadowOpacity: 0.34,
         shadowRadius: 3.27,

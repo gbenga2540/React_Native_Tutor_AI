@@ -152,13 +152,16 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     l_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 80,
+        height: Platform.OS === 'ios' ? 120 : 70,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
-        shadowColor: 'rgba(0 ,0 ,0 , 0.35)',
+        shadowColor:
+            Platform.OS === 'ios'
+                ? 'rgba(0 ,0 ,0 , 0.35)'
+                : 'rgba(0 ,0 ,0 , 0.9)',
         shadowOffset: {
             width: 1,
-            height: 2,
+            height: Platform.OS === 'ios' ? 1 : 2,
         },
         shadowOpacity: 0.34,
         shadowRadius: 3.27,

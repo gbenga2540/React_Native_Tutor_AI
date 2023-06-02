@@ -1,5 +1,12 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Platform,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
 import ArcInnerIcon from '../../Images/SVGs/Arc_Inner_Icon.svg';
@@ -47,7 +54,12 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                         lesson?.progress === 100
                             ? Colors.Primary
                             : Colors.LightPurple3,
-                    marginBottom: index === last_index ? 67 : 17,
+                    marginBottom:
+                        index === last_index
+                            ? Platform.OS === 'ios'
+                                ? 67
+                                : 22
+                            : 17,
                 },
             ]}>
             <ArcInnerIcon

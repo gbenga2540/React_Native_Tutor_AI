@@ -66,10 +66,10 @@ const SelectPaymentPage: FunctionComponent = () => {
 
     return (
         <View style={styles.sub_main}>
-            <CustomStatusBar backgroundColor={Colors.Background} />
+            <CustomStatusBar backgroundColor={Colors.Amber} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',

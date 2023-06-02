@@ -34,7 +34,7 @@ const ReportPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -302,7 +302,7 @@ const ReportPage: FunctionComponent = () => {
                 marginHorizontal={22}
                 buttonHeight={56}
                 marginTop={20}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
+                marginBottom={Platform.OS === 'ios' ? 25 : 10}
             />
         </View>
     );

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import { fonts } from '../../Configs/Fonts/Fonts';
@@ -11,7 +11,7 @@ const TCPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',

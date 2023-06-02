@@ -82,11 +82,11 @@ const CongratulationsPage: FunctionComponent = () => {
                             marginTop: navigation?.canGoBack()
                                 ? Platform.OS === 'ios'
                                     ? 56
-                                    : 40
+                                    : 25
                                 : Platform.OS === 'ios'
                                 ? 70
-                                : 40,
-                            marginBottom: 28,
+                                : 25,
+                            marginBottom: 15,
                         }}>
                         {navigation.canGoBack() && <BackButton />}
                     </View>
@@ -150,7 +150,7 @@ const CongratulationsPage: FunctionComponent = () => {
                 buttonText="Continue"
                 marginHorizontal={22}
                 execFunc={proceed}
-                marginBottom={Platform.OS === 'ios' ? 50 : 40}
+                marginBottom={Platform.OS === 'ios' ? 50 : 20}
             />
         </View>
     );

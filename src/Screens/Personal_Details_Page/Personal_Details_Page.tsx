@@ -30,9 +30,12 @@ import TextButton from '../../Components/Text_Button/Text_Button';
 import { mongo_date_converter_4 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
 import { get_age } from '../../Utils/Get_Age/Get_Age';
 import DatePicker from 'react-native-date-picker';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 const PersonalDetailsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const scrollViewRef = useRef<ScrollView | null>(null);
 
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
@@ -147,6 +150,14 @@ const PersonalDetailsPage: FunctionComponent = () => {
         },
     });
 
+    useEffect(() => {
+        const first_timer = setTimeout(() => {
+            scrollViewRef.current !== null &&
+                scrollViewRef.current?.scrollToEnd();
+        }, 500);
+        return () => clearTimeout(first_timer);
+    }, []);
+
     return (
         <View style={styles.pdp_main}>
             <CustomStatusBar
@@ -160,7 +171,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
             />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -176,7 +187,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     Personal Details
                 </Text>
             </View>
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
                 <View
                     style={{
                         flexDirection: 'row',

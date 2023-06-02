@@ -50,7 +50,7 @@ const AuthSelectPage: FunctionComponent = () => {
                         flexWrap: 'wrap',
                         flexDirection: 'row',
                         maxWidth: 310,
-                        marginTop: Platform.OS === 'ios' ? 120 : 70,
+                        marginTop: Platform.OS === 'ios' ? 110 : 55,
                         marginLeft: 40,
                     }}>
                     {avatars_data?.slice(0, 6)?.map(item => (
@@ -98,6 +98,7 @@ const AuthSelectPage: FunctionComponent = () => {
                     buttonText="Sign In"
                     marginHorizontal={22}
                     marginTop={15}
+                    marginBottom={50}
                     execFunc={nav_To_sign_in}
                     textColor={Colors.Primary}
                     backgroundColor={Colors.LightPurple}

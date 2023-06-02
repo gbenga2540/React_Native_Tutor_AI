@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
+    Platform,
     ScrollView,
     StyleSheet,
     Text,
@@ -32,7 +33,7 @@ const HelpCenterPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -49,10 +50,14 @@ const HelpCenterPage: FunctionComponent = () => {
                     textSize={20}
                 />
             </View>
-            <ScrollView style={{ flex: 1, marginHorizontal: 24 }}>
+            <View
+                style={{
+                    minHeight: 50,
+                    marginTop: 20,
+                    marginBottom: 20,
+                    marginHorizontal: 22,
+                }}>
                 <HeaderTab
-                    marginTop={20}
-                    marginBottom={20}
                     header_1="FAQ"
                     header_2="Contact Us"
                     marginBetween={4}
@@ -60,66 +65,95 @@ const HelpCenterPage: FunctionComponent = () => {
                     execFunc_Header_2={() => setCurrentTAB(2)}
                     secondIsInitialTab={currentTAB === 2}
                 />
-                {currentTAB === 1 && (
-                    <View>
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            style={{
-                                flexDirection: 'row',
-                                marginBottom: 12,
-                            }}>
-                            {faq_types?.map((item, index) => (
-                                <TouchableOpacity
-                                    style={{
-                                        borderWidth:
-                                            activeFAQ !== index ? 1.3 : 0,
-                                        paddingVertical: 8,
-                                        paddingHorizontal: 13,
-                                        marginRight: 12,
-                                        borderRadius: 20,
-                                        borderColor:
-                                            activeFAQ !== index
-                                                ? Colors.Primary
-                                                : undefined,
+            </View>
+            {currentTAB === 1 && (
+                <View
+                    style={{
+                        flex: 1,
+                        marginBottom: Platform.OS === 'ios' ? 25 : 5,
+                    }}>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={{
+                            flexDirection: 'row',
+                            marginBottom: 12,
+                            marginHorizontal: 22,
+                            maxHeight: 40,
+                        }}>
+                        {faq_types?.map((item, index) => (
+                            <TouchableOpacity
+                                style={{
+                                    borderWidth: activeFAQ !== index ? 1.3 : 0,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    paddingHorizontal: 13,
+                                    marginRight: 12,
+                                    borderRadius: 20,
+                                    borderColor:
+                                        activeFAQ !== index
+                                            ? Colors.Primary
+                                            : undefined,
 
-                                        backgroundColor:
+                                    backgroundColor:
+                                        activeFAQ === index
+                                            ? Colors.Primary
+                                            : Colors?.White,
+                                }}
+                                onPress={() => setActiveFAQ(index)}
+                                key={index}>
+                                <Text
+                                    style={{
+                                        fontFamily: fonts.Urbanist_500,
+                                        fontSize: 15,
+                                        color:
                                             activeFAQ === index
-                                                ? Colors.Primary
-                                                : Colors?.White,
-                                    }}
-                                    onPress={() => setActiveFAQ(index)}
-                                    key={index}>
-                                    <Text
-                                        style={{
-                                            fontFamily: fonts.Urbanist_500,
-                                            fontSize: 15,
-                                            color:
-                                                activeFAQ === index
-                                                    ? Colors.White
-                                                    : Colors.Primary,
-                                        }}>
-                                        {item}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
+                                                ? Colors.White
+                                                : Colors.Primary,
+                                    }}>
+                                    {item}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                    <View
+                        style={{
+                            height: 56,
+                            marginBottom: 5,
+                            marginHorizontal: 22,
+                        }}>
                         <SearchBar
                             inputValue={search}
                             setInputValue={setSearch}
                             placeHolderText="search"
-                            marginBottom={30}
                         />
+                    </View>
+                    <ScrollView
+                        style={{
+                            flex: 1,
+                            marginHorizontal: 2,
+                            paddingHorizontal: 22,
+                            paddingTop: 20,
+                        }}>
                         {faqs?.map((item, index) => (
                             <FAQReader key={index} faq={item} />
                         ))}
-                    </View>
-                )}
-                {currentTAB === 2 &&
-                    contact_us?.map((item, index) => (
+                    </ScrollView>
+                </View>
+            )}
+            {currentTAB === 2 && (
+                <ScrollView
+                    style={{
+                        paddingHorizontal: 20,
+                        marginHorizontal: 2,
+                        marginBottom: Platform.OS === 'ios' ? 25 : 5,
+                    }}>
+                    {contact_us?.map((item, index) => (
                         <ContactUsButton contact_us={item} key={index} />
                     ))}
-            </ScrollView>
+                </ScrollView>
+            )}
         </View>
     );
 };

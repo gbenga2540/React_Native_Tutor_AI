@@ -106,8 +106,8 @@ const MainStack: FunctionComponent = () => {
     if (render) {
         return (
             <Main_Stack.Navigator
-                // initialRouteName={'AuthStack'}
-                initialRouteName={'HomeStack'}
+                initialRouteName={'AuthStack'}
+                // initialRouteName={'HomeStack'}
                 screenOptions={{
                     headerShown: false,
                 }}>

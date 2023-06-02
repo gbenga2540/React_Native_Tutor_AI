@@ -19,7 +19,7 @@ const LessonArchivePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -36,8 +36,7 @@ const LessonArchivePage: FunctionComponent = () => {
                 style={{
                     paddingHorizontal: 4,
                     marginTop: 14,
-                    paddingBottom: 20,
-                    paddingBottom: Platform.OS === 'ios' ? 25 : 5,
+                    paddingBottom: Platform.OS === 'ios' ? 25 : 10,
                     flex: 1,
                 }}>
                 <Image

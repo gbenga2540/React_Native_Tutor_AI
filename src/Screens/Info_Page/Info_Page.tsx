@@ -26,7 +26,6 @@ const InfoPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
 
-    console.log(route.params);
     const hide_header: boolean = route?.params?.hide_header || false;
     const hide_back_btn: boolean = route?.params?.hide_back_btn || false;
 
@@ -107,7 +106,7 @@ const InfoPage: FunctionComponent = () => {
                     <Text
                         style={{
                             marginLeft: 22,
-                            marginTop: Platform.OS === 'ios' ? 56 : 40,
+                            marginTop: Platform.OS === 'ios' ? 56 : 25,
                             marginBottom: 28,
                         }}>
                         {''}
@@ -119,11 +118,11 @@ const InfoPage: FunctionComponent = () => {
                             marginTop: navigation?.canGoBack()
                                 ? Platform.OS === 'ios'
                                     ? 56
-                                    : 40
+                                    : 25
                                 : Platform.OS === 'ios'
                                 ? 70
-                                : 40,
-                            marginBottom: 28,
+                                : 25,
+                            marginBottom: 15,
                         }}>
                         {navigation.canGoBack() && <BackButton />}
                     </View>

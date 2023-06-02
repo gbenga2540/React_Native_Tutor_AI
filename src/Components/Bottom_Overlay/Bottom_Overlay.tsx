@@ -181,7 +181,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
             case 0:
                 return ['50'];
             case 1:
-                return Platform.OS === 'ios' ? ['60'] : ['65'];
+                return Platform.OS === 'ios' ? ['53'] : ['58'];
             case 2:
                 return KeyboardStore.keyboard_active ? ['87'] : ['60'];
             case 3:

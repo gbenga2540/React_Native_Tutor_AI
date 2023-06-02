@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useRef } from 'react';
 import {
     FlatList,
     Platform,
@@ -18,12 +18,21 @@ import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
 const ScheduleClassPage: FunctionComponent = () => {
+    const flatListRef = useRef<FlatList<any> | null>(null);
+
+    useEffect(() => {
+        const first_timer = setTimeout(() => {
+            flatListRef.current !== null && flatListRef.current?.scrollToEnd();
+        }, 500);
+        return () => clearTimeout(first_timer);
+    }, []);
+
     return (
         <View style={styles.sc_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: 65,
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -37,27 +46,32 @@ const ScheduleClassPage: FunctionComponent = () => {
                 />
             </View>
             <Observer>
-                {() => (
-                    <FlatList
-                        data={ScheduleInfoStore?.schedule_info}
-                        renderItem={({ item, index }) => (
-                            <ScheduleItem
-                                key={index}
-                                schedule={item}
-                                index={index}
-                            />
-                        )}
-                        keyExtractor={(item, index) =>
-                            `${item.time} + ${index}`
-                        }
-                        style={{
-                            marginHorizontal: 2,
-                            paddingHorizontal: 20,
-                            paddingTop: 10,
-                            flex: 1,
-                        }}
-                    />
-                )}
+                {() =>
+                    ScheduleInfoStore?.schedule_info?.length > 0 ? (
+                        <FlatList
+                            ref={flatListRef}
+                            data={ScheduleInfoStore?.schedule_info}
+                            renderItem={({ item, index }) => (
+                                <ScheduleItem
+                                    key={index}
+                                    schedule={item}
+                                    index={index}
+                                />
+                            )}
+                            keyExtractor={(item, index) =>
+                                `${item.time} + ${index}`
+                            }
+                            style={{
+                                marginHorizontal: 2,
+                                paddingHorizontal: 20,
+                                paddingTop: 10,
+                                flex: 1,
+                            }}
+                        />
+                    ) : (
+                        <View style={{ flex: 1 }}>{''}</View>
+                    )
+                }
             </Observer>
             <TouchableOpacity
                 onPress={no_double_clicks({
@@ -70,8 +84,8 @@ const ScheduleClassPage: FunctionComponent = () => {
                 style={{
                     backgroundColor: Colors.Primary,
                     alignSelf: 'flex-end',
-                    marginRight: 22,
-                    marginBottom: Platform.OS === 'ios' ? 30 : 10,
+                    marginRight: Platform.OS === 'ios' ? 18 : 14,
+                    marginBottom: Platform.OS === 'ios' ? 25 : 15,
                     marginTop: 8,
                     width: 60,
                     height: 60,
