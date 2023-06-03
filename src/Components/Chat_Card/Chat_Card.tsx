@@ -3,7 +3,6 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import TutorAIIcon from '../../Images/SVGs/Tutor_AI_Icon.svg';
 import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
-import TranslateIcon from '../../Images/SVGs/Translate_Icon.svg';
 import Colors from '../../Configs/Colors/Colors';
 import BasicText from '../Basic_Text/Basic_Text';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
@@ -32,7 +31,8 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             marginBottom: 20,
                         }}>
                         <TutorAIIcon width={31} height={31} />
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.55}
                             style={{
                                 width: 200,
                                 maxWidth: 200,
@@ -54,11 +54,6 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 minHeight: 55,
                             }}>
                             <BasicText inputText={chat?.chat} textSize={15} />
-                        </View>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            style={{ marginRight: 8 }}>
-                            <TranslateIcon width={30} height={30} />
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.5}>
                             <TranscribeIcon width={30} height={30} />
@@ -81,7 +76,8 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 borderRadius: 31,
                             }}
                         />
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.55}
                             style={{
                                 width: 200,
                                 maxWidth: 200,
@@ -107,11 +103,6 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 textColor={Colors.White}
                                 textSize={15}
                             />
-                        </View>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            style={{ marginRight: 8 }}>
-                            <TranslateIcon width={30} height={30} />
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.5}>
                             <TranscribeIcon width={30} height={30} />

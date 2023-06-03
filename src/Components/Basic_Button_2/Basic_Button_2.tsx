@@ -8,10 +8,10 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 interface BasicButton2Props {
     buttonHeight?: number | string;
     buttonText: string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
     borderRadius?: number;
-    marginHorizontal?: number;
+    marginHorizontal?: number | 'auto';
     paddingHorizontal?: number;
     execFunc: DebouncedFuncLeading<() => void>;
     disabled?: boolean;

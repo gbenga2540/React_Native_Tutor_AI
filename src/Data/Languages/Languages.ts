@@ -44,7 +44,6 @@ export const native_languages = [
     { name: 'Urdu', code: 'ur' },
     { name: 'Uzbek', code: 'uz' },
     { name: 'Vietnamese', code: 'vi' },
-    { name: 'Yoruba', code: 'yo' },
 ];
 
 export const NativeLanguagesChooser = [

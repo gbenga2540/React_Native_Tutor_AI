@@ -57,7 +57,7 @@ const SignInPage: FunctionComponent = () => {
                 {navigation.canGoBack() && <BackButton />}
             </View>
             <Text style={[styles.si_m_wt, { fontSize: 25 }]}>
-                Welcome Back Oluwagbemiga
+                Welcome Back!
             </Text>
             <BasicTextEntry
                 placeHolderText="johndoe@gmail.com"

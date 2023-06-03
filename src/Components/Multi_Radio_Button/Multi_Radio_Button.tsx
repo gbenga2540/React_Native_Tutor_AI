@@ -13,10 +13,10 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 
 interface MultiRadioButtonProps {
     option: string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
     index: number;
     answers: number[];
     setAnswers: Dispatch<SetStateAction<number[]>>;

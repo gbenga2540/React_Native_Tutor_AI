@@ -15,6 +15,7 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface LessonCardProps {
     lesson: INTF_Lesson;
@@ -125,28 +126,26 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                         paddingTop: 26,
                         paddingBottom: 12,
                     }}>
-                    <Text
-                        style={{
-                            color:
-                                lesson?.progress === 100
-                                    ? Colors.White
-                                    : Colors.Black,
-                            fontFamily: fonts.Urbanist_500,
-                            fontSize: 15,
-                        }}>
-                        {`Lesson ${lesson?.lesson_id}`}
-                    </Text>
-                    <Text
-                        style={{
-                            color:
-                                lesson?.progress === 100
-                                    ? Colors.White
-                                    : Colors.Black,
-                            fontFamily: fonts.Urbanist_600,
-                            fontSize: 18,
-                        }}>
-                        {lesson?.title}
-                    </Text>
+                    <BasicText
+                        inputText={`Lesson ${lesson?.lesson_id}`}
+                        textWeight={500}
+                        textSize={15}
+                        textColor={
+                            lesson?.progress === 100
+                                ? Colors.White
+                                : Colors.Black
+                        }
+                    />
+                    <BasicText
+                        inputText={lesson?.title as string}
+                        textWeight={600}
+                        textSize={18}
+                        textColor={
+                            lesson?.progress === 100
+                                ? Colors.White
+                                : Colors.Black
+                        }
+                    />
                 </View>
             </View>
         </TouchableOpacity>

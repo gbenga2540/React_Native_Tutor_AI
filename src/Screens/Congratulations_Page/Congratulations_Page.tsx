@@ -33,7 +33,7 @@ const CongratulationsPage: FunctionComponent = () => {
                     navigation.push(
                         'AuthStack' as never,
                         {
-                            screen: 'OnboardingPage',
+                            screen: 'PreTestPage',
                         } as never,
                     );
                     break;

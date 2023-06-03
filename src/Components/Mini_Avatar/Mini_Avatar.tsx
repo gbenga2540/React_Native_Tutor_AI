@@ -4,15 +4,18 @@ import { avatars_data } from '../../Data/Avatars/Avatars';
 import Colors from '../../Configs/Colors/Colors';
 import Feather from 'react-native-vector-icons/Feather';
 import { DebouncedFuncLeading } from 'lodash';
+import SubtitleIcon from '../../Images/SVGs/Subtitle_Icon.svg';
 
 const width = '100%';
 const height = 200;
 interface MiniAvatarProps {
     isMale: boolean;
     onPressVoice?: DebouncedFuncLeading<() => void>;
-    marginHorizontal?: number | string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginHorizontal?: number | 'auto';
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    isSubtitleIcon?: boolean;
+    hideIcons?: boolean;
 }
 const MiniAvatar: FunctionComponent<MiniAvatarProps> = ({
     isMale,
@@ -20,6 +23,8 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = ({
     marginHorizontal,
     marginTop,
     marginBottom,
+    isSubtitleIcon,
+    hideIcons,
 }) => {
     return (
         <View
@@ -39,18 +44,30 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = ({
                             resizeMode: 'contain',
                         }}
                     />
-                    <TouchableOpacity
-                        onPress={onPressVoice}
-                        style={styles.voice}
-                        activeOpacity={0.75}>
-                        <View style={styles.voice_icon}>
-                            <Feather
-                                name="volume-2"
-                                size={22}
-                                color={Colors.Primary}
-                            />
-                        </View>
-                    </TouchableOpacity>
+                    {!hideIcons &&
+                        (isSubtitleIcon ? (
+                            <TouchableOpacity
+                                onPress={onPressVoice}
+                                style={styles.voice}
+                                activeOpacity={0.75}>
+                                <View style={styles.voice_icon}>
+                                    <SubtitleIcon width={20} height={20} />
+                                </View>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                onPress={onPressVoice}
+                                style={styles.voice}
+                                activeOpacity={0.75}>
+                                <View style={styles.voice_icon}>
+                                    <Feather
+                                        name="volume-2"
+                                        size={22}
+                                        color={Colors.Primary}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        ))}
                 </View>
             )}
             {!isMale && (
@@ -70,18 +87,30 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = ({
                             resizeMode: 'contain',
                         }}
                     />
-                    <TouchableOpacity
-                        onPress={onPressVoice}
-                        style={styles.voice}
-                        activeOpacity={0.75}>
-                        <View style={styles.voice_icon}>
-                            <Feather
-                                name="volume-2"
-                                size={22}
-                                color={Colors.Primary}
-                            />
-                        </View>
-                    </TouchableOpacity>
+                    {!hideIcons &&
+                        (isSubtitleIcon ? (
+                            <TouchableOpacity
+                                onPress={onPressVoice}
+                                style={styles.voice}
+                                activeOpacity={0.75}>
+                                <View style={styles.voice_icon}>
+                                    <SubtitleIcon width={20} height={20} />
+                                </View>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                onPress={onPressVoice}
+                                style={styles.voice}
+                                activeOpacity={0.75}>
+                                <View style={styles.voice_icon}>
+                                    <Feather
+                                        name="volume-2"
+                                        size={22}
+                                        color={Colors.Primary}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        ))}
                 </View>
             )}
         </View>

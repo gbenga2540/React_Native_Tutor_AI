@@ -5,9 +5,9 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 
 interface TextDividerProps {
     text?: string;
-    marginTop?: number;
-    marginBottom?: number;
-    marginHorizontal?: number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     singleLine?: boolean;
     lineColor?: string;
     textColor?: string;

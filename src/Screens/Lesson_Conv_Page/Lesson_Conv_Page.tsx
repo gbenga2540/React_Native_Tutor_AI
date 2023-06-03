@@ -118,6 +118,7 @@ const LessonConvPage: FunctionComponent = observer(() => {
                 marginTop={15}
                 marginBottom={4}
                 marginHorizontal={22}
+                hideIcons
             />
             <KeyboardAvoidingView
                 style={{

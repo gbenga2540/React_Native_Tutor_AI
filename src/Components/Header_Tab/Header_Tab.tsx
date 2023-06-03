@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { fonts } from '../../Configs/Fonts/Fonts';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import Colors from '../../Configs/Colors/Colors';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface HeaderTabProps {
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginHorizontal?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     marginBetween?: number;
     execFunc_Header_1?: () => void;
     execFunc_Header_2?: () => void;
@@ -73,19 +73,20 @@ const HeaderTab: FunctionComponent<HeaderTabProps> = ({
                         marginRight: (marginBetween || 0) / 2 || 0,
                     },
                 ]}>
-                <Text
-                    style={[
-                        styles.ht_m_txt_1,
-                        {
-                            color: isFirstTab ? Colors.Primary : Colors?.Dark,
-                        },
-                    ]}>
-                    {header_1 || 'Header 1'}
-                </Text>
+                <BasicText
+                    inputText={header_1 || 'Header 1'}
+                    textColor={isFirstTab ? Colors.Primary : Colors?.Dark}
+                    textSize={18}
+                    textWeight={700}
+                />
                 {show_numbers && (
-                    <Text style={styles.ht_m_txt_2}>{`(${
-                        number_1 || 0
-                    })`}</Text>
+                    <BasicText
+                        inputText={`(${number_1 || 0})`}
+                        textWeight={500}
+                        marginLeft={5}
+                        textSize={16}
+                        textColor={Colors.DarkGrey}
+                    />
                 )}
             </TouchableOpacity>
             <TouchableOpacity
@@ -100,19 +101,20 @@ const HeaderTab: FunctionComponent<HeaderTabProps> = ({
                         marginLeft: (marginBetween || 0) / 2 || 0,
                     },
                 ]}>
-                <Text
-                    style={[
-                        styles.ht_m_txt_1,
-                        {
-                            color: !isFirstTab ? Colors.Primary : Colors?.Dark,
-                        },
-                    ]}>
-                    {header_2 || 'Header 2'}
-                </Text>
+                <BasicText
+                    inputText={header_2 || 'Header 2'}
+                    textColor={!isFirstTab ? Colors.Primary : Colors?.Dark}
+                    textSize={18}
+                    textWeight={700}
+                />
                 {show_numbers && (
-                    <Text style={styles.ht_m_txt_2}>{`(${
-                        number_2 || 0
-                    })`}</Text>
+                    <BasicText
+                        inputText={`(${number_2 || 0})`}
+                        textWeight={500}
+                        marginLeft={5}
+                        textSize={16}
+                        textColor={Colors.DarkGrey}
+                    />
                 )}
             </TouchableOpacity>
         </View>
@@ -133,15 +135,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 3,
         paddingBottom: 10,
-    },
-    ht_m_txt_1: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 18,
-    },
-    ht_m_txt_2: {
-        fontFamily: fonts.Urbanist_500,
-        marginLeft: 5,
-        color: Colors.DarkGrey,
-        fontSize: 16,
     },
 });

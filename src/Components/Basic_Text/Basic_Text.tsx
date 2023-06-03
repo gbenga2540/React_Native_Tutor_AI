@@ -10,11 +10,12 @@ interface BasicTextProps {
     textSize?: number;
     textColor?: string;
     backgroundColor?: string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
     textAlign?: 'auto' | 'center' | 'left' | 'right' | 'justify';
+    width?: number;
 }
 const BasicText: FunctionComponent<BasicTextProps> = ({
     inputText,
@@ -28,6 +29,7 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
     marginLeft,
     marginRight,
     textAlign,
+    width,
 }) => {
     return (
         <Text
@@ -43,6 +45,8 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
                           fontSize: textSize || 14,
                           backgroundColor: backgroundColor || undefined,
                           textAlign: textAlign || 'auto',
+                          width: width || undefined,
+                          maxWidth: width || undefined,
                       }
                     : {
                           fontFamily:
@@ -59,6 +63,8 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
                           fontSize: textSize || 14,
                           backgroundColor: backgroundColor || undefined,
                           textAlign: textAlign || 'auto',
+                          width: width || undefined,
+                          maxWidth: width || undefined,
                       }
             }>
             {inputText || ''}

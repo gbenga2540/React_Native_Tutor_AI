@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { Text, Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { INTF_ContactUS } from '../../Interface/Contact_Us/Contact_Us';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { open_browser_with_link } from '../../Utils/Open_Browser_Link/Open_Browser_Link';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface ContactUsButtonProps {
     contact_us: INTF_ContactUS;
@@ -42,15 +42,12 @@ const ContactUsButton: FunctionComponent<ContactUsButtonProps> = ({
                 }}
                 source={contact_us?.image}
             />
-            <Text
-                style={{
-                    fontFamily: fonts.Urbanist_600,
-                    color: Colors.Dark,
-                    marginLeft: 20,
-                    fontSize: 16,
-                }}>
-                {contact_us?.name}
-            </Text>
+            <BasicText
+                inputText={contact_us?.name}
+                marginLeft={20}
+                textSize={16}
+                textWeight={600}
+            />
         </TouchableOpacity>
     );
 };

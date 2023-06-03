@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import Colors from '../../Configs/Colors/Colors';
 import { number_to_day_short } from '../../Utils/Number_To_Day_Short/Number_To_Day_Short';
 import { fonts } from '../../Configs/Fonts/Fonts';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface CheckMarkProps {
     day_num: number;
@@ -41,18 +42,16 @@ const CheckMark: FunctionComponent<CheckMarkProps> = ({
                     <Feather name="check" size={15} color={Colors.White} />
                 )}
             </View>
-            <Text
-                style={{
-                    fontFamily: fonts.OpenSans_400,
-                    color: Colors.White,
-                    fontSize: 10,
-                    textAlign: 'center',
-                    marginTop: 4,
-                }}>
-                {number_to_day_short({
+            <BasicText
+                inputText={number_to_day_short({
                     day_number: day_num || 1,
                 })}
-            </Text>
+                marginTop={4}
+                textSize={10}
+                textFamily={fonts.OpenSans_400}
+                textAlign="center"
+                textColor={Colors.White}
+            />
         </View>
     );
 };

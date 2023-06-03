@@ -89,7 +89,7 @@ const OnboardingPage: FunctionComponent = () => {
                         header_txt: 'You did well.',
                         message_txt:
                             'You have been assigned to Confident Class.',
-                        nextPage: 2,
+                        nextPage: 3,
                     },
                 } as never,
             );
@@ -160,22 +160,18 @@ const OnboardingPage: FunctionComponent = () => {
                     marginLeft: 22,
                     marginTop: navigation?.canGoBack()
                         ? Platform.OS === 'ios'
-                            ? 56
-                            : 40
+                            ? 60
+                            : 25
                         : Platform.OS === 'ios'
                         ? 70
-                        : 40,
+                        : 25,
                     marginBottom: 28,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton execFunc={handle_go_back} />
+                <ProgressBar progress={(question / total_pages) * 100} />
             </View>
-            <ProgressBar
-                progress={(question / total_pages) * 100}
-                marginTop={10}
-                marginBottom={40}
-            />
             {question !== 6 && question !== 7 && question !== 8 && (
                 <ScrollView style={{ flex: 1 }}>
                     {question === 1 && (

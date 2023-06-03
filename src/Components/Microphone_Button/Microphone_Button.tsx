@@ -16,11 +16,11 @@ const anim_speed = 200;
 
 interface MicrophoneButtonProps {
     microphoneSize?: number;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
-    marginHorizontal?: number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     execFunc?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     animationSpeed?: number;

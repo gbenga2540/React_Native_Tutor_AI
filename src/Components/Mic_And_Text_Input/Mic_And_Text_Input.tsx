@@ -25,13 +25,13 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 const anim_speed = 200;
 
 interface MicAndTextInputProps {
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
     paddingTop?: number | string;
     paddingBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
-    marginHorizontal?: number;
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     execFunc?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     animationSpeed?: number;

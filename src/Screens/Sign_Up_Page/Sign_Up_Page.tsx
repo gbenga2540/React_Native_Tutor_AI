@@ -237,23 +237,19 @@ const SignUpPage: FunctionComponent = () => {
                     marginLeft: 22,
                     marginTop: navigation?.canGoBack()
                         ? Platform.OS === 'ios'
-                            ? 56
-                            : 40
+                            ? 60
+                            : 25
                         : Platform.OS === 'ios'
                         ? 70
-                        : 40,
-                    marginBottom: 28,
+                        : 25,
+                    marginBottom: 10,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton execFunc={handle_go_back} />
+                <ProgressBar progress={(question / total_pages) * 100} />
             </View>
             <ScrollView style={{ flex: 1 }}>
-                <ProgressBar
-                    progress={(question / total_pages) * 100}
-                    marginTop={5}
-                    marginBottom={20}
-                />
                 {question === 1 && (
                     <Fragment>
                         <Text style={styles.su_m_wt}>What is your Name?</Text>

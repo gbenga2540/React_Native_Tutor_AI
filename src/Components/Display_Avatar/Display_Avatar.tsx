@@ -7,9 +7,9 @@ const width = '100%';
 const height = 200;
 interface DisplayAvatarProps {
     isMale: boolean;
-    marginHorizontal?: number | string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginHorizontal?: number | 'auto';
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
 }
 const DisplayAvatar: FunctionComponent<DisplayAvatarProps> = ({
     isMale,

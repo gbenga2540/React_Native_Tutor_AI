@@ -20,9 +20,9 @@ interface SecureTextEntryProps {
     inputValue: string;
     placeHolderText?: string;
     setInputValue: Dispatch<SetStateAction<string>>;
-    marginTop?: string | number;
-    marginBottom?: string | number;
-    marginHorizontal?: string | number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     onFocus?: () => void;
     onChange?: () => void;
     inputMode?: InputModeOptions;

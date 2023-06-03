@@ -8,8 +8,8 @@ interface CheckBoxProps {
     padding?: number;
     active: boolean;
     setActive: Dispatch<SetStateAction<boolean>>;
-    marginLeft?: string | number;
-    marginRight?: string | number;
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
 }
 const CheckBox: FunctionComponent<CheckBoxProps> = ({
     size,

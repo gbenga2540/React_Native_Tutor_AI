@@ -69,7 +69,18 @@ const ScheduleClassPage: FunctionComponent = () => {
                             }}
                         />
                     ) : (
-                        <View style={{ flex: 1 }}>{''}</View>
+                        <View
+                            style={{
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                            <BasicText
+                                inputText="No Schedules Found!"
+                                textWeight={600}
+                                textSize={16}
+                            />
+                        </View>
                     )
                 }
             </Observer>

@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { INTF_FAQ } from '../../Interface/FAQ/FAQ';
 import DownArrowIcon from '../../Images/SVGs/Down_Arrow_Icon.svg';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import TextDivider from '../Text_Divider/Text_Divider';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface FAQReaderProps {
     faq: INTF_FAQ;
@@ -32,14 +32,11 @@ const FAQReader: FunctionComponent<FAQReaderProps> = ({ faq }) => {
                             height: 50,
                             marginHorizontal: 20,
                         }}>
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_700,
-                                color: Colors.Dark,
-                                fontSize: 15,
-                            }}>
-                            {faq.faq_title}
-                        </Text>
+                        <BasicText
+                            inputText={faq.faq_title}
+                            textSize={15}
+                            textWeight={700}
+                        />
                         <DownArrowIcon
                             style={{
                                 marginLeft: 'auto',
@@ -57,16 +54,14 @@ const FAQReader: FunctionComponent<FAQReaderProps> = ({ faq }) => {
                         marginBottom={10}
                         marginHorizontal={18}
                     />
-                    <Text
-                        style={{
-                            fontFamily: fonts.Urbanist_500,
-                            color: Colors.Dark,
-                            fontSize: 15,
-                            marginHorizontal: 22,
-                            marginBottom: 16,
-                        }}>
-                        {faq.faq_body}
-                    </Text>
+                    <BasicText
+                        inputText={faq.faq_body}
+                        textSize={15}
+                        textWeight={500}
+                        marginBottom={16}
+                        marginLeft={22}
+                        marginRight={22}
+                    />
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity
@@ -81,15 +76,12 @@ const FAQReader: FunctionComponent<FAQReaderProps> = ({ faq }) => {
                         alignItems: 'center',
                         borderRadius: 10,
                     }}>
-                    <Text
-                        style={{
-                            fontFamily: fonts.Urbanist_600,
-                            color: Colors.Dark,
-                            marginLeft: 20,
-                            fontSize: 15,
-                        }}>
-                        {faq.faq_title}
-                    </Text>
+                    <BasicText
+                        inputText={faq.faq_title}
+                        textSize={15}
+                        textWeight={600}
+                        marginLeft={20}
+                    />
                     <DownArrowIcon
                         style={{
                             marginLeft: 'auto',

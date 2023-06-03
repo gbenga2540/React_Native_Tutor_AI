@@ -7,11 +7,11 @@ import Feather from 'react-native-vector-icons/Feather';
 
 interface VoiceButtonProps {
     buttonSize?: number | string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
-    marginHorizontal?: number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     borderRadius?: number;
     borderColor?: string;
     borderWidth?: number;

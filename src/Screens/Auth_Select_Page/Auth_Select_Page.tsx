@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useRef } from 'react';
 import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -13,6 +13,7 @@ import BasicButton from '../../Components/Basic_Button/Basic_Button';
 
 const AuthSelectPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const scrollViewRef = useRef<ScrollView | null>(null);
 
     const nav_To_sign_up = no_double_clicks({
         execFunc: () =>
@@ -34,6 +35,14 @@ const AuthSelectPage: FunctionComponent = () => {
             ),
     });
 
+    useEffect(() => {
+        const first_timer = setTimeout(() => {
+            scrollViewRef.current !== null &&
+                scrollViewRef.current?.scrollToEnd();
+        }, 500);
+        return () => clearTimeout(first_timer);
+    }, []);
+
     return (
         <LinearGradient
             start={{ x: 0, y: 0 }}
@@ -44,7 +53,7 @@ const AuthSelectPage: FunctionComponent = () => {
             colors={['#CDC2FF', '#f5f5f5']}
             style={styles.auth_sel_main}>
             <CustomStatusBar backgroundColor={Colors.LightPurple} />
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
                 <View
                     style={{
                         flexWrap: 'wrap',
@@ -98,7 +107,7 @@ const AuthSelectPage: FunctionComponent = () => {
                     buttonText="Sign In"
                     marginHorizontal={22}
                     marginTop={15}
-                    marginBottom={50}
+                    marginBottom={Platform.OS === 'ios' ? 30 : 20}
                     execFunc={nav_To_sign_in}
                     textColor={Colors.Primary}
                     backgroundColor={Colors.LightPurple}

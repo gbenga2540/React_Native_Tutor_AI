@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
     Image,
     Keyboard,
@@ -20,11 +20,13 @@ import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import TextButton from '../../Components/Text_Button/Text_Button';
+import StopWatch from '../../Components/Stop_Watch/Stop_Watch';
 
 const VerifyOTPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [OTP, setOTP] = useState<string>('');
+    const [timer, setTimer] = useState<number>(30);
     // const [token, setToken] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
@@ -55,6 +57,21 @@ const VerifyOTPPage: FunctionComponent = () => {
             }
         },
     });
+
+    const onCompleted = () => {};
+    const count_down = () => {
+        let counter = 30;
+        const interval = setInterval(() => {
+            counter--;
+            // setTimer(counter);
+            console.log(counter);
+            if (counter <= 0) {
+                // onCompleted !== undefined && onCompleted();
+                clearInterval(interval);
+            }
+        }, 1000);
+    };
+    count_down();
 
     return (
         <View style={styles.v_otp_main}>
@@ -109,7 +126,7 @@ const VerifyOTPPage: FunctionComponent = () => {
             </View>
             <Text
                 style={[styles.v_o_m_info, { marginTop: 30, marginBottom: 0 }]}>
-                {'Didn’t get an OTP? Click Resend in 30 seconds'}
+                {`Didn’t get an OTP? Click Resend in ${timer} seconds`}
             </Text>
             <TextButton
                 textColor={Colors.LightPink}

@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { Keyboard, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, TouchableOpacity } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import Colors from '../../Configs/Colors/Colors';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { DebouncedFuncLeading } from 'lodash';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface IconTextProps {
     buttonName: string;
@@ -36,15 +37,13 @@ const IconText: FunctionComponent<IconTextProps> = ({
                 size={21}
                 color={buttonColor || Colors.Black}
             />
-            <Text
-                style={{
-                    color: buttonColor || Colors.Black,
-                    fontSize: 16,
-                    fontFamily: fonts.OpenSans_500,
-                    marginLeft: 3,
-                }}>
-                {buttonName}
-            </Text>
+            <BasicText
+                inputText={buttonName}
+                textFamily={fonts.OpenSans_500}
+                marginLeft={3}
+                textSize={16}
+                textColor={buttonColor || Colors.Black}
+            />
         </TouchableOpacity>
     );
 };

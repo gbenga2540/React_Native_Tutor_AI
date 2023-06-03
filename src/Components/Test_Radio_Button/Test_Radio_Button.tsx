@@ -8,10 +8,10 @@ import { INTF_Test2Answers } from '../../Interface/Test_2_Answers/Test_2_Answers
 
 interface TestRadioButtonProps {
     option: string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
     buttonHeight?: number;
     buttonWidth?: number;
     isSelected: boolean;

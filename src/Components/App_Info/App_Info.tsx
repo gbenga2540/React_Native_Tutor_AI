@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { INTF_AppInfo } from '../../Interface/App_Info/App_Info';
-import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface AppInfoProps {
     app: INTF_AppInfo;
@@ -28,15 +27,12 @@ const AppInfo: FunctionComponent<AppInfoProps> = ({ app }) => {
                     height: 50,
                 }}
             />
-            <Text
-                style={{
-                    color: Colors.Dark,
-                    marginLeft: 5,
-                    fontFamily: fonts.Urbanist_600,
-                    fontSize: 16,
-                }}>
-                {app?.name?.replace('.app', '')}
-            </Text>
+            <BasicText
+                inputText={app?.name?.replace('.app', '') as string}
+                marginLeft={5}
+                textWeight={600}
+                textSize={16}
+            />
         </TouchableOpacity>
     );
 };

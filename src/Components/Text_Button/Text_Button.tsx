@@ -14,10 +14,10 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 interface TextButtonProps {
     buttonText: string;
     textColor?: string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
     isFontLight?: boolean;
     execFunc: DebouncedFuncLeading<() => void>;
     disabled?: boolean;

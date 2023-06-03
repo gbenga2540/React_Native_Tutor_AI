@@ -266,9 +266,9 @@ interface PhoneNumberInputProps {
         | undefined;
     setInputValue: Dispatch<SetStateAction<string>>;
     setIsValid: Dispatch<SetStateAction<boolean>>;
-    marginTop?: number | string;
-    marginBottom?: number | string;
-    marginHorizontal?: number | string;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     withDarkTheme?: boolean;
     autoFocus?: boolean;
     height?: number;

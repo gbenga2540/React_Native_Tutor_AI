@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { INTF_ProfileMenu } from '../../Interface/Profile_Menu/Profile_Menu';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import Feather from 'react-native-vector-icons/Feather';
 import TextDivider from '../Text_Divider/Text_Divider';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface MenuMakerProps {
     menu: INTF_ProfileMenu[];
@@ -15,9 +15,9 @@ interface MenuMakerProps {
     textColor?: string;
     lineColor?: string;
     arrowColor?: string;
-    marginTop?: string | number;
-    marginBottom?: string | number;
-    marginHorizontal?: string | number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     borderRadius?: number;
 }
 const MenuMaker: FunctionComponent<MenuMakerProps> = ({
@@ -73,16 +73,14 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                         alignItems: 'center',
                         flexDirection: 'row',
                     }}>
-                    <Text
-                        style={{
-                            fontFamily: fonts.Urbanist_600,
-                            marginLeft: 17,
-                            fontSize: 15,
-                            color: textColor || Colors.Dark,
-                            marginRight: 'auto',
-                        }}>
-                        {menu[0].name}
-                    </Text>
+                    <BasicText
+                        inputText={menu[0].name}
+                        textWeight={600}
+                        marginLeft={17}
+                        textSize={15}
+                        textColor={textColor || Colors.Dark}
+                        marginRight={'auto'}
+                    />
                     <Feather
                         name="chevron-right"
                         size={24}
@@ -125,16 +123,14 @@ const MenuMaker: FunctionComponent<MenuMakerProps> = ({
                                 alignItems: 'center',
                                 flexDirection: 'row',
                             }}>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_600,
-                                    marginLeft: 17,
-                                    fontSize: 15,
-                                    color: textColor || Colors.Dark,
-                                    marginRight: 'auto',
-                                }}>
-                                {item.name}
-                            </Text>
+                            <BasicText
+                                inputText={item.name}
+                                marginLeft={17}
+                                marginRight={'auto'}
+                                textColor={textColor || Colors.Dark}
+                                textWeight={600}
+                                textSize={15}
+                            />
                             <Feather
                                 name="chevron-right"
                                 size={24}

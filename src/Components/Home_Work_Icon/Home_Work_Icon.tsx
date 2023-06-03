@@ -11,8 +11,8 @@ import CheckIcon from '../../Images/SVGs/Check_Icon.svg';
 interface HomeWorkIconProps {
     image_icon: ImageSourcePropType;
     is_completed: boolean;
-    marginLeft?: number | string;
-    marginRight?: number | string;
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
 }
 const HomeWorkIcon: FunctionComponent<HomeWorkIconProps> = ({
     image_icon,

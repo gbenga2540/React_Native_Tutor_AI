@@ -24,11 +24,11 @@ interface DropDownProps {
     height?: number;
     width?: number | string;
     borderRadius?: number;
-    marginTop?: number | string;
-    marginLeft?: number | string;
-    marginRight?: number | string;
-    marginBottom?: number | string;
-    marginHorizontal?: number;
+    marginTop?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginHorizontal?: number | 'auto';
     paddingHorizontal?: number;
     disable?: boolean;
 }

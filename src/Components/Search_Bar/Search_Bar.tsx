@@ -8,10 +8,10 @@ interface SearchBarProps {
     inputValue: string;
     placeHolderText?: string;
     setInputValue: Dispatch<SetStateAction<string>>;
-    marginTop?: string | number;
-    marginBottom?: string | number;
-    marginLeft?: string | number;
-    marginRight?: string | number;
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
+    marginLeft?: number | 'auto';
+    marginRight?: number | 'auto';
     inputMode?: InputModeOptions;
     onFocus?: () => void;
 }

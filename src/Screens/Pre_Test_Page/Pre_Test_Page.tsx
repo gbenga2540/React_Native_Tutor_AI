@@ -10,65 +10,31 @@ import {
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
+import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
+import BackButton from '../../Components/Back_Button/Back_Button';
+import TextButton from '../../Components/Text_Button/Text_Button';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const ConversationPage: FunctionComponent = observer(() => {
+const PreTestPage: FunctionComponent = observer(() => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
     const [chats, setChats] = useState<INTF_Conversation[]>([]);
     const [micText, setMicText] = useState<string>('');
     const flatListRef = useRef<FlatList<any> | null>(null);
 
     useEffect(() => {
         setChats([
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Have you been paying close attention to your lectures both online and offline?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
             {
                 isAI: true,
                 chat: 'Hello, Dominion How’s life going?',
@@ -88,10 +54,32 @@ const ConversationPage: FunctionComponent = observer(() => {
     }, []);
 
     return (
-        <View style={styles.conversation_main}>
+        <View style={styles.pre_test_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
-            <View style={styles.c_header_cont}>
-                <Text style={styles.c_header}>Conversation</Text>
+            <View
+                style={{
+                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginHorizontal: 22,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                }}>
+                <BackButton />
+                <TextButton
+                    buttonText="Skip"
+                    marginLeft={'auto'}
+                    marginRight={5}
+                    isFontLight
+                    execFunc={no_double_clicks({
+                        execFunc: () => {
+                            navigation.push(
+                                'AuthStack' as never,
+                                {
+                                    screen: 'OnboardingPage',
+                                } as never,
+                            );
+                        },
+                    })}
+                />
             </View>
             <MiniAvatar
                 isMale={false}
@@ -141,9 +129,16 @@ const ConversationPage: FunctionComponent = observer(() => {
                 <MicAndTextInput
                     inputMode="text"
                     marginTop={3}
-                    marginLeft={10}
-                    marginRight={10}
+                    marginLeft={12}
+                    marginRight={12}
                     paddingBottom={7}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? KeyboardStore.keyboard_active
+                                ? 1
+                                : 25
+                            : 8
+                    }
                     paddingTop={3}
                     placeHolderText="Type.."
                     inputValue={micText}
@@ -160,34 +155,11 @@ const ConversationPage: FunctionComponent = observer(() => {
     );
 });
 
-export default ConversationPage;
+export default PreTestPage;
 
 const styles = StyleSheet.create({
-    conversation_main: {
+    pre_test_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    c_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 70,
-        paddingLeft: 22,
-        backgroundColor: Colors.Background,
-        shadowColor:
-            Platform.OS === 'ios'
-                ? 'rgba(0 ,0 ,0 , 0.35)'
-                : 'rgba(0 ,0 ,0 , 0.9)',
-        shadowOffset: {
-            width: 1,
-            height: Platform.OS === 'ios' ? 1 : 2,
-        },
-        shadowOpacity: 0.34,
-        shadowRadius: 3.27,
-        elevation: 3,
-    },
-    c_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 25,
-        marginTop: 'auto',
-        marginBottom: 18,
-        color: Colors.Dark,
     },
 });

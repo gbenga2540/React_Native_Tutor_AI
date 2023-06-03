@@ -11,9 +11,9 @@ import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
 interface AudioProgressBarProps {
     progress: number;
     speed?: number;
-    marginHorizontal?: number | string;
-    marginTop?: number | string;
-    marginBottom?: number | string;
+    marginHorizontal?: number | 'auto';
+    marginTop?: number | 'auto';
+    marginBottom?: number | 'auto';
     height?: number;
     borderRadius?: number;
     progressWidth?: number;

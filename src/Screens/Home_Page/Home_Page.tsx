@@ -26,6 +26,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import { Observer } from 'mobx-react';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
 
 const HomePage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -312,14 +313,12 @@ const HomePage: FunctionComponent = () => {
                                     marginTop: 15,
                                     marginLeft: 17,
                                 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_700,
-                                        color: Colors.White,
-                                        fontSize: 20,
-                                    }}>
-                                    Vocabulary
-                                </Text>
+                                <BasicText
+                                    inputText="Vocabulary"
+                                    textWeight={700}
+                                    textColor={Colors.White}
+                                    textSize={19}
+                                />
                                 <Feather
                                     name="chevron-right"
                                     color={Colors.White}
@@ -329,30 +328,16 @@ const HomePage: FunctionComponent = () => {
                                     }}
                                 />
                             </View>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginTop: 5,
-                                    marginLeft: 17,
-                                }}>
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_700,
-                                        color: Colors.White,
-                                        fontSize: 12,
-                                    }}>
-                                    Learn new English Words
-                                </Text>
-                                <Feather
-                                    name="chevron-right"
-                                    color={Colors.White}
-                                    size={18}
-                                    style={{
-                                        marginTop: 2,
-                                    }}
-                                />
-                            </View>
+                            <BasicText
+                                inputText="Learn new English Words"
+                                textColor={Colors.White}
+                                textSize={12}
+                                textWeight={700}
+                                marginTop={5}
+                                marginLeft={17}
+                                marginRight={17}
+                                width={135}
+                            />
                             <VocabularyIcon
                                 style={{
                                     width: 100,
@@ -419,15 +404,6 @@ const HomePage: FunctionComponent = () => {
                                     }}>
                                     Download your result here
                                 </Text>
-                                <Feather
-                                    name="chevron-right"
-                                    color={Colors.Primary}
-                                    size={18}
-                                    style={{
-                                        marginTop: 2,
-                                        marginLeft: -2,
-                                    }}
-                                />
                             </View>
                         </TouchableOpacity>
                     </View>
