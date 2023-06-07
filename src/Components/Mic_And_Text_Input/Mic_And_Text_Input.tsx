@@ -32,15 +32,16 @@ interface MicAndTextInputProps {
     marginLeft?: number | 'auto';
     marginRight?: number | 'auto';
     marginHorizontal?: number | 'auto';
-    execFunc?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     animationSpeed?: number;
     inputValue: string;
     placeHolderText?: string;
     setInputValue: Dispatch<SetStateAction<string>>;
     inputMode?: InputModeOptions;
-    onFocus?: () => void;
-    onChange?: () => void;
+    onMicPress?: DebouncedFuncLeading<() => void>;
+    onFocus?: DebouncedFuncLeading<() => void>;
+    onChange?: DebouncedFuncLeading<() => void>;
+    onSend?: DebouncedFuncLeading<() => void>;
     autoFocus?: boolean;
     editable?: boolean;
     textColor?: string;
@@ -55,15 +56,16 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
     marginLeft,
     marginRight,
     marginHorizontal,
-    execFunc,
     disabled,
     animationSpeed,
     inputValue,
     placeHolderText,
     setInputValue,
     inputMode,
+    onMicPress,
     onFocus,
     onChange,
+    onSend,
     autoFocus,
     editable,
     textColor,
@@ -120,8 +122,8 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
             if (Keyboard.isVisible()) {
                 Keyboard.dismiss();
             }
-            if (execFunc !== undefined) {
-                execFunc();
+            if (onMicPress !== undefined) {
+                onMicPress();
             }
         },
     });
@@ -143,7 +145,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                 }}>
                 <View
                     style={{
-                        alignItems: 'center',
+                        // alignItems: 'center',
                         flexDirection: 'row',
                         height: 56,
                         borderRadius: 8,
@@ -173,6 +175,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                         }
                         autoFocus={autoFocus || false}
                         editable={editable === false ? false : true}
+                        multiline
                     />
                 </View>
                 {!inputValue && (
@@ -207,6 +210,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                 )}
                 {inputValue && (
                     <TouchableOpacity
+                        onPress={() => onSend !== undefined && onSend()}
                         activeOpacity={0.55}
                         style={{
                             width: 56,
@@ -240,9 +244,8 @@ const styles = StyleSheet.create({
         flex: 1,
         fontFamily: fonts.Urbanist_500,
         fontSize: 16,
-        height: 56,
         marginHorizontal: 18,
-        textAlignVertical: 'center',
         borderWidth: 0,
+        marginVertical: 2,
     },
 });

@@ -7,6 +7,7 @@ import BasicText from '../../Components/Basic_Text/Basic_Text';
 import HomeWorkStash from '../../Components/Home_Work_Stash/Home_Work_Stash';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const HomeWorkArchivePage: FunctionComponent = () => {
     const restart_homework = no_double_clicks({
@@ -18,7 +19,13 @@ const HomeWorkArchivePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -89,7 +96,14 @@ const HomeWorkArchivePage: FunctionComponent = () => {
                 marginHorizontal={20}
                 buttonHeight={56}
                 marginTop={5}
-                marginBottom={Platform.OS === 'ios' ? 25 : 10}
+                marginBottom={
+                    Platform.OS === 'ios'
+                        ? screen_height_less_than({
+                              if_true: 25,
+                              if_false: 40,
+                          })
+                        : 20
+                }
             />
         </View>
     );

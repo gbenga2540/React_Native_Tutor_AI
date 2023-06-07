@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import {
     FlatList,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -25,6 +26,7 @@ import TextButton from '../../Components/Text_Button/Text_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const PreTestPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -37,7 +39,7 @@ const PreTestPage: FunctionComponent = observer(() => {
         setChats([
             {
                 isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
+                chat: 'Hello Oluwagbemiga, How’s life going?',
             },
             {
                 isAI: false,
@@ -49,16 +51,25 @@ const PreTestPage: FunctionComponent = observer(() => {
     useEffect(() => {
         const first_timer = setTimeout(() => {
             flatListRef.current !== null && flatListRef.current?.scrollToEnd();
-        }, 500);
+        }, 100);
+        if (Keyboard.isVisible()) {
+            Keyboard.dismiss();
+        }
         return () => clearTimeout(first_timer);
-    }, []);
+    }, [chats]);
 
     return (
         <View style={styles.pre_test_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 40,
+                                  if_false: 65,
+                              })
+                            : 20,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -82,7 +93,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                 />
             </View>
             <MiniAvatar
-                isMale={false}
                 marginTop={15}
                 marginBottom={4}
                 marginHorizontal={22}
@@ -92,7 +102,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                 style={{
                     flex: 1,
                 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <FlatList
                     ref={flatListRef}
                     ListHeaderComponent={() =>
@@ -136,19 +146,43 @@ const PreTestPage: FunctionComponent = observer(() => {
                         Platform.OS === 'ios'
                             ? KeyboardStore.keyboard_active
                                 ? 1
-                                : 25
+                                : screen_height_less_than({
+                                      if_false: 35,
+                                      if_true: 20,
+                                  })
+                            : KeyboardStore.keyboard_active
+                            ? screen_height_less_than({
+                                  if_true: 7,
+                                  if_false: 10,
+                              })
                             : 8
                     }
                     paddingTop={3}
-                    placeHolderText="Type.."
+                    placeHolderText="Type here.."
                     inputValue={micText}
                     setInputValue={setMicText}
-                    onChange={() => {
-                        flatListRef?.current?.scrollToEnd();
-                    }}
-                    onFocus={() => {
-                        flatListRef?.current?.scrollToEnd();
-                    }}
+                    onChange={no_double_clicks({
+                        execFunc: () => {
+                            flatListRef?.current?.scrollToEnd();
+                        },
+                    })}
+                    onFocus={no_double_clicks({
+                        execFunc: () => {
+                            flatListRef?.current?.scrollToEnd();
+                        },
+                    })}
+                    onSend={no_double_clicks({
+                        execFunc: () => {
+                            if (micText) {
+                                setChats(prev_chats => [
+                                    ...prev_chats,
+                                    { isAI: false, chat: micText },
+                                ]);
+                            }
+                            setMicText('');
+                            Keyboard.isVisible() && Keyboard.dismiss();
+                        },
+                    })}
                 />
             </KeyboardAvoidingView>
         </View>

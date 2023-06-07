@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import {
     ScrollView,
     StyleSheet,
-    Text,
     View,
     Image,
     TouchableOpacity,
@@ -23,10 +22,10 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import { Observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const HomePage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -36,8 +35,16 @@ const HomePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.h_header_cont}>
                 <View style={styles.h_header_txt_c}>
-                    <Text style={styles.h_header}>Hello, Oluwagbemiga</Text>
-                    <Text style={styles.h_header_2}>5 Pending Homework</Text>
+                    <BasicText
+                        inputText="Hello, Oluwagbemiga"
+                        textSize={22}
+                        textWeight={700}
+                    />
+                    <BasicText
+                        inputText="5 Pending Homework"
+                        textSize={14}
+                        textFamily={fonts.OpenSans_400}
+                    />
                 </View>
                 <Image
                     source={require('../../../test/Images/Test_DP.png')}
@@ -48,7 +55,7 @@ const HomePage: FunctionComponent = () => {
                 style={{
                     flex: 1,
                     paddingHorizontal: 18,
-                    paddingTop: 30,
+                    paddingTop: 22,
                     marginHorizontal: 2,
                 }}>
                 <View
@@ -64,23 +71,13 @@ const HomePage: FunctionComponent = () => {
                             marginTop: 30,
                             zIndex: 1,
                         }}>
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_700,
-                                color: Colors.White,
-                                fontSize: 20,
-                            }}>
-                            Assigned Class
-                        </Text>
-                        <TouchableOpacity
-                            onPress={no_double_clicks({
-                                execFunc: () => {
-                                    BottomSheetStore.open_bottom_sheet({
-                                        component_type: 1,
-                                    });
-                                },
-                            })}
-                            activeOpacity={0.6}
+                        <BasicText
+                            inputText="Assigned Class"
+                            textColor={Colors.White}
+                            textWeight={700}
+                            textSize={20}
+                        />
+                        <View
                             style={{
                                 backgroundColor: Colors.Primary,
                                 minWidth: 133,
@@ -95,26 +92,19 @@ const HomePage: FunctionComponent = () => {
                             }}>
                             <Observer>
                                 {() => (
-                                    <Text
-                                        style={{
-                                            color: Colors.White,
-                                            fontFamily: fonts.Urbanist_600,
-                                            fontSize: 18,
-                                            marginRight: 3,
-                                        }}>
-                                        {
+                                    <BasicText
+                                        inputText={
                                             StudentInfoStore?.student_info
-                                                ?.assigned_class
+                                                ?.assigned_class as string
                                         }
-                                    </Text>
+                                        textColor={Colors.White}
+                                        textWeight={600}
+                                        textSize={17}
+                                        marginRight={3}
+                                    />
                                 )}
                             </Observer>
-                            <Feather
-                                name="chevron-down"
-                                size={21}
-                                color={Colors.White}
-                            />
-                        </TouchableOpacity>
+                        </View>
                     </View>
                     <Image
                         source={require('../../Images/Home/HPA_1.png')}
@@ -128,20 +118,18 @@ const HomePage: FunctionComponent = () => {
                         }}
                     />
                 </View>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        fontSize: 20,
-                        marginTop: 30,
-                        color: Colors.Black,
-                    }}>
-                    Access Classroom
-                </Text>
+                <BasicText
+                    inputText=" Access Classroom"
+                    textColor={Colors.Black}
+                    textWeight={700}
+                    textSize={20}
+                    marginTop={24}
+                />
                 <View
                     style={{
                         flexDirection: 'row',
-                        marginTop: 20,
-                        marginBottom: 40,
+                        marginTop: 14,
+                        marginBottom: 30,
                     }}>
                     <View
                         style={{
@@ -165,16 +153,14 @@ const HomePage: FunctionComponent = () => {
                                 height: 145,
                                 borderRadius: 15,
                             }}>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.White,
-                                    marginTop: 17,
-                                    marginLeft: 17,
-                                    fontSize: 19,
-                                }}>
-                                Lessons
-                            </Text>
+                            <BasicText
+                                inputText="Lessons"
+                                textWeight={700}
+                                textColor={Colors.White}
+                                marginTop={17}
+                                marginLeft={17}
+                                textSize={19}
+                            />
                             <ProgressBar
                                 marginTop={15}
                                 progress={(55 / 70) * 100}
@@ -183,16 +169,14 @@ const HomePage: FunctionComponent = () => {
                                 progressBackgroundColor={Colors.DeepBlue}
                                 marginHorizontal={17}
                             />
-                            <Text
-                                style={{
-                                    fontFamily: fonts.OpenSans_700,
-                                    color: Colors.White,
-                                    marginTop: 5,
-                                    marginLeft: 17,
-                                    fontSize: 15,
-                                }}>
-                                55/70
-                            </Text>
+                            <BasicText
+                                inputText="55/70"
+                                textWeight={700}
+                                textColor={Colors.White}
+                                marginTop={5}
+                                marginLeft={17}
+                                textSize={15}
+                            />
                             <Image
                                 source={require('../../Images/Home/HPA_3.png')}
                                 style={{
@@ -233,16 +217,14 @@ const HomePage: FunctionComponent = () => {
                                 height: 145,
                                 borderRadius: 15,
                             }}>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.Primary,
-                                    marginTop: 17,
-                                    marginLeft: 17,
-                                    fontSize: 19,
-                                }}>
-                                Homework
-                            </Text>
+                            <BasicText
+                                inputText="Homework"
+                                textWeight={700}
+                                textColor={Colors.Primary}
+                                marginTop={17}
+                                marginLeft={17}
+                                textSize={19}
+                            />
                             <ProgressBar
                                 marginTop={15}
                                 progress={(70 / 100) * 100}
@@ -251,16 +233,14 @@ const HomePage: FunctionComponent = () => {
                                 progressBackgroundColor={Colors.DeepBlue}
                                 marginHorizontal={17}
                             />
-                            <Text
-                                style={{
-                                    fontFamily: fonts.OpenSans_700,
-                                    color: Colors.Primary,
-                                    marginTop: 5,
-                                    marginLeft: 17,
-                                    fontSize: 15,
-                                }}>
-                                70%
-                            </Text>
+                            <BasicText
+                                inputText="70%"
+                                textColor={Colors.Primary}
+                                marginTop={5}
+                                marginLeft={17}
+                                textSize={15}
+                                textFamily={fonts.OpenSans_700}
+                            />
                             <Image
                                 source={require('../../Images/Home/HPA_4.png')}
                                 style={{
@@ -312,6 +292,7 @@ const HomePage: FunctionComponent = () => {
                                     alignItems: 'center',
                                     marginTop: 15,
                                     marginLeft: 17,
+                                    marginRight: 17,
                                 }}>
                                 <BasicText
                                     inputText="Vocabulary"
@@ -373,38 +354,32 @@ const HomePage: FunctionComponent = () => {
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_700,
-                                        color: Colors.Primary,
-                                        fontSize: 20,
-                                        marginRight: 3,
-                                    }}>
-                                    View Report
-                                </Text>
+                                <BasicText
+                                    inputText="View Report"
+                                    textColor={Colors.Primary}
+                                    textSize={20}
+                                    textWeight={700}
+                                    marginLeft={'auto'}
+                                    marginRight={'auto'}
+                                />
                                 <StatsReportIcon
                                     color={Colors.Primary}
-                                    width={25}
-                                    height={25}
+                                    width={22}
+                                    height={22}
+                                    style={{
+                                        marginLeft: 3,
+                                    }}
                                 />
                             </View>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginTop: 5,
-                                    justifyContent: 'center',
-                                    marginLeft: 5,
-                                }}>
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_500,
-                                        color: Colors.Primary,
-                                        fontSize: 12,
-                                    }}>
-                                    Download your result here
-                                </Text>
-                            </View>
+                            <BasicText
+                                inputText="Download your result here"
+                                textColor={Colors.Primary}
+                                textSize={13}
+                                textWeight={500}
+                                marginTop={5}
+                                marginLeft={'auto'}
+                                marginRight={'auto'}
+                            />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -430,15 +405,13 @@ const HomePage: FunctionComponent = () => {
                             marginTop: 12,
                             alignItems: 'center',
                         }}>
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_700,
-                                color: Colors.White,
-                                fontSize: 20,
-                                textAlign: 'center',
-                            }}>
-                            You’re on Fire
-                        </Text>
+                        <BasicText
+                            inputText="You’re on Fire"
+                            textWeight={700}
+                            textColor={Colors.White}
+                            textSize={20}
+                            textAlign="center"
+                        />
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -447,14 +420,12 @@ const HomePage: FunctionComponent = () => {
                                 marginTop: 5,
                             }}>
                             <FireIcon width={22} height={22} />
-                            <Text
-                                style={{
-                                    fontFamily: fonts.OpenSans_700,
-                                    color: Colors.White,
-                                    fontSize: 20,
-                                }}>
-                                3
-                            </Text>
+                            <BasicText
+                                inputText="3"
+                                textFamily={fonts.OpenSans_700}
+                                textColor={Colors.White}
+                                textSize={20}
+                            />
                         </View>
                         <View
                             style={{
@@ -485,7 +456,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     h_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 75,
+        height:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_true: 90,
+                      if_false: 120,
+                  })
+                : 75,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
         shadowColor:
@@ -504,16 +481,6 @@ const styles = StyleSheet.create({
     h_header_txt_c: {
         marginTop: 'auto',
         marginBottom: 12,
-    },
-    h_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 22,
-        color: Colors.Dark,
-    },
-    h_header_2: {
-        fontFamily: fonts.OpenSans_400,
-        fontSize: 14,
-        color: Colors.Dark,
     },
     h_header_img: {
         width: 50,

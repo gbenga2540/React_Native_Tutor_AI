@@ -1,14 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import {
-    Image,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
+import { Image, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
 import MenuMaker from '../../Components/Menu_Maker/Menu_Maker';
 import ProfileAccountIcon from '../../Images/SVGs/Profile_Account_Icon.svg';
@@ -22,12 +14,31 @@ import {
     profile_menu_4,
 } from '../../Data/Profile_Menu/Profile_Menu';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ProfilePage: FunctionComponent = () => {
     return (
         <View style={styles.profile_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
-            <Text style={styles.p_header}>Profile</Text>
+            <BasicText
+                inputText="Profile"
+                marginLeft={22}
+                marginBottom={screen_height_less_than({
+                    if_true: 1,
+                    if_false: 18,
+                })}
+                marginTop={
+                    Platform.OS === 'ios'
+                        ? screen_height_less_than({
+                              if_true: 40,
+                              if_false: 60,
+                          })
+                        : 25
+                }
+                textWeight={700}
+                textSize={25}
+            />
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.p_i_c_w}>
                     <View style={styles.p_i_c}>
@@ -50,25 +61,20 @@ const ProfilePage: FunctionComponent = () => {
                         )}
                     </View>
                 </View>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        marginTop: 10,
-                        fontSize: 20,
-                        textAlign: 'center',
-                    }}>
-                    Akindeju Oluwagbemiga
-                </Text>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_500,
-                        color: Colors.DarkGrey,
-                        marginTop: 5,
-                        textAlign: 'center',
-                    }}>
-                    Joined since 10 May, 2023
-                </Text>
+                <BasicText
+                    inputText="Akindeju Oluwagbemiga"
+                    textWeight={700}
+                    marginTop={10}
+                    textSize={20}
+                    textAlign="center"
+                />
+                <BasicText
+                    inputText="Joined since 10 May, 2023"
+                    textWeight={500}
+                    marginTop={5}
+                    textAlign="center"
+                    textColor={Colors.DarkGrey}
+                />
                 <View style={styles.p_menu_headers}>
                     <View style={styles.p_menu_img}>
                         <ProfileAccountIcon
@@ -77,7 +83,12 @@ const ProfilePage: FunctionComponent = () => {
                             color={Colors.Primary}
                         />
                     </View>
-                    <Text style={styles.p_menu_txt}>Account</Text>
+                    <BasicText
+                        inputText="Account"
+                        textSize={18}
+                        textWeight={600}
+                        marginLeft={10}
+                    />
                 </View>
                 <MenuMaker
                     borderRadius={15}
@@ -98,7 +109,12 @@ const ProfilePage: FunctionComponent = () => {
                             color={Colors.Primary}
                         />
                     </View>
-                    <Text style={styles.p_menu_txt}>Subscription</Text>
+                    <BasicText
+                        inputText="Subscription"
+                        textSize={18}
+                        textWeight={600}
+                        marginLeft={10}
+                    />
                 </View>
                 <MenuMaker
                     borderRadius={15}
@@ -113,7 +129,12 @@ const ProfilePage: FunctionComponent = () => {
                             color={Colors.Primary}
                         />
                     </View>
-                    <Text style={styles.p_menu_txt}>Security</Text>
+                    <BasicText
+                        inputText="Security"
+                        textSize={18}
+                        textWeight={600}
+                        marginLeft={10}
+                    />
                 </View>
                 <MenuMaker
                     borderRadius={15}
@@ -134,7 +155,12 @@ const ProfilePage: FunctionComponent = () => {
                             color={Colors.Orange}
                         />
                     </View>
-                    <Text style={styles.p_menu_txt}>Contact & Information</Text>
+                    <BasicText
+                        inputText="Contact & Information"
+                        textSize={18}
+                        textWeight={600}
+                        marginLeft={10}
+                    />
                 </View>
                 <MenuMaker
                     borderRadius={15}
@@ -158,14 +184,6 @@ const styles = StyleSheet.create({
     profile_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    p_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 25,
-        marginTop: Platform.OS === 'ios' ? 60 : 25,
-        marginLeft: 22,
-        marginBottom: 18,
-        color: Colors.Dark,
     },
     p_i_c_w: {
         marginLeft: 'auto',
@@ -198,11 +216,5 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    p_menu_txt: {
-        marginLeft: 10,
-        color: Colors.Dark,
-        fontFamily: fonts.Urbanist_600,
-        fontSize: 18,
     },
 });

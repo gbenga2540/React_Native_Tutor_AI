@@ -21,6 +21,7 @@ import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const CongratulationsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -33,7 +34,7 @@ const CongratulationsPage: FunctionComponent = () => {
                     navigation.push(
                         'AuthStack' as never,
                         {
-                            screen: 'PreTestPage',
+                            screen: 'PreAvatarPage',
                         } as never,
                     );
                     break;
@@ -150,7 +151,14 @@ const CongratulationsPage: FunctionComponent = () => {
                 buttonText="Continue"
                 marginHorizontal={22}
                 execFunc={proceed}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
+                marginBottom={
+                    Platform.OS === 'ios'
+                        ? screen_height_less_than({
+                              if_true: 30,
+                              if_false: 40,
+                          })
+                        : 20
+                }
             />
         </View>
     );

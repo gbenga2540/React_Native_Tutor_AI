@@ -5,13 +5,11 @@ import {
     Platform,
     ScrollView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { useNavigation } from '@react-navigation/native';
@@ -32,6 +30,8 @@ import { get_age } from '../../Utils/Get_Age/Get_Age';
 import DatePicker from 'react-native-date-picker';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const PersonalDetailsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -171,21 +171,24 @@ const PersonalDetailsPage: FunctionComponent = () => {
             />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton />
-                <Text
-                    style={{
-                        marginLeft: 30,
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Personal Details
-                </Text>
+                <BasicText
+                    inputText="Personal Details"
+                    textWeight={700}
+                    marginLeft={10}
+                    textSize={20}
+                />
             </View>
             <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
                 <View
@@ -258,7 +261,11 @@ const PersonalDetailsPage: FunctionComponent = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.pdp_txt}>Language</Text>
+                <BasicText
+                    inputText="Language"
+                    marginLeft={22}
+                    textWeight={500}
+                />
                 <RNDropDown
                     dropdownData={NativeLanguagesChooser}
                     value={language}
@@ -272,7 +279,11 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     marginTop={10}
                     marginBottom={30}
                 />
-                <Text style={styles.pdp_txt}>Full Name</Text>
+                <BasicText
+                    inputText="Full Name"
+                    marginLeft={22}
+                    textWeight={500}
+                />
                 <BasicTextEntry
                     placeHolderText="John Doe"
                     inputValue={email}
@@ -281,14 +292,18 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     marginBottom={30}
                     inputMode="text"
                 />
-                <Text style={styles.pdp_txt}>Phone Number</Text>
+                <BasicText
+                    inputText="Phone Number"
+                    marginLeft={22}
+                    textWeight={500}
+                />
                 <PhoneNumberInput
                     setInputValue={setPhoneNo}
                     setIsValid={setPhoneNoValid}
                     defaultCode="US"
                     marginTop={10}
                 />
-                <Text style={styles.pdp_txt}>Email</Text>
+                <BasicText inputText="Email" marginLeft={22} textWeight={500} />
                 <BasicTextEntry
                     placeHolderText="johndoe@gmail.com"
                     inputValue={email}
@@ -297,7 +312,11 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     marginBottom={30}
                     inputMode="text"
                 />
-                <Text style={styles.pdp_txt}>Date of Birth</Text>
+                <BasicText
+                    inputText="Date of Birth"
+                    marginLeft={22}
+                    textWeight={500}
+                />
                 <BasicTextEntry
                     placeHolderText={mongo_date_converter_4({
                         input_date: new Date()?.toString(),
@@ -346,7 +365,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     buttonHeight={56}
                     disabled={disableButton}
                     marginTop={20}
-                    marginBottom={Platform.OS === 'ios' ? 50 : 20}
+                    marginBottom={Platform.OS === 'ios' ? 30 : 20}
                 />
             </ScrollView>
             <DatePicker
@@ -376,13 +395,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
         paddingBottom: Platform.OS === 'ios' ? 25 : 5,
     },
-    pdp_m_wt2: {
-        fontFamily: fonts.Urbanist_500,
-        fontSize: 16,
-        lineHeight: 24,
-        marginHorizontal: 22,
-        color: Colors.Grey,
-    },
     pdp_i_c_w: {
         marginLeft: 'auto',
         marginRight: 'auto',
@@ -400,11 +412,6 @@ const styles = StyleSheet.create({
         borderRadius: 150,
         width: 150,
         height: 150,
-    },
-    pdp_txt: {
-        fontFamily: fonts.Urbanist_500,
-        marginHorizontal: 22,
-        color: Colors.Dark,
     },
     pdp_sp_w: {
         flexDirection: 'row',

@@ -21,7 +21,7 @@ interface MicrophoneButtonProps {
     marginLeft?: number | 'auto';
     marginRight?: number | 'auto';
     marginHorizontal?: number | 'auto';
-    execFunc?: DebouncedFuncLeading<() => void>;
+    onMicPress?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     animationSpeed?: number;
 }
@@ -34,7 +34,7 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
     marginLeft,
     marginRight,
     marginHorizontal,
-    execFunc,
+    onMicPress,
     disabled,
     animationSpeed,
 }) => {
@@ -96,8 +96,8 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
             if (Keyboard.isVisible()) {
                 Keyboard.dismiss();
             }
-            if (execFunc !== undefined) {
-                execFunc();
+            if (onMicPress !== undefined) {
+                onMicPress();
             }
         },
     });

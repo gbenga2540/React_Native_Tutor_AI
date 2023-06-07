@@ -3,17 +3,16 @@ import {
     Platform,
     ScrollView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import PlayIcon from '../../Images/SVGs/Play_Icon.svg';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import HomeWorkStash from '../../Components/Home_Work_Stash/Home_Work_Stash';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const HomeWorkPage: FunctionComponent = () => {
     const [startedHW, setStartedHW] = useState<boolean>(false);
@@ -22,7 +21,13 @@ const HomeWorkPage: FunctionComponent = () => {
         <View style={styles.hw_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.l_header_cont}>
-                <Text style={styles.l_header}>Homework</Text>
+                <BasicText
+                    inputText="Homework"
+                    marginBottom={18}
+                    marginTop={'auto'}
+                    textSize={25}
+                    textWeight={700}
+                />
             </View>
             {!startedHW && (
                 <TouchableOpacity
@@ -142,7 +147,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     l_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 70,
+        height:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_true: 90,
+                      if_false: 120,
+                  })
+                : 70,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
         shadowColor:
@@ -156,12 +167,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 3.27,
         elevation: 3,
-    },
-    l_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 25,
-        marginTop: 'auto',
-        marginBottom: 18,
-        color: Colors.Dark,
     },
 });

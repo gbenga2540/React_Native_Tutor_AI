@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import {
     BackHandler,
-    Image,
+    KeyboardAvoidingView,
     Platform,
     StyleSheet,
     Text,
@@ -26,10 +26,6 @@ import ProgressBar from '../../Components/Progress_Bar/Progress_Bar';
 import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { avatars_data } from '../../Data/Avatars/Avatars';
-import RNDropDown from '../../Components/RN_Drop_Down/RN_Drop_Down';
-import { AvatarVoices } from '../../Data/Voices/Voices';
-import VoiceButton from '../../Components/Voice_Button/Voice_Button';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import SingleRadioButton from '../../Components/Single_Radio_Button/Single_Radio_Button';
 import {
@@ -50,20 +46,18 @@ import { INTF_Test2Answers } from '../../Interface/Test_2_Answers/Test_2_Answers
 import TestRadioButton from '../../Components/Test_Radio_Button/Test_Radio_Button';
 import TextDivider from '../../Components/Text_Divider/Text_Divider';
 import BasicButton2 from '../../Components/Basic_Button_2/Basic_Button_2';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import {
+    screen_height_less_than,
+    screen_width_less_than,
+} from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+
+const TOTAL_PAGES = 7;
 
 const OnboardingPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const total_pages = 8;
     const [question, setQuestion] = useState<number>(1);
-    const [isMaleTutor, setIsMaleTutor] = useState<boolean>(false);
-    const [maleVoice, setMaleVoice] = useState<string>(
-        AvatarVoices?.Male[0]?.value,
-    );
-    const [femaleVoice, setFemaleVoice] = useState<string>(
-        AvatarVoices?.Female[0]?.value,
-    );
-
     const [answer_1, setAnswer_1] = useState<number | null>(null);
     const [test2Answers, setTest2Answers] = useState<INTF_Test2Answers>({
         a: null,
@@ -105,12 +99,12 @@ const OnboardingPage: FunctionComponent = () => {
     };
 
     const next_question = no_double_clicks({
-        execFunc: () => {
+        execFunc: async () => {
             setQuestion(
                 clamp_value({
                     value: question + 1,
                     minValue: 1,
-                    maxValue: total_pages,
+                    maxValue: TOTAL_PAGES,
                 }),
             );
         },
@@ -122,7 +116,7 @@ const OnboardingPage: FunctionComponent = () => {
                 clamp_value({
                     value: question - 1,
                     minValue: 1,
-                    maxValue: total_pages,
+                    maxValue: TOTAL_PAGES,
                 }),
             ),
     });
@@ -160,171 +154,66 @@ const OnboardingPage: FunctionComponent = () => {
                     marginLeft: 22,
                     marginTop: navigation?.canGoBack()
                         ? Platform.OS === 'ios'
-                            ? 60
-                            : 25
+                            ? screen_height_less_than({
+                                  if_false: 60,
+                                  if_true: 40,
+                              })
+                            : 20
                         : Platform.OS === 'ios'
-                        ? 70
-                        : 25,
+                        ? screen_height_less_than({
+                              if_false: 70,
+                              if_true: 45,
+                          })
+                        : 20,
                     marginBottom: 28,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton execFunc={handle_go_back} />
-                <ProgressBar progress={(question / total_pages) * 100} />
+                <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
-            {question !== 6 && question !== 7 && question !== 8 && (
+            {question !== 5 && question !== 6 && question !== 7 && (
                 <ScrollView style={{ flex: 1 }}>
                     {question === 1 && (
                         <Fragment>
-                            <Text style={styles.onboarding_headers}>
-                                Choose Your Desired Teacher
-                            </Text>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    marginTop: 30,
-                                    justifyContent: 'space-between',
-                                    marginHorizontal: 22,
-                                    marginBottom: 20,
-                                }}>
-                                <View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                        }}>
-                                        <TouchableOpacity
-                                            style={[
-                                                styles.avatar_bg,
-                                                {
-                                                    backgroundColor:
-                                                        Colors.LightPink,
-                                                },
-                                            ]}
-                                            onPress={() =>
-                                                setIsMaleTutor(false)
-                                            }>
-                                            <View>
-                                                {isMaleTutor && (
-                                                    <View
-                                                        style={
-                                                            styles.avatar_bg_overlay
-                                                        }>
-                                                        {''}
-                                                    </View>
-                                                )}
-                                                <Image
-                                                    source={
-                                                        avatars_data[0]?.image
-                                                    }
-                                                    style={{
-                                                        width: 130,
-                                                        height: 130,
-                                                    }}
-                                                />
-                                            </View>
-                                        </TouchableOpacity>
-                                        <VoiceButton
-                                            execFunc={no_double_clicks({
-                                                execFunc: () =>
-                                                    console.log(femaleVoice),
-                                            })}
-                                            buttonSize={38}
-                                            borderRadius={8}
-                                            marginLeft={5}
-                                            disabled={isMaleTutor}
-                                        />
-                                    </View>
-                                    <RNDropDown
-                                        dropdownData={AvatarVoices.Female}
-                                        value={femaleVoice}
-                                        setValue={setFemaleVoice}
-                                        height={42}
-                                        disable={false}
-                                        paddingHorizontal={7}
-                                        marginRight={40}
-                                    />
-                                </View>
-                                <View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                        }}>
-                                        <TouchableOpacity
-                                            style={styles.avatar_bg}
-                                            onPress={() =>
-                                                setIsMaleTutor(true)
-                                            }>
-                                            <View>
-                                                {!isMaleTutor && (
-                                                    <View
-                                                        style={
-                                                            styles.avatar_bg_overlay
-                                                        }>
-                                                        {''}
-                                                    </View>
-                                                )}
-                                                <Image
-                                                    source={
-                                                        avatars_data[6]?.image
-                                                    }
-                                                    style={{
-                                                        width: 130,
-                                                        height: 130,
-                                                    }}
-                                                />
-                                            </View>
-                                        </TouchableOpacity>
-                                        <VoiceButton
-                                            execFunc={no_double_clicks({
-                                                execFunc: () =>
-                                                    console.log(femaleVoice),
-                                            })}
-                                            buttonSize={38}
-                                            borderRadius={8}
-                                            marginLeft={5}
-                                            disabled={!isMaleTutor}
-                                        />
-                                    </View>
-                                    <RNDropDown
-                                        dropdownData={AvatarVoices.Male}
-                                        value={maleVoice}
-                                        setValue={setMaleVoice}
-                                        height={42}
-                                        disable={false}
-                                        paddingHorizontal={7}
-                                        marginRight={40}
-                                    />
-                                </View>
-                            </View>
-                        </Fragment>
-                    )}
-                    {question === 2 && (
-                        <Fragment>
                             <MiniAvatar
-                                isMale={isMaleTutor}
                                 marginBottom={20}
                                 marginHorizontal={22}
                             />
-                            <Text style={styles.test_header}>Test 1</Text>
-                            <Text style={styles.test_question}>
-                                {test_1_question}
-                            </Text>
+                            <BasicText
+                                inputText="Test 1"
+                                marginBottom={3}
+                                marginTop={10}
+                                textColor={Colors.Black}
+                                marginLeft={22}
+                                marginRight={22}
+                                textWeight={700}
+                                textSize={22}
+                            />
+                            <BasicText
+                                inputText={test_1_question}
+                                textFamily={fonts.OpenSans_400}
+                                textColor={Colors.Black}
+                                textSize={16}
+                                marginLeft={22}
+                                marginRight={22}
+                            />
                             <Text
-                                style={[
-                                    styles.test_question,
-                                    {
-                                        marginTop: 12,
-                                    },
-                                ]}>
-                                <Text
-                                    style={[
-                                        styles.test_question,
-                                        {
-                                            fontFamily: fonts.OpenSans_700,
-                                        },
-                                    ]}>
-                                    Question:
-                                </Text>{' '}
+                                style={{
+                                    marginTop: 12,
+                                    marginHorizontal: 22,
+                                    fontSize: 16,
+                                    fontFamily: fonts.OpenSans_400,
+                                    color: Colors.Black,
+                                }}>
+                                <BasicText
+                                    inputText="Question:"
+                                    textFamily={fonts.OpenSans_700}
+                                    textColor={Colors.Black}
+                                    textSize={16}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />{' '}
                                 Who won the Game?
                             </Text>
                             <View>
@@ -336,21 +225,21 @@ const OnboardingPage: FunctionComponent = () => {
                                             alignItems: 'center',
                                             marginTop: 10,
                                         }}>
-                                        <Text
-                                            style={{
-                                                marginLeft: 22,
-                                                marginRight: 10,
-                                                fontFamily: fonts.Urbanist_500,
-                                                fontSize: 15,
-                                            }}>
-                                            {index === 0
-                                                ? 'A'
-                                                : index === 1
-                                                ? 'B'
-                                                : index === 2
-                                                ? 'C'
-                                                : 'D'}
-                                        </Text>
+                                        <BasicText
+                                            inputText={
+                                                index === 0
+                                                    ? 'A'
+                                                    : index === 1
+                                                    ? 'B'
+                                                    : index === 2
+                                                    ? 'C'
+                                                    : 'D'
+                                            }
+                                            marginLeft={22}
+                                            marginRight={10}
+                                            textSize={15}
+                                            textWeight={500}
+                                        />
                                         <SingleRadioButton
                                             option={item}
                                             index={index}
@@ -362,33 +251,46 @@ const OnboardingPage: FunctionComponent = () => {
                             </View>
                         </Fragment>
                     )}
-                    {question === 3 && (
+                    {question === 2 && (
                         <Fragment>
                             <MiniAvatar
-                                isMale={isMaleTutor}
                                 marginBottom={20}
                                 marginHorizontal={22}
                             />
-                            <Text style={styles.test_header}>Test 2</Text>
-                            <Text style={styles.test_question}>
-                                {test_2_question}
-                            </Text>
+                            <BasicText
+                                inputText="Test 2"
+                                marginBottom={3}
+                                marginTop={10}
+                                textColor={Colors.Black}
+                                marginLeft={22}
+                                marginRight={22}
+                                textWeight={700}
+                                textSize={22}
+                            />
+                            <BasicText
+                                inputText={test_2_question}
+                                textFamily={fonts.OpenSans_400}
+                                textColor={Colors.Black}
+                                textSize={16}
+                                marginLeft={22}
+                                marginRight={22}
+                            />
                             <Text
-                                style={[
-                                    styles.test_question,
-                                    {
-                                        marginTop: 12,
-                                    },
-                                ]}>
-                                <Text
-                                    style={[
-                                        styles.test_question,
-                                        {
-                                            fontFamily: fonts.OpenSans_700,
-                                        },
-                                    ]}>
-                                    Question:
-                                </Text>{' '}
+                                style={{
+                                    marginTop: 12,
+                                    fontSize: 16,
+                                    marginHorizontal: 22,
+                                    color: Colors.Black,
+                                    fontFamily: fonts.OpenSans_400,
+                                }}>
+                                <BasicText
+                                    inputText="Question:"
+                                    textFamily={fonts.OpenSans_700}
+                                    textColor={Colors.Black}
+                                    textSize={16}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />{' '}
                                 Fil in the gaps
                             </Text>
                             <View
@@ -456,7 +358,10 @@ const OnboardingPage: FunctionComponent = () => {
                                         isSelected={false}
                                         marginRight={15}
                                         marginBottom={15}
-                                        buttonWidth={100}
+                                        buttonWidth={screen_width_less_than({
+                                            if_true: 90,
+                                            if_false: 100,
+                                        })}
                                         buttonHeight={43}
                                         answers={test2Answers}
                                         setAnswers={setTest2Answers}
@@ -481,14 +386,22 @@ const OnboardingPage: FunctionComponent = () => {
                             </View>
                         </Fragment>
                     )}
-                    {question === 4 && (
+                    {question === 3 && (
                         <Fragment>
                             <MiniAvatar
-                                isMale={isMaleTutor}
                                 marginBottom={20}
                                 marginHorizontal={22}
                             />
-                            <Text style={styles.test_header}>Test 3</Text>
+                            <BasicText
+                                inputText="Test 3"
+                                marginBottom={3}
+                                marginTop={10}
+                                textColor={Colors.Black}
+                                marginLeft={22}
+                                marginRight={22}
+                                textWeight={700}
+                                textSize={22}
+                            />
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -527,21 +440,21 @@ const OnboardingPage: FunctionComponent = () => {
                                 </View>
                             </View>
                             <Text
-                                style={[
-                                    styles.test_question,
-                                    {
-                                        marginTop: 1,
-                                    },
-                                ]}>
-                                <Text
-                                    style={[
-                                        styles.test_question,
-                                        {
-                                            fontFamily: fonts.OpenSans_700,
-                                        },
-                                    ]}>
-                                    Question:
-                                </Text>{' '}
+                                style={{
+                                    marginHorizontal: 22,
+                                    fontFamily: fonts.OpenSans_400,
+                                    color: Colors.Black,
+                                    fontSize: 16,
+                                    marginTop: 1,
+                                }}>
+                                <BasicText
+                                    inputText="Question:"
+                                    textFamily={fonts.OpenSans_700}
+                                    textColor={Colors.Black}
+                                    textSize={16}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />{' '}
                                 What did you hear?
                             </Text>
                             <BasicTextEntry
@@ -554,69 +467,88 @@ const OnboardingPage: FunctionComponent = () => {
                             />
                         </Fragment>
                     )}
-                    {question === 5 && (
+                    {question === 4 && (
                         <Fragment>
                             <MiniAvatar
-                                isMale={isMaleTutor}
                                 marginBottom={20}
                                 marginHorizontal={22}
                             />
-                            <Text style={styles.test_header}>Test 4</Text>
-                            <Text style={styles.test_question}>
-                                {test_4_question}
-                            </Text>
+                            <BasicText
+                                inputText="Test 4"
+                                marginBottom={3}
+                                marginTop={10}
+                                textColor={Colors.Black}
+                                marginLeft={22}
+                                marginRight={22}
+                                textWeight={700}
+                                textSize={22}
+                            />
+                            <BasicText
+                                inputText={test_4_question}
+                                textFamily={fonts.OpenSans_400}
+                                textColor={Colors.Black}
+                                textSize={16}
+                                marginLeft={22}
+                                marginRight={22}
+                            />
                             <Text
-                                style={[
-                                    styles.test_question,
-                                    {
-                                        marginTop: 12,
-                                    },
-                                ]}>
-                                <Text
-                                    style={[
-                                        styles.test_question,
-                                        {
-                                            fontFamily: fonts.OpenSans_700,
-                                        },
-                                    ]}>
-                                    Question:
-                                </Text>{' '}
+                                style={{
+                                    marginTop: 12,
+                                    fontSize: 16,
+                                    marginHorizontal: 22,
+                                    color: Colors.Black,
+                                }}>
+                                <BasicText
+                                    inputText="Question:"
+                                    textFamily={fonts.OpenSans_700}
+                                    textColor={Colors.Black}
+                                    textSize={16}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />{' '}
                                 Speak the above sentence with the microphone
                                 below.
                             </Text>
                             <View
                                 style={{
                                     alignItems: 'center',
-                                    marginTop: 30,
+                                    marginTop: screen_height_less_than({
+                                        if_true: 25,
+                                        if_false: 30,
+                                    }),
                                 }}>
                                 <MicrophoneButton
-                                    microphoneSize={80}
+                                    microphoneSize={screen_height_less_than({
+                                        if_true: 60,
+                                        if_false: 75,
+                                    })}
                                     animationSpeed={300}
                                 />
                             </View>
-                            <Text
-                                style={{
-                                    marginTop: 10,
-                                    textAlign: 'center',
-                                    fontFamily: fonts.Urbanist_600,
-                                    color: Colors.Black,
-                                }}>
-                                Hold the "Microphone" Button to Speak.
-                            </Text>
+                            <BasicText
+                                inputText='Hold the "Microphone" Button to Speak.'
+                                textAlign="center"
+                                textColor={Colors.Black}
+                                textWeight={600}
+                                marginTop={10}
+                            />
                         </Fragment>
                     )}
                 </ScrollView>
             )}
-            {question === 6 && (
+            {question === 5 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar
-                        isMale={isMaleTutor}
-                        marginBottom={20}
-                        marginHorizontal={22}
+                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
+                    <BasicText
+                        inputText="Your Native Language?"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
                     />
-                    <Text style={styles.test_header}>
-                        Your Native Language?
-                    </Text>
                     <View
                         style={{
                             marginTop: 10,
@@ -647,16 +579,19 @@ const OnboardingPage: FunctionComponent = () => {
                     </View>
                 </View>
             )}
-            {question === 7 && (
+            {question === 6 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar
-                        isMale={isMaleTutor}
-                        marginBottom={20}
-                        marginHorizontal={22}
+                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
+                    <BasicText
+                        inputText="Your study target per day?"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
                     />
-                    <Text style={styles.test_header}>
-                        Your study target per day?
-                    </Text>
                     <View
                         style={{
                             marginTop: 15,
@@ -682,18 +617,26 @@ const OnboardingPage: FunctionComponent = () => {
                                     />
                                 );
                             }}
+                            initialNumToRender={5}
+                            maxToRenderPerBatch={5}
+                            windowSize={5}
                         />
                     </View>
                 </View>
             )}
-            {question === 8 && (
+            {question === 7 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar
-                        isMale={isMaleTutor}
-                        marginBottom={20}
-                        marginHorizontal={22}
+                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
+                    <BasicText
+                        inputText="Your Interests?"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
                     />
-                    <Text style={styles.test_header}>Your Interests?</Text>
                     <View
                         style={{
                             marginTop: 15,
@@ -725,16 +668,29 @@ const OnboardingPage: FunctionComponent = () => {
                     </View>
                 </View>
             )}
-            <BasicButton
-                buttonText={question === total_pages ? 'Submit' : 'Continue'}
-                borderRadius={8}
-                marginHorizontal={22}
-                execFunc={
-                    question === total_pages ? submit_data : next_question
-                }
-                buttonHeight={56}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
-            />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+                <BasicButton
+                    buttonText={
+                        question === TOTAL_PAGES ? 'Submit' : 'Continue'
+                    }
+                    borderRadius={8}
+                    marginHorizontal={22}
+                    execFunc={
+                        question === TOTAL_PAGES ? submit_data : next_question
+                    }
+                    buttonHeight={56}
+                    marginTop={10}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 25,
+                                  if_false: 40,
+                              })
+                            : 20
+                    }
+                />
+            </KeyboardAvoidingView>
         </View>
     );
 };
@@ -745,12 +701,6 @@ const styles = StyleSheet.create({
     onboarding_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    onboarding_headers: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 28,
-        marginHorizontal: 22,
-        color: Colors.Dark,
     },
     avatar_bg: {
         backgroundColor: Colors.Primary,
@@ -776,19 +726,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
         flex: 1,
-    },
-    test_header: {
-        fontFamily: fonts.OpenSans_700,
-        fontSize: 22,
-        marginHorizontal: 22,
-        marginTop: 10,
-        color: Colors.Black,
-        marginBottom: 3,
-    },
-    test_question: {
-        marginHorizontal: 22,
-        fontFamily: fonts.OpenSans_400,
-        color: Colors.Black,
-        fontSize: 16,
     },
 });

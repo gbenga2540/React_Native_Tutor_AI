@@ -1,14 +1,12 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import {
-    Image,
     Keyboard,
+    KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import OTPTextView from 'react-native-otp-textinput';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
@@ -16,18 +14,19 @@ import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BackButton from '../../Components/Back_Button/Back_Button';
-// import TextButton from '../../Components/Text_Button/Text_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import TextButton from '../../Components/Text_Button/Text_Button';
-import StopWatch from '../../Components/Stop_Watch/Stop_Watch';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
+import { Observer } from 'mobx-react';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const VerifyOTPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [OTP, setOTP] = useState<string>('');
     const [timer, setTimer] = useState<number>(30);
-    // const [token, setToken] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
     const resend_mail = no_double_clicks({
@@ -58,7 +57,6 @@ const VerifyOTPPage: FunctionComponent = () => {
         },
     });
 
-    const onCompleted = () => {};
     const count_down = () => {
         let counter = 30;
         const interval = setInterval(() => {
@@ -66,12 +64,10 @@ const VerifyOTPPage: FunctionComponent = () => {
             // setTimer(counter);
             console.log(counter);
             if (counter <= 0) {
-                // onCompleted !== undefined && onCompleted();
                 clearInterval(interval);
             }
         }, 1000);
     };
-    count_down();
 
     return (
         <View style={styles.v_otp_main}>
@@ -94,16 +90,29 @@ const VerifyOTPPage: FunctionComponent = () => {
                         : Platform.OS === 'ios'
                         ? 70
                         : 25,
-                    marginBottom: 15,
+                    marginBottom: 8,
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>
-            <Text style={styles.vo_m_wt}>Let's Verify your Email Address</Text>
-            <Text style={styles.v_o_m_info}>
-                {
-                    'We have sent you your OTP code to change your Password. Check your mail or Spam Folder'
-                }
-            </Text>
+            <BasicText
+                inputText="Let's Verify your Email Address"
+                marginBottom={50}
+                marginLeft={22}
+                width={320}
+                textSize={30}
+                textWeight={700}
+            />
+            <BasicText
+                inputText="We have sent you your OTP code to change your Password. Please, check your Email."
+                width={330}
+                textSize={15}
+                marginBottom={12}
+                textAlign="center"
+                marginLeft={'auto'}
+                marginRight={'auto'}
+                textColor={Colors.DarkGrey}
+                textWeight={500}
+            />
             <View
                 style={{
                     maxWidth: 240,
@@ -124,10 +133,17 @@ const VerifyOTPPage: FunctionComponent = () => {
                     textInputStyle={styles.roundedTextInput}
                 />
             </View>
-            <Text
-                style={[styles.v_o_m_info, { marginTop: 30, marginBottom: 0 }]}>
-                {`Didn’t get an OTP? Click Resend in ${timer} seconds`}
-            </Text>
+            <BasicText
+                inputText={`Didn’t get an OTP? Click Resend in ${timer} seconds`}
+                width={330}
+                textSize={15}
+                textAlign="center"
+                marginLeft={'auto'}
+                marginRight={'auto'}
+                textColor={Colors.DarkGrey}
+                textWeight={500}
+                marginTop={30}
+            />
             <TextButton
                 textColor={Colors.LightPink}
                 isFontLight={true}
@@ -139,14 +155,30 @@ const VerifyOTPPage: FunctionComponent = () => {
                 marginBottom={'auto'}
                 execFunc={resend_mail}
             />
-            <BasicButton
-                buttonText="Verify Email"
-                borderRadius={8}
-                marginHorizontal={22}
-                execFunc={verify_otp}
-                buttonHeight={56}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
-            />
+            <Observer>
+                {() => (
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                        <BasicButton
+                            buttonText="Verify Email"
+                            borderRadius={8}
+                            marginHorizontal={22}
+                            execFunc={verify_otp}
+                            buttonHeight={56}
+                            marginBottom={
+                                Platform.OS === 'ios'
+                                    ? KeyboardStore.keyboard_active
+                                        ? 15
+                                        : screen_height_less_than({
+                                              if_true: 30,
+                                              if_false: 40,
+                                          })
+                                    : 20
+                            }
+                        />
+                    </KeyboardAvoidingView>
+                )}
+            </Observer>
         </View>
     );
 };
@@ -158,27 +190,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.Background,
     },
-    vo_m_wt: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 30,
-        width: 320,
-        lineHeight: 39,
-        marginLeft: 22,
-        color: Colors.Dark,
-        marginBottom: 50,
-    },
     roundedTextInput: {
         borderRadius: 5,
         borderWidth: 1,
         borderBottomWidth: 1,
-    },
-    v_o_m_info: {
-        fontFamily: fonts.Urbanist_500,
-        color: Colors.DarkGrey,
-        textAlign: 'center',
-        width: 330,
-        alignSelf: 'center',
-        marginBottom: 12,
-        fontSize: 15,
     },
 });

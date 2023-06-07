@@ -8,6 +8,7 @@ import SearchBar from '../../Components/Search_Bar/Search_Bar';
 import { glossary } from '../../../test/Data/Glossary';
 import GlossaryItem from '../../Components/Glossary_Item/Glossary_Item';
 import { sort_glossary_by_name } from '../../Utils/Sort_Glossary_By_Name/Sort_Glossary_By_Name';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const GlossaryPage: FunctionComponent = () => {
     const [search, setSearch] = useState<string>('');
@@ -18,7 +19,13 @@ const GlossaryPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',

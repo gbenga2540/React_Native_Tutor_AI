@@ -1,14 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-    Platform,
-    Image,
-} from 'react-native';
+import { ScrollView, StyleSheet, View, Platform, Image } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import SimpleBIcon from '../../Images/SVGs/Simple_B_Icon.svg';
 import FireIcon from '../../Images/SVGs/Fire_Icon.svg';
 import { test_assignments } from '../../../test/Data/Assignments';
@@ -21,6 +13,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ReportPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -34,21 +28,24 @@ const ReportPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton />
-                <Text
-                    style={{
-                        marginLeft: 30,
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Report
-                </Text>
+                <BasicText
+                    inputText="Report"
+                    textSize={20}
+                    textWeight={700}
+                    marginLeft={10}
+                />
             </View>
             <ScrollView
                 style={{
@@ -79,15 +76,13 @@ const ReportPage: FunctionComponent = () => {
                             marginTop: 12,
                             alignItems: 'center',
                         }}>
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_700,
-                                color: Colors.White,
-                                fontSize: 20,
-                                textAlign: 'center',
-                            }}>
-                            You’re on Fire
-                        </Text>
+                        <BasicText
+                            inputText="You’re on Fire"
+                            textAlign="center"
+                            textSize={20}
+                            textWeight={700}
+                            textColor={Colors.White}
+                        />
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -96,14 +91,13 @@ const ReportPage: FunctionComponent = () => {
                                 marginTop: 5,
                             }}>
                             <FireIcon width={22} height={22} />
-                            <Text
-                                style={{
-                                    fontFamily: fonts.OpenSans_700,
-                                    color: Colors.White,
-                                    fontSize: 20,
-                                }}>
-                                3
-                            </Text>
+                            <BasicText
+                                inputText="3"
+                                textSize={20}
+                                textWeight={700}
+                                textColor={Colors.White}
+                                marginTop={2}
+                            />
                         </View>
                         <View
                             style={{
@@ -118,26 +112,21 @@ const ReportPage: FunctionComponent = () => {
                                 />
                             ))}
                         </View>
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_600,
-                                color: Colors.White,
-                                fontSize: 12,
-                                marginTop: 7,
-                            }}>
-                            Keep Going!
-                        </Text>
+                        <BasicText
+                            inputText="Keep Going!"
+                            textSize={12}
+                            marginTop={7}
+                            textWeight={600}
+                            textColor={Colors.White}
+                        />
                     </View>
                 </View>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        marginTop: 40,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Completed Lessons
-                </Text>
+                <BasicText
+                    inputText="Completed Lessons"
+                    textSize={20}
+                    marginTop={40}
+                    textWeight={700}
+                />
                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                     <View
                         style={{
@@ -162,23 +151,17 @@ const ReportPage: FunctionComponent = () => {
                                 marginLeft: 'auto',
                                 marginRight: 20,
                             }}>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_500,
-                                    color: Colors.Dark,
-                                    fontSize: 14,
-                                }}>
-                                100 Lessons Done
-                            </Text>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.Dark,
-                                    fontSize: 16,
-                                    marginTop: 10,
-                                }}>
-                                Total: 300mins
-                            </Text>
+                            <BasicText
+                                inputText="100 Lessons Done"
+                                textSize={14}
+                                textWeight={500}
+                            />
+                            <BasicText
+                                inputText="Total: 300mins"
+                                textSize={16}
+                                textWeight={700}
+                                marginTop={10}
+                            />
                         </View>
                     </View>
                     <TouchableOpacity
@@ -211,15 +194,12 @@ const ReportPage: FunctionComponent = () => {
                         />
                     </TouchableOpacity>
                 </View>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        marginTop: 40,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Completed Homework
-                </Text>
+                <BasicText
+                    inputText="Completed Homework"
+                    textSize={20}
+                    marginTop={40}
+                    textWeight={700}
+                />
                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                     <View
                         style={{
@@ -244,23 +224,19 @@ const ReportPage: FunctionComponent = () => {
                                 marginLeft: 'auto',
                                 marginRight: 20,
                             }}>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_500,
-                                    color: Colors.White,
-                                    fontSize: 14,
-                                }}>
-                                100 Homework Done
-                            </Text>
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_700,
-                                    color: Colors.Green2,
-                                    fontSize: 16,
-                                    marginTop: 10,
-                                }}>
-                                Success Rate: 80%
-                            </Text>
+                            <BasicText
+                                inputText="100 Homework Done"
+                                textSize={14}
+                                textWeight={500}
+                                textColor={Colors.White}
+                            />
+                            <BasicText
+                                inputText="Success Rate: 80%"
+                                textSize={16}
+                                textWeight={700}
+                                marginTop={10}
+                                textColor={Colors.Green2}
+                            />
                         </View>
                     </View>
                     <TouchableOpacity
@@ -301,8 +277,15 @@ const ReportPage: FunctionComponent = () => {
                 borderRadius={8}
                 marginHorizontal={22}
                 buttonHeight={56}
-                marginTop={20}
-                marginBottom={Platform.OS === 'ios' ? 25 : 10}
+                marginTop={2}
+                marginBottom={
+                    Platform.OS === 'ios'
+                        ? screen_height_less_than({
+                              if_true: 25,
+                              if_false: 40,
+                          })
+                        : 20
+                }
             />
         </View>
     );

@@ -8,9 +8,9 @@ import React, {
 import {
     BackHandler,
     Image,
+    KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
 } from 'react-native';
@@ -36,11 +36,18 @@ import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '../../Components/Check_Box/Check_Box';
 import { get_age } from '../../Utils/Get_Age/Get_Age';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+
+const IMAGE_SIZE = screen_height_less_than({
+    if_true: 180,
+    if_false: 220,
+});
+const TOTAL_PAGES = 3;
 
 const SignUpPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const total_pages = 3;
     const [question, setQuestion] = useState<number>(1);
 
     const [name, setName] = useState<string>('');
@@ -98,7 +105,7 @@ const SignUpPage: FunctionComponent = () => {
                 clamp_value({
                     value: question + 1,
                     minValue: 1,
-                    maxValue: total_pages,
+                    maxValue: TOTAL_PAGES,
                 }),
             );
         },
@@ -110,7 +117,7 @@ const SignUpPage: FunctionComponent = () => {
                 clamp_value({
                     value: question - 1,
                     minValue: 1,
-                    maxValue: total_pages,
+                    maxValue: TOTAL_PAGES,
                 }),
             ),
     });
@@ -238,21 +245,28 @@ const SignUpPage: FunctionComponent = () => {
                     marginTop: navigation?.canGoBack()
                         ? Platform.OS === 'ios'
                             ? 60
-                            : 25
+                            : 20
                         : Platform.OS === 'ios'
                         ? 70
-                        : 25,
+                        : 20,
                     marginBottom: 10,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton execFunc={handle_go_back} />
-                <ProgressBar progress={(question / total_pages) * 100} />
+                <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
             <ScrollView style={{ flex: 1 }}>
                 {question === 1 && (
                     <Fragment>
-                        <Text style={styles.su_m_wt}>What is your Name?</Text>
+                        <BasicText
+                            inputText="What is your Name?"
+                            marginTop={20}
+                            textWeight={700}
+                            textSize={24}
+                            marginLeft={22}
+                            marginRight={22}
+                        />
                         <BasicTextEntry
                             placeHolderText="John Doe"
                             inputValue={name}
@@ -261,7 +275,14 @@ const SignUpPage: FunctionComponent = () => {
                             marginBottom={12}
                             inputMode="text"
                         />
-                        <Text style={styles.su_m_wt}>Your Date of Birth?</Text>
+                        <BasicText
+                            inputText="Your Date of Birth?"
+                            marginTop={25}
+                            textWeight={700}
+                            textSize={24}
+                            marginLeft={22}
+                            marginRight={22}
+                        />
                         <BasicTextEntry
                             placeHolderText={mongo_date_converter_4({
                                 input_date: new Date()?.toString(),
@@ -306,9 +327,14 @@ const SignUpPage: FunctionComponent = () => {
                             input_date: dob?.toString(),
                         }) as number) >= 15 && (
                             <Fragment>
-                                <Text style={styles.su_m_wt}>
-                                    What is your Email Address?
-                                </Text>
+                                <BasicText
+                                    inputText="What is your Email Address?"
+                                    marginTop={25}
+                                    textWeight={700}
+                                    textSize={24}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />
                                 <BasicTextEntry
                                     placeHolderText="johndoe@gmail.com"
                                     inputValue={email}
@@ -323,9 +349,14 @@ const SignUpPage: FunctionComponent = () => {
                 )}
                 {question === 2 && (
                     <Fragment>
-                        <Text style={styles.su_m_wt}>
-                            What is your Mobile Number?
-                        </Text>
+                        <BasicText
+                            inputText="What is your Mobile Number?"
+                            marginTop={20}
+                            textWeight={700}
+                            textSize={24}
+                            marginLeft={22}
+                            marginRight={22}
+                        />
                         <PhoneNumberInput
                             setInputValue={setPhoneNo}
                             setIsValid={setPhoneNoValid}
@@ -336,9 +367,14 @@ const SignUpPage: FunctionComponent = () => {
                             input_date: dob?.toString(),
                         }) as number) < 15 && (
                             <Fragment>
-                                <Text style={styles.su_m_wt}>
-                                    Your Parent's WhatsApp Number?
-                                </Text>
+                                <BasicText
+                                    inputText="Your Parent's WhatsApp Number?"
+                                    marginTop={25}
+                                    textWeight={700}
+                                    textSize={24}
+                                    marginLeft={22}
+                                    marginRight={22}
+                                />
                                 <PhoneNumberInput
                                     setInputValue={setParentPhoneNo}
                                     setIsValid={setParentPhoneNoValid}
@@ -347,9 +383,14 @@ const SignUpPage: FunctionComponent = () => {
                                 />
                             </Fragment>
                         )}
-                        <Text style={styles.su_m_wt}>
-                            Add a Profile Picture
-                        </Text>
+                        <BasicText
+                            inputText="Add a Profile Picture"
+                            marginTop={25}
+                            textWeight={700}
+                            textSize={24}
+                            marginLeft={22}
+                            marginRight={22}
+                        />
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -368,28 +409,28 @@ const SignUpPage: FunctionComponent = () => {
                                         alignSelf: 'center',
                                         borderWidth: 2,
                                         padding: 3,
-                                        borderRadius: 220,
+                                        borderRadius: IMAGE_SIZE,
                                         borderColor: Colors.Grey,
                                     }}>
                                     {displayPicture ? (
                                         <Image
                                             style={{
-                                                borderRadius: 220,
-                                                width: 220,
-                                                height: 220,
+                                                borderRadius: IMAGE_SIZE,
+                                                width: IMAGE_SIZE,
+                                                height: IMAGE_SIZE,
                                             }}
                                             source={{
                                                 uri: displayPicture,
-                                                width: 220,
-                                                height: 220,
+                                                width: IMAGE_SIZE,
+                                                height: IMAGE_SIZE,
                                             }}
                                         />
                                     ) : (
                                         <Image
                                             style={{
-                                                borderRadius: 220,
-                                                width: 220,
-                                                height: 220,
+                                                borderRadius: IMAGE_SIZE,
+                                                width: IMAGE_SIZE,
+                                                height: IMAGE_SIZE,
                                             }}
                                             source={require('../../Images/Logos/Default_User_Logo.jpg')}
                                         />
@@ -407,7 +448,10 @@ const SignUpPage: FunctionComponent = () => {
                                     ]}>
                                     <Feather
                                         name="camera"
-                                        size={28}
+                                        size={screen_height_less_than({
+                                            if_true: 25,
+                                            if_false: 28,
+                                        })}
                                         color={Colors.DarkGrey}
                                     />
                                 </TouchableOpacity>
@@ -421,7 +465,10 @@ const SignUpPage: FunctionComponent = () => {
                                     ]}>
                                     <Feather
                                         name="image"
-                                        size={28}
+                                        size={screen_height_less_than({
+                                            if_true: 25,
+                                            if_false: 28,
+                                        })}
                                         color={Colors.DarkGrey}
                                     />
                                 </TouchableOpacity>
@@ -435,7 +482,10 @@ const SignUpPage: FunctionComponent = () => {
                                     ]}>
                                     <Feather
                                         name="x"
-                                        size={28}
+                                        size={screen_height_less_than({
+                                            if_true: 25,
+                                            if_false: 28,
+                                        })}
                                         color={Colors.DarkGrey}
                                     />
                                 </TouchableOpacity>
@@ -445,7 +495,14 @@ const SignUpPage: FunctionComponent = () => {
                 )}
                 {question === 3 && (
                     <Fragment>
-                        <Text style={styles.su_m_wt}>Create a Password</Text>
+                        <BasicText
+                            inputText="Create a Password"
+                            marginTop={20}
+                            textWeight={700}
+                            textSize={24}
+                            marginLeft={22}
+                            marginRight={22}
+                        />
                         <SecureTextEntry
                             inputValue={password}
                             setInputValue={setPassword}
@@ -473,16 +530,14 @@ const SignUpPage: FunctionComponent = () => {
                                 active={acceptedTC}
                                 setActive={setAcceptedTC}
                             />
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    fontFamily: fonts.OpenSans_400,
-                                    marginHorizontal: 5,
-                                    marginLeft: 7,
-                                    color: Colors.Black,
-                                }}>
-                                Accept the
-                            </Text>
+                            <BasicText
+                                inputText="Accept the"
+                                textSize={16}
+                                textFamily={fonts.OpenSans_400}
+                                marginLeft={7}
+                                marginRight={5}
+                                textColor={Colors.Black}
+                            />
                             <TextButton
                                 buttonText="Terms and Conditions"
                                 execFunc={nav_to_tc_page}
@@ -491,16 +546,29 @@ const SignUpPage: FunctionComponent = () => {
                     </Fragment>
                 )}
             </ScrollView>
-            <BasicButton
-                buttonText={question === total_pages ? 'Submit' : 'Continue'}
-                borderRadius={8}
-                marginHorizontal={22}
-                execFunc={
-                    question === total_pages ? submit_data : next_question
-                }
-                buttonHeight={56}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
-            />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+                <BasicButton
+                    buttonText={
+                        question === TOTAL_PAGES ? 'Submit' : 'Continue'
+                    }
+                    borderRadius={8}
+                    marginHorizontal={22}
+                    execFunc={
+                        question === TOTAL_PAGES ? submit_data : next_question
+                    }
+                    buttonHeight={56}
+                    marginTop={10}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 30,
+                                  if_false: 40,
+                              })
+                            : 20
+                    }
+                />
+            </KeyboardAvoidingView>
             <DatePicker
                 modal
                 mode="date"
@@ -527,21 +595,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.Background,
     },
-    su_m_wt: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 24,
-        marginHorizontal: 22,
-        color: Colors.Dark,
-        marginTop: 25,
-    },
     sdp_sp_w: {
         flexDirection: 'column',
         justifyContent: 'space-evenly',
     },
     sdp_sp_i: {
-        width: 60,
-        height: 60,
-        borderRadius: 60,
+        width: screen_height_less_than({ if_true: 52, if_false: 60 }),
+        height: screen_height_less_than({ if_true: 52, if_false: 60 }),
+        borderRadius: screen_height_less_than({ if_true: 52, if_false: 60 }),
         justifyContent: 'center',
         alignItems: 'center',
     },

@@ -3,13 +3,11 @@ import {
     Image,
     Platform,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -19,6 +17,7 @@ import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
 
 const SelectDPPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -171,9 +170,14 @@ const SelectDPPage: FunctionComponent = () => {
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>
-            <Text style={styles.su_m_wt}>
-                Select a Display Picture to Proceed
-            </Text>
+            <BasicText
+                inputText="Select a Display Picture to Proceed"
+                marginBottom={50}
+                marginLeft={22}
+                width={320}
+                textWeight={700}
+                textSize={30}
+            />
             <View style={styles.sdp_w_i_c}>
                 {displayPicture === '' ? (
                     <Image
@@ -241,15 +245,6 @@ const styles = StyleSheet.create({
     select_dp_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    su_m_wt: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 30,
-        width: 320,
-        lineHeight: 39,
-        marginLeft: 22,
-        color: Colors.Dark,
-        marginBottom: 50,
     },
     sdp_w_i_c: {
         alignItems: 'center',

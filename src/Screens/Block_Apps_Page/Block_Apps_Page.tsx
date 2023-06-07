@@ -1,14 +1,15 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import HeaderTab from '../../Components/Header_Tab/Header_Tab';
 import { AppInfoStore } from '../../MobX/App_Info/App_Info';
 import AppInfo from '../../Components/App_Info/App_Info';
 import { INTF_AppInfo } from '../../Interface/App_Info/App_Info';
 import OverlaySpinner2 from '../../Components/Overlay_Spinner_2/Overlay_Spinner_2';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const BlockAppsPage: FunctionComponent = () => {
     const [currentTAB, setCurrentTAB] = useState<number>(1);
@@ -28,21 +29,24 @@ const BlockAppsPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 30,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 30,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton />
-                <Text
-                    style={{
-                        marginLeft: 30,
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Parental Control
-                </Text>
+                <BasicText
+                    inputText="Parental Control"
+                    marginLeft={10}
+                    textWeight={700}
+                    textSize={20}
+                />
             </View>
             <View style={{ height: 56, marginHorizontal: 22 }}>
                 <HeaderTab
@@ -72,6 +76,13 @@ const BlockAppsPage: FunctionComponent = () => {
                         marginTop: 3,
                         paddingTop: 25,
                         paddingBottom: Platform.OS === 'ios' ? 25 : 5,
+                        marginBottom:
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_false: 20,
+                                      if_true: 7,
+                                  })
+                                : 5,
                     }}>
                     {currentTAB === 1 &&
                         allApps

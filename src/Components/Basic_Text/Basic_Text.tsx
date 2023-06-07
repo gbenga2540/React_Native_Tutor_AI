@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Text } from 'react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
+import { screen_width_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 interface BasicTextProps {
     inputText: string;
@@ -42,7 +43,10 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
                           marginRight: marginRight || 0,
                           marginTop: marginTop || 0,
                           marginBottom: marginBottom || 0,
-                          fontSize: textSize || 14,
+                          fontSize: screen_width_less_than({
+                              if_true: (textSize || 14) - 2,
+                              if_false: textSize || 14,
+                          }),
                           backgroundColor: backgroundColor || undefined,
                           textAlign: textAlign || 'auto',
                           width: width || undefined,
@@ -60,7 +64,10 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
                           marginRight: marginRight || 0,
                           marginTop: marginTop || 0,
                           marginBottom: marginBottom || 0,
-                          fontSize: textSize || 14,
+                          fontSize: screen_width_less_than({
+                              if_true: (textSize || 14) - 2,
+                              if_false: textSize || 14,
+                          }),
                           backgroundColor: backgroundColor || undefined,
                           textAlign: textAlign || 'auto',
                           width: width || undefined,

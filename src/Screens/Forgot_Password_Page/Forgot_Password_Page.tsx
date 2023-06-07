@@ -1,8 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Image, Platform, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +11,7 @@ import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
 
 const ForgotPasswordPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -63,10 +63,22 @@ const ForgotPasswordPage: FunctionComponent = () => {
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>
-            <Text style={styles.fp_m_wt}>Forgot Password?</Text>
-            <Text style={styles.fp_m_wt2}>
-                Enter Your Email to receive reset link.
-            </Text>
+            <BasicText
+                inputText="Forgot Password?"
+                textWeight={700}
+                textSize={30}
+                marginLeft={22}
+                width={280}
+                marginBottom={2}
+            />
+            <BasicText
+                inputText="Enter Your Email to receive reset link."
+                textWeight={500}
+                textSize={16}
+                marginLeft={22}
+                marginRight={22}
+                textColor={Colors.Grey}
+            />
             <BasicTextEntry
                 placeHolderText="Enter your email"
                 inputValue={email}
@@ -104,22 +116,6 @@ const styles = StyleSheet.create({
     fp_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    fp_m_wt: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 30,
-        lineHeight: 39,
-        marginLeft: 22,
-        color: Colors.Dark,
-        width: 280,
-        marginBottom: 2,
-    },
-    fp_m_wt2: {
-        fontFamily: fonts.Urbanist_500,
-        fontSize: 16,
-        lineHeight: 24,
-        marginHorizontal: 22,
-        color: Colors.Grey,
     },
     fp_reg_cont: {
         flex: 1,

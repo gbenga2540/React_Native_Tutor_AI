@@ -5,11 +5,12 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
 import { observer } from 'mobx-react';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface MultiRadioButtonProps {
     option: string;
@@ -84,15 +85,16 @@ const MultiRadioButton: FunctionComponent<MultiRadioButtonProps> = observer(
                               }
                             : {},
                     ]}>
-                    <Text
-                        style={[
-                            styles.tb_m_txt,
-                            {
-                                color: active ? Colors.White : Colors.Dark,
-                            },
-                        ]}>
-                        {option}
-                    </Text>
+                    <BasicText
+                        inputText={option}
+                        textFamily={fonts.OpenSans_400}
+                        marginLeft={8}
+                        marginRight={8}
+                        marginTop={6}
+                        marginBottom={6}
+                        textSize={15}
+                        textColor={active ? Colors.White : Colors.Dark}
+                    />
                 </TouchableOpacity>
             </View>
         );

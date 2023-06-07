@@ -16,6 +16,7 @@ import { Observer } from 'mobx-react';
 import Feather from 'react-native-vector-icons/Feather';
 import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ScheduleClassPage: FunctionComponent = () => {
     const flatListRef = useRef<FlatList<any> | null>(null);
@@ -32,7 +33,13 @@ const ScheduleClassPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',

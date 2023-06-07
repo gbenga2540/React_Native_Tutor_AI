@@ -12,6 +12,7 @@ import CongratulationsPage from '../../Screens/Congratulations_Page/Congratulati
 import TCPage from '../../Screens/T_C_Page/T_C_Page';
 import OnboardingPage from '../../Screens/Onboarding_Page/Onboarding_Page';
 import PreTestPage from '../../Screens/Pre_Test_Page/Pre_Test_Page';
+import PreAvatarPage from '../../Screens/Pre_Avatar_Page/Pre_Avatar_Page';
 
 type AuthStackParamList = {
     AuthSelectPage: {};
@@ -25,6 +26,7 @@ type AuthStackParamList = {
     TCPage: {};
     OnboardingPage: {};
     PreTestPage: {};
+    PreAvatarPage: {};
 };
 
 const Auth_Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -61,6 +63,7 @@ const AuthStack: FunctionComponent = () => {
                 component={OnboardingPage}
             />
             <Auth_Stack.Screen name="PreTestPage" component={PreTestPage} />
+            <Auth_Stack.Screen name="PreAvatarPage" component={PreAvatarPage} />
         </Auth_Stack.Navigator>
     );
 };

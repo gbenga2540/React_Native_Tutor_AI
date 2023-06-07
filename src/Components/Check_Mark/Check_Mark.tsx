@@ -5,6 +5,7 @@ import Colors from '../../Configs/Colors/Colors';
 import { number_to_day_short } from '../../Utils/Number_To_Day_Short/Number_To_Day_Short';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicText from '../Basic_Text/Basic_Text';
+import { screen_width_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 interface CheckMarkProps {
     day_num: number;
@@ -23,19 +24,37 @@ const CheckMark: FunctionComponent<CheckMarkProps> = ({
                 style={
                     isCompleted
                         ? {
-                              width: 22,
-                              height: 22,
+                              width: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
+                              height: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
                               backgroundColor: Colors.Primary,
-                              borderRadius: 22,
+                              borderRadius: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
                               alignItems: 'center',
                               justifyContent: 'center',
                           }
                         : {
                               borderWidth: 1,
                               borderColor: Colors.White,
-                              width: 22,
-                              height: 22,
-                              borderRadius: 22,
+                              width: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
+                              height: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
+                              borderRadius: screen_width_less_than({
+                                  if_true: 18,
+                                  if_false: 22,
+                              }),
                           }
                 }>
                 {isCompleted && (

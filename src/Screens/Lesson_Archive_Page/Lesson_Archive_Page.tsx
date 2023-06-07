@@ -8,6 +8,7 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const LessonArchivePage: FunctionComponent = () => {
     const retake_lesson = no_double_clicks({
@@ -19,7 +20,13 @@ const LessonArchivePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -36,8 +43,14 @@ const LessonArchivePage: FunctionComponent = () => {
                 style={{
                     paddingHorizontal: 4,
                     marginTop: 14,
-                    paddingBottom: Platform.OS === 'ios' ? 25 : 10,
                     flex: 1,
+                    paddingBottom:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 25,
+                                  if_false: 40,
+                              })
+                            : 20,
                 }}>
                 <Image
                     source={require('../../Images/Lessons/Lessons.png')}

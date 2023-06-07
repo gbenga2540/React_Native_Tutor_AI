@@ -1,9 +1,14 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    View,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -11,6 +16,8 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import SecureTextEntry from '../../Components/Secure_Text_Entry/Secure_Text_Entry';
 import CheckBox from '../../Components/Check_Box/Check_Box';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const AddPaymentPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -60,37 +67,44 @@ const AddPaymentPage: FunctionComponent = () => {
     });
 
     return (
-        <View style={styles.sub_main}>
+        <View style={styles.add_p_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
                 <BackButton />
-                <Text
-                    style={{
-                        marginLeft: 30,
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 20,
-                    }}>
-                    Add Payment Method
-                </Text>
+                <BasicText
+                    inputText="Add Payment Method"
+                    textSize={20}
+                    textWeight={700}
+                    marginLeft={10}
+                />
             </View>
-            <ScrollView style={{ flex: 1, marginHorizontal: 25 }}>
-                <Text
-                    style={{
-                        color: Colors.Primary,
-                        fontSize: 15,
-                        fontFamily: fonts.Urbanist_500,
-                        marginTop: 40,
-                    }}>
-                    Enter your Card Details
-                </Text>
-                <Text style={styles.payment_h_txt}>Card Name</Text>
+            <ScrollView
+                style={{ flex: 1, paddingHorizontal: 21, marginHorizontal: 3 }}>
+                <BasicText
+                    inputText="Enter your Card Details"
+                    textSize={15}
+                    textColor={Colors.Primary}
+                    textWeight={500}
+                    marginTop={40}
+                />
+                <BasicText
+                    inputText="Card Name"
+                    textSize={15}
+                    marginTop={25}
+                    textWeight={500}
+                />
                 <BasicTextEntry
                     inputMode="text"
                     marginHorizontal={0.01}
@@ -99,7 +113,12 @@ const AddPaymentPage: FunctionComponent = () => {
                     setInputValue={setCardName}
                     placeHolderText="John Doe"
                 />
-                <Text style={styles.payment_h_txt}>Card Number</Text>
+                <BasicText
+                    inputText="Card Number"
+                    textSize={15}
+                    marginTop={25}
+                    textWeight={500}
+                />
                 <BasicTextEntry
                     inputMode="numeric"
                     marginHorizontal={0.01}
@@ -115,7 +134,12 @@ const AddPaymentPage: FunctionComponent = () => {
                             flex: 1,
                             marginRight: 10,
                         }}>
-                        <Text style={styles.payment_h_txt}>Expiry Date</Text>
+                        <BasicText
+                            inputText="Expiry Date"
+                            textSize={15}
+                            marginTop={25}
+                            textWeight={500}
+                        />
                         <BasicTextEntry
                             inputMode="numeric"
                             marginHorizontal={0.01}
@@ -131,7 +155,12 @@ const AddPaymentPage: FunctionComponent = () => {
                             flex: 1,
                             marginLeft: 10,
                         }}>
-                        <Text style={styles.payment_h_txt}>CVV</Text>
+                        <BasicText
+                            inputText="CVV"
+                            textSize={15}
+                            marginTop={25}
+                            textWeight={500}
+                        />
                         <BasicTextEntry
                             inputMode="numeric"
                             marginHorizontal={0.01}
@@ -143,7 +172,12 @@ const AddPaymentPage: FunctionComponent = () => {
                         />
                     </View>
                 </View>
-                <Text style={styles.payment_h_txt}>Card PIN</Text>
+                <BasicText
+                    inputText="Card PIN"
+                    textSize={15}
+                    marginTop={25}
+                    textWeight={500}
+                />
                 <SecureTextEntry
                     marginHorizontal={0.01}
                     marginTop={10}
@@ -159,9 +193,12 @@ const AddPaymentPage: FunctionComponent = () => {
                         marginTop: 25,
                         justifyContent: 'flex-end',
                     }}>
-                    <Text style={[styles.payment_h_txt, { marginTop: 0 }]}>
-                        Save Card
-                    </Text>
+                    <BasicText
+                        inputText="Save Card"
+                        textSize={15}
+                        marginTop={0.1}
+                        textWeight={500}
+                    />
                     <CheckBox
                         active={saveCard}
                         setActive={setSaveCard}
@@ -169,14 +206,25 @@ const AddPaymentPage: FunctionComponent = () => {
                         size={25}
                     />
                 </View>
+                <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
-            <BasicButton
-                buttonText="Confirm"
-                marginHorizontal={22}
-                marginTop={'auto'}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
-                execFunc={nav_to_payment_successful_page}
-            />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+                <BasicButton
+                    buttonText="Confirm"
+                    marginHorizontal={22}
+                    marginTop={'auto'}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 30,
+                                  if_false: 40,
+                              })
+                            : 20
+                    }
+                    execFunc={nav_to_payment_successful_page}
+                />
+            </KeyboardAvoidingView>
         </View>
     );
 };
@@ -184,14 +232,8 @@ const AddPaymentPage: FunctionComponent = () => {
 export default AddPaymentPage;
 
 const styles = StyleSheet.create({
-    sub_main: {
+    add_p_main: {
         flex: 1,
         backgroundColor: Colors.Background,
-    },
-    payment_h_txt: {
-        color: Colors.Dark,
-        fontSize: 15,
-        fontFamily: fonts.Urbanist_500,
-        marginTop: 25,
     },
 });

@@ -7,20 +7,22 @@ import React, {
 } from 'react';
 import {
     FlatList,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ConversationPage: FunctionComponent = observer(() => {
     const [chats, setChats] = useState<INTF_Conversation[]>([]);
@@ -31,7 +33,7 @@ const ConversationPage: FunctionComponent = observer(() => {
         setChats([
             {
                 isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
+                chat: 'Hello Oluwagbemiga, How’s life going?',
             },
             {
                 isAI: false,
@@ -83,18 +85,26 @@ const ConversationPage: FunctionComponent = observer(() => {
     useEffect(() => {
         const first_timer = setTimeout(() => {
             flatListRef.current !== null && flatListRef.current?.scrollToEnd();
-        }, 500);
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
+        }, 100);
         return () => clearTimeout(first_timer);
-    }, []);
+    }, [chats]);
 
     return (
         <View style={styles.conversation_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.c_header_cont}>
-                <Text style={styles.c_header}>Conversation</Text>
+                <BasicText
+                    inputText="Conversation"
+                    textWeight={700}
+                    textSize={25}
+                    marginTop={'auto'}
+                    marginBottom={18}
+                />
             </View>
             <MiniAvatar
-                isMale={false}
                 marginTop={15}
                 marginBottom={4}
                 marginHorizontal={22}
@@ -104,7 +114,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                 style={{
                     flex: 1,
                 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <FlatList
                     ref={flatListRef}
                     ListHeaderComponent={() =>
@@ -145,15 +155,31 @@ const ConversationPage: FunctionComponent = observer(() => {
                     marginRight={10}
                     paddingBottom={7}
                     paddingTop={3}
-                    placeHolderText="Type.."
+                    placeHolderText="Type here.."
                     inputValue={micText}
                     setInputValue={setMicText}
-                    onChange={() => {
-                        flatListRef?.current?.scrollToEnd();
-                    }}
-                    onFocus={() => {
-                        flatListRef?.current?.scrollToEnd();
-                    }}
+                    onChange={no_double_clicks({
+                        execFunc: () => {
+                            flatListRef?.current?.scrollToEnd();
+                        },
+                    })}
+                    onFocus={no_double_clicks({
+                        execFunc: () => {
+                            flatListRef?.current?.scrollToEnd();
+                        },
+                    })}
+                    onSend={no_double_clicks({
+                        execFunc: () => {
+                            if (micText) {
+                                setChats(prev_chats => [
+                                    ...prev_chats,
+                                    { isAI: false, chat: micText },
+                                ]);
+                            }
+                            Keyboard.isVisible() && Keyboard.dismiss();
+                            setMicText('');
+                        },
+                    })}
                 />
             </KeyboardAvoidingView>
         </View>
@@ -168,7 +194,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     c_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 70,
+        height:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_true: 90,
+                      if_false: 120,
+                  })
+                : 70,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
         shadowColor:
@@ -182,12 +214,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 3.27,
         elevation: 3,
-    },
-    c_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 25,
-        marginTop: 'auto',
-        marginBottom: 18,
-        color: Colors.Dark,
     },
 });

@@ -5,11 +5,12 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { INTF_PaymentMethods } from '../../Interface/Payment_Methods/Payment_Methods';
+import BasicText from '../Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 interface PaymentMethodProps {
     payment_method: INTF_PaymentMethods;
@@ -50,7 +51,10 @@ const PaymentMethod: FunctionComponent<PaymentMethodProps> = ({
                 borderRadius: 15,
                 marginBottom: 20,
                 backgroundColor: isActive ? Colors.LightPrimary : Colors.White,
-                minHeight: 90,
+                minHeight: screen_height_less_than({
+                    if_true: 70,
+                    if_false: 90,
+                }),
             }}>
             <Image
                 source={payment_method.logo}
@@ -60,14 +64,11 @@ const PaymentMethod: FunctionComponent<PaymentMethodProps> = ({
                     marginRight: 11,
                 }}
             />
-            <Text
-                style={{
-                    fontFamily: fonts.Urbanist_700,
-                    color: Colors.Dark,
-                    fontSize: 18,
-                }}>
-                {payment_method.name}
-            </Text>
+            <BasicText
+                inputText={payment_method.name}
+                textSize={18}
+                textWeight={700}
+            />
             <View
                 style={{
                     marginLeft: 'auto',

@@ -5,11 +5,12 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { INTF_Subscription } from '../../Interface/Subscription/Subscription';
+import BasicText from '../Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 interface SubscriptionPlanProps {
     subscription: INTF_Subscription;
@@ -46,6 +47,10 @@ const SubscriptionPlan: FunctionComponent<SubscriptionPlanProps> = ({
                 alignItems: 'center',
                 borderWidth: 2,
                 padding: 20,
+                paddingVertical: screen_height_less_than({
+                    if_true: 15,
+                    if_false: 20,
+                }),
                 borderColor: isActive ? Colors.Primary : Colors.DarkBorder,
                 borderRadius: 15,
                 marginBottom: 20,
@@ -55,33 +60,26 @@ const SubscriptionPlan: FunctionComponent<SubscriptionPlanProps> = ({
                 style={{
                     marginRight: 'auto',
                 }}>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Dark,
-                        fontSize: 19,
-                    }}>
-                    {`${subscription.months} ${
+                <BasicText
+                    inputText={`${subscription.months} ${
                         subscription.months === 1 ? 'Month' : 'Months'
                     }`}
-                </Text>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_500,
-                        color: Colors.DarkGrey,
-                        fontSize: 14,
-                    }}>
-                    {`${subscription.discount}% off`}
-                </Text>
+                    textWeight={700}
+                    textSize={19}
+                />
+                <BasicText
+                    inputText={`${subscription.discount}% off`}
+                    textWeight={500}
+                    textSize={14}
+                    textColor={Colors.DarkGrey}
+                />
             </View>
-            <Text
-                style={{
-                    fontFamily: fonts.Urbanist_700,
-                    color: Colors.Primary,
-                    fontSize: 19,
-                }}>
-                {`$${subscription.price}.00`}
-            </Text>
+            <BasicText
+                inputText={`$${subscription.price}.00`}
+                textWeight={700}
+                textSize={19}
+                textColor={Colors.Primary}
+            />
         </TouchableOpacity>
     );
 };

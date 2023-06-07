@@ -13,6 +13,7 @@ import LessonIcon from '../../Images/SVGs/Lesson_Icon.svg';
 import HomeWorkIcon from '../../Images/SVGs/Home_Work_Icon.svg';
 import ConversationIcon from '../../Images/SVGs/Conversation_Icon.svg';
 import ProfileIcon from '../../Images/SVGs/Profile_Icon.svg';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 type HomeTabParamList = {
     HomePage: {};
@@ -36,6 +37,7 @@ const HomeTab: FunctionComponent = () => {
                 tabBarLabelStyle: styles.tabBar_label,
                 tabBarIconStyle: styles.tabBar_icon,
                 tabBarShowLabel: true,
+                tabBarHideOnKeyboard: Platform.OS === 'ios' ? false : true,
             }}>
             <Home_Tab.Screen
                 name="HomePage"
@@ -104,8 +106,20 @@ export default HomeTab;
 
 const styles = StyleSheet.create({
     tabBar_main: {
-        height: Platform.OS === 'ios' ? 92 : 75,
-        paddingBottom: Platform.OS === 'ios' ? 30 : 13,
+        height:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_false: 92,
+                      if_true: 75,
+                  })
+                : 75,
+        paddingBottom:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_false: 30,
+                      if_true: 15,
+                  })
+                : 13,
         backgroundColor: Colors.Background,
         shadowColor: Colors.Black,
         shadowOffset: {

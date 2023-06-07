@@ -3,13 +3,13 @@ export const Avatars = {
         { name: 'Harry', type: 'British' },
         { name: 'Ethan', type: 'Australian' },
         { name: 'Kyle', type: 'American' },
-        { name: 'George', type: 'British' },
+        { name: 'George', type: 'Ireland' },
     ],
     Female: [
         { name: 'Emma', type: 'British' },
         { name: 'Willow', type: 'Australian' },
         { name: 'Emily', type: 'American' },
-        { name: 'Anne', type: 'British' },
+        { name: 'Anne', type: 'Ireland' },
     ],
 };
 

@@ -1,10 +1,11 @@
 import React, { Dispatch, FunctionComponent, SetStateAction } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
 import { observer } from 'mobx-react';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { INTF_Test2Answers } from '../../Interface/Test_2_Answers/Test_2_Answers';
+import BasicText from '../Basic_Text/Basic_Text';
 
 interface TestRadioButtonProps {
     option: string;
@@ -103,15 +104,16 @@ const TestRadioButton: FunctionComponent<TestRadioButtonProps> = observer(
                             : {},
                         buttonWidth ? { width: buttonWidth } : {},
                     ]}>
-                    <Text
-                        style={[
-                            styles.tb_m_txt,
-                            {
-                                color: isSelected ? Colors.White : Colors.Dark,
-                            },
-                        ]}>
-                        {option}
-                    </Text>
+                    <BasicText
+                        inputText={option}
+                        textFamily={fonts.OpenSans_400}
+                        marginLeft={8}
+                        marginRight={8}
+                        marginTop={6}
+                        marginBottom={6}
+                        textSize={17}
+                        textColor={isSelected ? Colors.White : Colors.Dark}
+                    />
                 </TouchableOpacity>
             </View>
         );
@@ -126,11 +128,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 6,
-    },
-    tb_m_txt: {
-        fontFamily: fonts.OpenSans_400,
-        marginHorizontal: 8,
-        marginVertical: 6,
-        fontSize: 17,
     },
 });

@@ -1,29 +1,29 @@
 import React, { FunctionComponent, ReactElement } from 'react';
-import {
-    FlatList,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import { test_lessons } from '../../../test/Data/Lessons';
-import Feather from 'react-native-vector-icons/Feather';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
-import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { Observer } from 'mobx-react';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import {
+    screen_height_less_than,
+    screen_width_less_than,
+} from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const LessonPage: FunctionComponent = () => {
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.l_header_cont}>
-                <Text style={styles.l_header}>Lessons</Text>
+                <BasicText
+                    inputText="Lessons"
+                    marginTop={'auto'}
+                    marginBottom={18}
+                    textSize={25}
+                    textWeight={700}
+                />
             </View>
             <View
                 style={{
@@ -31,29 +31,19 @@ const LessonPage: FunctionComponent = () => {
                     marginTop: 14,
                     paddingBottom: 20,
                 }}>
-                <Text
-                    style={{
-                        fontFamily: fonts.Urbanist_700,
-                        color: Colors.Black,
-                        fontSize: 20,
-                        marginHorizontal: 22,
-                    }}>
-                    Assigned Class
-                </Text>
+                <BasicText
+                    inputText="Assigned Class"
+                    marginLeft={22}
+                    textColor={Colors.Black}
+                    textWeight={700}
+                    textSize={20}
+                />
                 <View
                     style={{
                         flexDirection: 'row',
                         marginBottom: 3,
                     }}>
-                    <TouchableOpacity
-                        onPress={no_double_clicks({
-                            execFunc: () => {
-                                BottomSheetStore.open_bottom_sheet({
-                                    component_type: 1,
-                                });
-                            },
-                        })}
-                        activeOpacity={0.6}
+                    <View
                         style={{
                             backgroundColor: Colors.Primary,
                             minWidth: 133,
@@ -69,30 +59,26 @@ const LessonPage: FunctionComponent = () => {
                         }}>
                         <Observer>
                             {() => (
-                                <Text
-                                    style={{
-                                        color: Colors.White,
-                                        fontFamily: fonts.Urbanist_600,
-                                        fontSize: 18,
-                                        marginRight: 3,
-                                    }}>
-                                    {
+                                <BasicText
+                                    inputText={
                                         StudentInfoStore?.student_info
-                                            ?.assigned_class
+                                            ?.assigned_class as string
                                     }
-                                </Text>
+                                    textColor={Colors.White}
+                                    textSize={18}
+                                    marginRight={3}
+                                    textWeight={600}
+                                />
                             )}
                         </Observer>
-                        <Feather
-                            name="chevron-down"
-                            size={21}
-                            color={Colors.White}
-                        />
-                    </TouchableOpacity>
+                    </View>
                     <View
                         style={{
                             backgroundColor: Colors.LightPrimary,
-                            width: 131,
+                            width: screen_width_less_than({
+                                if_true: 100,
+                                if_false: 131,
+                            }),
                             height: 42,
                             marginTop: 10,
                             justifyContent: 'center',
@@ -101,14 +87,12 @@ const LessonPage: FunctionComponent = () => {
                             marginLeft: 'auto',
                             marginRight: 22,
                         }}>
-                        <Text
-                            style={{
-                                color: Colors.Primary,
-                                fontFamily: fonts.Urbanist_600,
-                                fontSize: 18,
-                            }}>
-                            20:00 Mins
-                        </Text>
+                        <BasicText
+                            inputText={'30:00 Mins'}
+                            textColor={Colors.Primary}
+                            textSize={18}
+                            textWeight={600}
+                        />
                     </View>
                 </View>
                 <FlatList
@@ -152,7 +136,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Background,
     },
     l_header_cont: {
-        height: Platform.OS === 'ios' ? 120 : 70,
+        height:
+            Platform.OS === 'ios'
+                ? screen_height_less_than({
+                      if_true: 90,
+                      if_false: 120,
+                  })
+                : 70,
         paddingLeft: 22,
         backgroundColor: Colors.Background,
         shadowColor:
@@ -166,12 +156,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 3.27,
         elevation: 3,
-    },
-    l_header: {
-        fontFamily: fonts.Urbanist_700,
-        fontSize: 25,
-        marginTop: 'auto',
-        marginBottom: 18,
-        color: Colors.Dark,
     },
 });

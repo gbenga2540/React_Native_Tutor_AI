@@ -18,6 +18,8 @@ import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { MutationCache, QueryCache } from 'react-query';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const InfoPage: FunctionComponent = () => {
     const queryCache = new QueryCache();
@@ -103,24 +105,35 @@ const InfoPage: FunctionComponent = () => {
             />
             <View style={styles.info_main}>
                 {hide_back_btn ? (
-                    <Text
-                        style={{
-                            marginLeft: 22,
-                            marginTop: Platform.OS === 'ios' ? 56 : 25,
-                            marginBottom: 28,
-                        }}>
-                        {''}
-                    </Text>
+                    <BasicText
+                        inputText=""
+                        marginLeft={22}
+                        marginBottom={28}
+                        marginTop={
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_false: 56,
+                                      if_true: 45,
+                                  })
+                                : 25
+                        }
+                    />
                 ) : (
                     <View
                         style={{
                             marginLeft: 22,
                             marginTop: navigation?.canGoBack()
                                 ? Platform.OS === 'ios'
-                                    ? 56
+                                    ? screen_height_less_than({
+                                          if_false: 56,
+                                          if_true: 45,
+                                      })
                                     : 25
                                 : Platform.OS === 'ios'
-                                ? 70
+                                ? screen_height_less_than({
+                                      if_false: 70,
+                                      if_true: 60,
+                                  })
                                 : 25,
                             marginBottom: 15,
                         }}>
@@ -164,7 +177,13 @@ const InfoPage: FunctionComponent = () => {
                 <View
                     style={{
                         marginHorizontal: 20,
-                        marginBottom: 60,
+                        marginBottom:
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_false: 40,
+                                      if_true: 25,
+                                  })
+                                : 20,
                         flex: 1,
                         justifyContent: 'flex-end',
                     }}>

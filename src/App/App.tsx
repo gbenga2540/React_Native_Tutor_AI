@@ -6,10 +6,9 @@
  */
 
 import React, { FunctionComponent, useEffect } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CustomStatusBar from '../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { NavigationContainer } from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
 import { OnlineManager } from '../Hooks/Online_Manager/Online_Manager';
 import { OnAppFocus } from '../Hooks/On_App_Focus/On_App_Focus';
 import { KeyboardManager } from '../Hooks/Keyboard_Manager/Keyboard_Manager';
@@ -18,42 +17,18 @@ import { observer } from 'mobx-react';
 import OverlaySheet from '../Components/Overlay_Sheet/Overlay_Sheet';
 import { BottomSheetStore } from '../MobX/Bottom_Sheet/Bottom_Sheet';
 import BottomOverlay from '../Components/Bottom_Overlay/Bottom_Overlay';
-import SInfo from 'react-native-sensitive-info';
-import { SECURE_STORAGE_NAME, SECURE_STORAGE_SCHEDULE_INFO } from '@env';
-import { INTF_SchedulesInfo } from '../Interface/Schedules_Info/Schedules_Info';
-import { ScheduleInfoStore } from '../MobX/Schedules_Info/Schedules_Info';
-import { sort_schedule } from '../Utils/Sort_Schedule/Sort_Schedule';
 import Colors from '../Configs/Colors/Colors';
+import { HideSplashScreen } from '../Hooks/Hide_Splash_Screen/Hide_Splash_Screen';
+import { SetClassSchedule } from '../Hooks/Set_Class_Schedule/Set_Class_Schedule';
+import { LoadAvatarVoice } from '../Hooks/Load_Avatar_Voice/Load_Avatar_Voice';
+// import { TextToSpeech } from '../Hooks/Text_To_Speech/Text_To_Speech';
 
 const App: FunctionComponent = observer(() => {
     useEffect(() => {
-        if (Platform.OS === 'android') {
-            const time_out = setTimeout(() => {
-                SplashScreen.hide();
-            }, 1000);
-            return () => {
-                clearTimeout(time_out);
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        const get_class_schedule = async () => {
-            try {
-                await SInfo.getItem(SECURE_STORAGE_SCHEDULE_INFO, {
-                    sharedPreferencesName: SECURE_STORAGE_NAME,
-                    keychainService: SECURE_STORAGE_NAME,
-                })?.then(async res => {
-                    if (res) {
-                        const json_res: INTF_SchedulesInfo[] = JSON.parse(res);
-                        ScheduleInfoStore.set_schedule_info({
-                            schedule: sort_schedule({ schedule: json_res }),
-                        });
-                    }
-                });
-            } catch (error) {}
-        };
-        get_class_schedule();
+        HideSplashScreen();
+        SetClassSchedule();
+        LoadAvatarVoice();
+        // TextToSpeech();
     }, []);
 
     OnlineManager();

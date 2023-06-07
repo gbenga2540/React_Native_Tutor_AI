@@ -3,14 +3,12 @@ import {
     Platform,
     ScrollView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { fonts } from '../../Configs/Fonts/Fonts';
 import HeaderTab from '../../Components/Header_Tab/Header_Tab';
 import SearchBar from '../../Components/Search_Bar/Search_Bar';
 import { faq_types, faqs } from '../../Data/FAQ/FAQ';
@@ -19,6 +17,7 @@ import { contact_us } from '../../Data/Contact_Us/Contact_Us';
 import ContactUsButton from '../../Components/Contact_Us_Button/Contact_Us_Button';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const HelpCenterPage: FunctionComponent = () => {
     const route = useRoute<RouteProp<any>>();
@@ -33,7 +32,13 @@ const HelpCenterPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -70,7 +75,13 @@ const HelpCenterPage: FunctionComponent = () => {
                 <View
                     style={{
                         flex: 1,
-                        marginBottom: Platform.OS === 'ios' ? 25 : 5,
+                        marginBottom:
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_true: 10,
+                                      if_false: 20,
+                                  })
+                                : 5,
                     }}>
                     <ScrollView
                         horizontal
@@ -103,17 +114,16 @@ const HelpCenterPage: FunctionComponent = () => {
                                 }}
                                 onPress={() => setActiveFAQ(index)}
                                 key={index}>
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_500,
-                                        fontSize: 15,
-                                        color:
-                                            activeFAQ === index
-                                                ? Colors.White
-                                                : Colors.Primary,
-                                    }}>
-                                    {item}
-                                </Text>
+                                <BasicText
+                                    inputText={item}
+                                    textColor={
+                                        activeFAQ === index
+                                            ? Colors.White
+                                            : Colors.Primary
+                                    }
+                                    textWeight={500}
+                                    textSize={15}
+                                />
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
@@ -147,7 +157,13 @@ const HelpCenterPage: FunctionComponent = () => {
                     style={{
                         paddingHorizontal: 20,
                         marginHorizontal: 2,
-                        marginBottom: Platform.OS === 'ios' ? 25 : 5,
+                        marginBottom:
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_true: 10,
+                                      if_false: 20,
+                                  })
+                                : 5,
                     }}>
                     {contact_us?.map((item, index) => (
                         <ContactUsButton contact_us={item} key={index} />

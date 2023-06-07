@@ -20,6 +20,7 @@ import TranslateIcon from '../../Images/SVGs/Translate_Icon.svg';
 import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import TextDivider from '../../Components/Text_Divider/Text_Divider';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const VocabularyPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -44,7 +45,13 @@ const VocabularyPage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View
                 style={{
-                    marginTop: Platform.OS === 'ios' ? 65 : 25,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
                     marginHorizontal: 22,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -96,12 +103,12 @@ const VocabularyPage: FunctionComponent = () => {
                             justifyContent: 'space-between',
                         }}>
                         <BasicText
-                            inputText="Transcript"
+                            inputText="Translate"
                             textSize={15}
                             textColor={Colors.White}
                         />
                         <BasicText
-                            inputText="Translate"
+                            inputText="Transcript"
                             textSize={15}
                             textColor={Colors.White}
                         />
@@ -116,12 +123,12 @@ const VocabularyPage: FunctionComponent = () => {
                         }}>
                         <TouchableOpacity
                             activeOpacity={0.5}
-                            onPress={transcribe_text}>
+                            onPress={translate_text}>
                             <TranslateIcon width={30} height={30} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={0.5}
-                            onPress={translate_text}>
+                            onPress={transcribe_text}>
                             <TranscribeIcon width={30} height={30} />
                         </TouchableOpacity>
                     </View>
@@ -144,14 +151,12 @@ const VocabularyPage: FunctionComponent = () => {
                             marginHorizontal: 20,
                         }}>
                         {'Meaning: '}
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_500,
-                                fontSize: 14,
-                                color: Colors.White,
-                            }}>
-                            concurrence of opinion
-                        </Text>
+                        <BasicText
+                            inputText="concurrence of opinion"
+                            textColor={Colors.White}
+                            textSize={14}
+                            textWeight={500}
+                        />
                     </Text>
                     <Text
                         style={{
@@ -162,15 +167,13 @@ const VocabularyPage: FunctionComponent = () => {
                             marginHorizontal: 20,
                         }}>
                         {'Example: '}
-                        <Text
-                            style={{
-                                fontFamily: fonts.Urbanist_500,
-                                fontSize: 14,
-                                color: Colors.White,
-                            }}>
-                            The committee worked in accord on the bill, and it
-                            eventually passed.
-                        </Text>
+                        <BasicText
+                            inputText="The committee worked in accord on the bill, and it
+                            eventually passed."
+                            textColor={Colors.White}
+                            textSize={14}
+                            textWeight={500}
+                        />
                     </Text>
                     {showTranslated && (
                         <View>
@@ -197,14 +200,12 @@ const VocabularyPage: FunctionComponent = () => {
                                     marginHorizontal: 20,
                                 }}>
                                 {'Meaning: '}
-                                <Text
-                                    style={{
-                                        fontFamily: fonts.Urbanist_500,
-                                        fontSize: 14,
-                                        color: Colors.White,
-                                    }}>
-                                    concurrence of opinion
-                                </Text>
+                                <BasicText
+                                    inputText="concurrence of opinion"
+                                    textColor={Colors.White}
+                                    textSize={14}
+                                    textWeight={500}
+                                />
                             </Text>
                             <BasicText
                                 inputText="Translated Text"
@@ -226,8 +227,8 @@ const VocabularyPage: FunctionComponent = () => {
                 borderRadius={8}
                 marginHorizontal={22}
                 buttonHeight={56}
-                marginTop={20}
-                marginBottom={Platform.OS === 'ios' ? 50 : 20}
+                marginTop={30}
+                marginBottom={Platform.OS === 'ios' ? 30 : 20}
             />
         </View>
     );
