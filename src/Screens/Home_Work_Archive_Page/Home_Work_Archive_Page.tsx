@@ -99,8 +99,8 @@ const HomeWorkArchivePage: FunctionComponent = () => {
                 marginBottom={
                     Platform.OS === 'ios'
                         ? screen_height_less_than({
-                              if_true: 25,
-                              if_false: 40,
+                              if_true: 10,
+                              if_false: 35,
                           })
                         : 20
                 }

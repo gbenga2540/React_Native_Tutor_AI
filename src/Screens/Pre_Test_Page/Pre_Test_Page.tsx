@@ -101,6 +101,13 @@ const PreTestPage: FunctionComponent = observer(() => {
             <KeyboardAvoidingView
                 style={{
                     flex: 1,
+                    marginBottom:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_false: 35,
+                                  if_true: 10,
+                              })
+                            : 15,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <FlatList
@@ -142,21 +149,21 @@ const PreTestPage: FunctionComponent = observer(() => {
                     marginLeft={12}
                     marginRight={12}
                     paddingBottom={7}
-                    marginBottom={
-                        Platform.OS === 'ios'
-                            ? KeyboardStore.keyboard_active
-                                ? 1
-                                : screen_height_less_than({
-                                      if_false: 35,
-                                      if_true: 20,
-                                  })
-                            : KeyboardStore.keyboard_active
-                            ? screen_height_less_than({
-                                  if_true: 7,
-                                  if_false: 10,
-                              })
-                            : 8
-                    }
+                    // marginBottom={
+                    //     Platform.OS === 'ios'
+                    //         ? KeyboardStore.keyboard_active
+                    //             ? 1
+                    //             : screen_height_less_than({
+                    //                   if_false: 35,
+                    //                   if_true: 20,
+                    //               })
+                    //         : KeyboardStore.keyboard_active
+                    //         ? screen_height_less_than({
+                    //               if_true: 7,
+                    //               if_false: 30,
+                    //           })
+                    //         : 8
+                    // }
                     paddingTop={3}
                     placeHolderText="Type here.."
                     inputValue={micText}

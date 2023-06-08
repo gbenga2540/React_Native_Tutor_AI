@@ -680,11 +680,11 @@ const OnboardingPage: FunctionComponent = () => {
                         question === TOTAL_PAGES ? submit_data : next_question
                     }
                     buttonHeight={56}
-                    marginTop={10}
+                    marginTop={2}
                     marginBottom={
                         Platform.OS === 'ios'
                             ? screen_height_less_than({
-                                  if_true: 25,
+                                  if_true: 10,
                                   if_false: 40,
                               })
                             : 20

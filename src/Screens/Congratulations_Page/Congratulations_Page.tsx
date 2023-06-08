@@ -154,7 +154,7 @@ const CongratulationsPage: FunctionComponent = () => {
                 marginBottom={
                     Platform.OS === 'ios'
                         ? screen_height_less_than({
-                              if_true: 30,
+                              if_true: 10,
                               if_false: 40,
                           })
                         : 20

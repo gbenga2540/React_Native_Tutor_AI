@@ -181,7 +181,7 @@ const InfoPage: FunctionComponent = () => {
                             Platform.OS === 'ios'
                                 ? screen_height_less_than({
                                       if_false: 40,
-                                      if_true: 25,
+                                      if_true: 10,
                                   })
                                 : 20,
                         flex: 1,

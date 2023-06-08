@@ -200,7 +200,7 @@ const SignInPage: FunctionComponent = () => {
                     marginBottom={
                         Platform.OS === 'ios'
                             ? screen_height_less_than({
-                                  if_true: 25,
+                                  if_true: 10,
                                   if_false: 40,
                               })
                             : 20
@@ -216,6 +216,7 @@ const SignInPage: FunctionComponent = () => {
                     bottom: -65,
                     left: -75,
                     transform: [{ scale: 0.5 }],
+                    opacity: 0.25,
                 }}
             />
         </View>

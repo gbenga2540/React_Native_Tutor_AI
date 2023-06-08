@@ -228,7 +228,14 @@ const VocabularyPage: FunctionComponent = () => {
                 marginHorizontal={22}
                 buttonHeight={56}
                 marginTop={30}
-                marginBottom={Platform.OS === 'ios' ? 30 : 20}
+                marginBottom={
+                    Platform.OS === 'ios'
+                        ? screen_height_less_than({
+                              if_false: 35,
+                              if_true: 10,
+                          })
+                        : 20
+                }
             />
         </View>
     );

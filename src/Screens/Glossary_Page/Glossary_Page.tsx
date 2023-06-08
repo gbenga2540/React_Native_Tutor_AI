@@ -74,6 +74,13 @@ const GlossaryPage: FunctionComponent = () => {
                     paddingTop: 20,
                     marginHorizontal: 2,
                     paddingBottom: Platform.OS === 'ios' ? 25 : 5,
+                    marginBottom:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 10,
+                                  if_false: 20,
+                              })
+                            : 5,
                 }}
                 ListFooterComponent={() =>
                     (

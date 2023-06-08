@@ -170,7 +170,7 @@ const VerifyOTPPage: FunctionComponent = () => {
                                     ? KeyboardStore.keyboard_active
                                         ? 15
                                         : screen_height_less_than({
-                                              if_true: 30,
+                                              if_true: 10,
                                               if_false: 40,
                                           })
                                     : 20

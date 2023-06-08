@@ -1,5 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Image, Platform, StyleSheet, View } from 'react-native';
+import {
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    View,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
@@ -12,6 +19,7 @@ import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ForgotPasswordPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -63,38 +71,52 @@ const ForgotPasswordPage: FunctionComponent = () => {
                 }}>
                 {navigation.canGoBack() && <BackButton />}
             </View>
-            <BasicText
-                inputText="Forgot Password?"
-                textWeight={700}
-                textSize={30}
-                marginLeft={22}
-                width={280}
-                marginBottom={2}
-            />
-            <BasicText
-                inputText="Enter Your Email to receive reset link."
-                textWeight={500}
-                textSize={16}
-                marginLeft={22}
-                marginRight={22}
-                textColor={Colors.Grey}
-            />
-            <BasicTextEntry
-                placeHolderText="Enter your email"
-                inputValue={email}
-                setInputValue={setEmail}
-                marginTop={20}
-                marginBottom={18}
-                inputMode="email"
-            />
-            <BasicButton
-                buttonText="Send Mail"
-                borderRadius={8}
-                marginHorizontal={22}
-                execFunc={send_mail}
-                buttonHeight={56}
-                disabled={disableButton}
-            />
+            <ScrollView style={{ flex: 1 }}>
+                <BasicText
+                    inputText="Forgot Password?"
+                    textWeight={700}
+                    textSize={30}
+                    marginLeft={22}
+                    width={280}
+                    marginBottom={2}
+                />
+                <BasicText
+                    inputText="Enter Your Email to receive reset link."
+                    textWeight={500}
+                    textSize={16}
+                    marginLeft={22}
+                    marginRight={22}
+                    textColor={Colors.Grey}
+                />
+                <BasicTextEntry
+                    placeHolderText="Enter your email"
+                    inputValue={email}
+                    setInputValue={setEmail}
+                    marginTop={20}
+                    marginBottom={18}
+                    inputMode="email"
+                />
+            </ScrollView>
+            <KeyboardAvoidingView
+                style={{ zIndex: 2 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+                <BasicButton
+                    buttonText="Send Mail"
+                    borderRadius={8}
+                    marginHorizontal={22}
+                    execFunc={send_mail}
+                    buttonHeight={56}
+                    disabled={disableButton}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 10,
+                                  if_false: 40,
+                              })
+                            : 20
+                    }
+                />
+            </KeyboardAvoidingView>
             <Image
                 source={require('../../Images/Extra/Arrow_Curves_2.png')}
                 style={{
@@ -104,6 +126,7 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     bottom: -65,
                     left: -75,
                     transform: [{ scale: 0.5 }],
+                    opacity: 0.25,
                 }}
             />
         </View>

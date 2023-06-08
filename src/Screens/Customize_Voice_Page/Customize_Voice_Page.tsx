@@ -345,7 +345,7 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                 marginBottom={
                     Platform.OS === 'ios'
                         ? screen_height_less_than({
-                              if_true: 20,
+                              if_true: 1,
                               if_false: 30,
                           })
                         : 5

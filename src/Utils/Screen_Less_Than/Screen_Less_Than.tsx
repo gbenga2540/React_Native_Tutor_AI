@@ -27,7 +27,7 @@ export const screen_height_less_than = ({
     if_false: any;
 }): any => {
     const { height: screenHeight } = Dimensions.get('window');
-    if (screenHeight <= (min_height || 780)) {
+    if (screenHeight <= (min_height || 760)) {
         return if_true;
     } else {
         return if_false;

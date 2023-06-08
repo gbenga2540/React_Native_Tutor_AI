@@ -138,9 +138,9 @@ const LessonConvPage: FunctionComponent = observer(() => {
                         Platform.OS === 'ios'
                             ? screen_height_less_than({
                                   if_false: 35,
-                                  if_true: 20,
+                                  if_true: 10,
                               })
-                            : 10,
+                            : 15,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <FlatList

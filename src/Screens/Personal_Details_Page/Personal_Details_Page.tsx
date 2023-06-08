@@ -365,7 +365,14 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     buttonHeight={56}
                     disabled={disableButton}
                     marginTop={20}
-                    marginBottom={Platform.OS === 'ios' ? 30 : 20}
+                    marginBottom={
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 10,
+                                  if_false: 30,
+                              })
+                            : 20
+                    }
                 />
             </ScrollView>
             <DatePicker
