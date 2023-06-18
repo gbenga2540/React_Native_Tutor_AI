@@ -7,21 +7,19 @@ import { test_assignments } from '../../../test/Data/Assignments';
 import CheckMark from '../../Components/Check_Mark/Check_Mark';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import BackButton from '../../Components/Back_Button/Back_Button';
-import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import {
+    screen_height_less_than,
+    screen_width_less_than,
+} from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const ReportPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
-    const download_results = no_double_clicks({
-        execFunc: () => {},
-    });
 
     return (
         <View style={styles.report_main}>
@@ -53,6 +51,13 @@ const ReportPage: FunctionComponent = () => {
                     paddingHorizontal: 20,
                     paddingTop: 30,
                     marginHorizontal: 2,
+                    marginBottom:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_false: 25,
+                                  if_true: 10,
+                              })
+                            : 5,
                 }}>
                 <View
                     style={{
@@ -138,9 +143,15 @@ const ReportPage: FunctionComponent = () => {
                             flex: 1,
                         }}>
                         <Image
-                            source={require('../../Images/Lessons/Lessons.png')}
+                            source={screen_width_less_than({
+                                if_false: require('../../Images/Lessons/Lessons.png'),
+                                if_true: require('../../Images/Lessons/Lessons_Single.png'),
+                            })}
                             style={{
-                                width: 155,
+                                width: screen_height_less_than({
+                                    if_false: 155,
+                                    if_true: 80,
+                                }),
                                 height: 80,
                                 alignSelf: 'center',
                             }}
@@ -149,7 +160,7 @@ const ReportPage: FunctionComponent = () => {
                             style={{
                                 alignSelf: 'center',
                                 marginLeft: 'auto',
-                                marginRight: 20,
+                                marginRight: 5,
                             }}>
                             <BasicText
                                 inputText="100 Lessons Done"
@@ -195,7 +206,7 @@ const ReportPage: FunctionComponent = () => {
                     </TouchableOpacity>
                 </View>
                 <BasicText
-                    inputText="Completed Homework"
+                    inputText="Completed Homeworks"
                     textSize={20}
                     marginTop={40}
                     textWeight={700}
@@ -211,9 +222,15 @@ const ReportPage: FunctionComponent = () => {
                             flex: 1,
                         }}>
                         <Image
-                            source={require('../../Images/Lessons/Lessons.png')}
+                            source={screen_width_less_than({
+                                if_false: require('../../Images/Lessons/Lessons.png'),
+                                if_true: require('../../Images/Lessons/Lessons_Single.png'),
+                            })}
                             style={{
-                                width: 155,
+                                width: screen_height_less_than({
+                                    if_false: 155,
+                                    if_true: 80,
+                                }),
                                 height: 80,
                                 alignSelf: 'center',
                             }}
@@ -222,7 +239,7 @@ const ReportPage: FunctionComponent = () => {
                             style={{
                                 alignSelf: 'center',
                                 marginLeft: 'auto',
-                                marginRight: 20,
+                                marginRight: 5,
                             }}>
                             <BasicText
                                 inputText="100 Homework Done"
@@ -269,24 +286,89 @@ const ReportPage: FunctionComponent = () => {
                         />
                     </TouchableOpacity>
                 </View>
+                <BasicText
+                    inputText="Completed Exams"
+                    textSize={20}
+                    marginTop={40}
+                    textWeight={700}
+                />
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                    <View
+                        style={{
+                            backgroundColor: Colors.Orange,
+                            borderRadius: 10,
+                            padding: 10,
+                            flexDirection: 'row',
+                            height: 100,
+                            flex: 1,
+                        }}>
+                        <Image
+                            source={screen_width_less_than({
+                                if_false: require('../../Images/Lessons/Lessons.png'),
+                                if_true: require('../../Images/Lessons/Lessons_Single.png'),
+                            })}
+                            style={{
+                                width: screen_height_less_than({
+                                    if_false: 155,
+                                    if_true: 80,
+                                }),
+                                height: 80,
+                                alignSelf: 'center',
+                            }}
+                        />
+                        <View
+                            style={{
+                                alignSelf: 'center',
+                                marginLeft: 'auto',
+                                marginRight: 5,
+                            }}>
+                            <BasicText
+                                inputText="10 Exams Done"
+                                textSize={14}
+                                textWeight={500}
+                                textColor={Colors.White}
+                            />
+                            <BasicText
+                                inputText="Success Rate: 90%"
+                                textSize={16}
+                                textWeight={700}
+                                marginTop={10}
+                                textColor={Colors.White}
+                            />
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={no_double_clicks({
+                            execFunc: () => {
+                                navigation.push(
+                                    'HomeStack' as never,
+                                    {
+                                        screen: 'LessonArchivePage',
+                                    } as never,
+                                );
+                            },
+                        })}
+                        activeOpacity={0.5}
+                        style={{
+                            width: 22,
+                            height: 50,
+                            backgroundColor: Colors.Orange,
+                            marginLeft: 10,
+                            marginTop: 'auto',
+                            marginBottom: 'auto',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 5,
+                        }}>
+                        <Feather
+                            name="chevron-right"
+                            color={Colors.White}
+                            size={23}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
-            <BasicButton
-                execFunc={download_results}
-                buttonText="Download Results"
-                borderRadius={8}
-                marginHorizontal={22}
-                buttonHeight={56}
-                marginTop={2}
-                marginBottom={
-                    Platform.OS === 'ios'
-                        ? screen_height_less_than({
-                              if_true: 10,
-                              if_false: 40,
-                          })
-                        : 20
-                }
-            />
         </View>
     );
 };

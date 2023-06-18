@@ -19,8 +19,13 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { useMutation } from 'react-query';
+import { change_password } from '../../Configs/Queries/Users/Users';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
+import { observer } from 'mobx-react';
 
-const ChangePasswordPage: FunctionComponent = () => {
+const ChangePasswordPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [oldPassword, setOldPassword] = useState<string>('');
     const [newPassword, setNewPassword] = useState<string>('');
@@ -28,11 +33,45 @@ const ChangePasswordPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
+    const { mutate: change_password_mutate } = useMutation(change_password, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        "An error occured while trying to change User's Password!",
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                info_handler({
+                    navigation: navigation,
+                    proceed_type: 4,
+                    success_mssg:
+                        'Your password has been updated successfully!',
+                    svr_success_mssg: '',
+                    hide_back_btn: false,
+                    hide_header: false,
+                });
+            }
+        },
+    });
+
     const change_password_func = no_double_clicks({
         execFunc: async () => {
             if (oldPassword && newPassword && newCPassword) {
                 if (newPassword?.length >= 6) {
                     if (newPassword === newCPassword) {
+                        change_password_mutate({
+                            uid: UserInfoStore?.user_info?._id as string,
+                            oldPassword: oldPassword,
+                            newPassword: newPassword,
+                        });
                     } else {
                         error_handler({
                             navigation: navigation,
@@ -149,7 +188,7 @@ const ChangePasswordPage: FunctionComponent = () => {
             />
         </View>
     );
-};
+});
 
 export default ChangePasswordPage;
 

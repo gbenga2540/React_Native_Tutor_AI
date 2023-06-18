@@ -17,6 +17,7 @@ interface BasicTextProps {
     marginRight?: number | 'auto';
     textAlign?: 'auto' | 'center' | 'left' | 'right' | 'justify';
     width?: number;
+    selectable?: boolean;
 }
 const BasicText: FunctionComponent<BasicTextProps> = ({
     inputText,
@@ -31,9 +32,11 @@ const BasicText: FunctionComponent<BasicTextProps> = ({
     marginRight,
     textAlign,
     width,
+    selectable,
 }) => {
     return (
         <Text
+            selectable={selectable || false}
             style={
                 textFamily
                     ? {

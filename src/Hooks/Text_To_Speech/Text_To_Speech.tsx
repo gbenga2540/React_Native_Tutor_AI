@@ -1,13 +1,38 @@
 import { Avatars } from '../../Data/Voices/Voices';
 import TTS from 'react-native-tts';
 import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { useEffect } from 'react';
+import { AvatarSpeakStore } from '../../MobX/Avatar_Speak/Avatar_Speak';
 
 const TextToSpeech = () => {
     const is_tts_engine_ready = async () => {
-        await TTS.voices().then(res => console.log(res));
         const isInitialized = await TTS.getInitStatus();
         return isInitialized;
     };
+
+    useEffect(() => {
+        TTS.addEventListener('tts-start', () => {
+            AvatarSpeakStore.set_avatar_speak({ should_avatar_speak: true });
+        });
+        TTS.addEventListener('tts-finish', () => {
+            AvatarSpeakStore.set_avatar_speak({ should_avatar_speak: false });
+            TextToSpeechStore.clear_speech();
+        });
+        return () => {
+            TTS.removeEventListener('tts-start', () => {
+                AvatarSpeakStore.set_avatar_speak({
+                    should_avatar_speak: true,
+                });
+            });
+            TTS.removeEventListener('tts-finish', () => {
+                AvatarSpeakStore.set_avatar_speak({
+                    should_avatar_speak: false,
+                });
+                TextToSpeechStore.clear_speech();
+            });
+        };
+    }, []);
 
     const generate_speech_for_avatar = ({
         type,
@@ -77,13 +102,15 @@ const TextToSpeech = () => {
         }
     };
 
-    generate_speech({
-        speech: `Hi there, My Name is ${
-            AvatarVoiceStore.is_avatar_male
-                ? AvatarVoiceStore.avatar_male_voice
-                : AvatarVoiceStore.avatar_female_voice
-        }. Welcome To Tutor AI.`,
-    });
+    if (TextToSpeechStore?.speech) {
+        TTS.stop().then(() => {
+            generate_speech({
+                speech: TextToSpeechStore.speech,
+            });
+        });
+    } else {
+        TTS.stop();
+    }
 };
 
 export { TextToSpeech };

@@ -21,16 +21,16 @@ import Colors from '../Configs/Colors/Colors';
 import { HideSplashScreen } from '../Hooks/Hide_Splash_Screen/Hide_Splash_Screen';
 import { SetClassSchedule } from '../Hooks/Set_Class_Schedule/Set_Class_Schedule';
 import { LoadAvatarVoice } from '../Hooks/Load_Avatar_Voice/Load_Avatar_Voice';
-// import { TextToSpeech } from '../Hooks/Text_To_Speech/Text_To_Speech';
+import { TextToSpeech } from '../Hooks/Text_To_Speech/Text_To_Speech';
 
 const App: FunctionComponent = observer(() => {
     useEffect(() => {
         HideSplashScreen();
         SetClassSchedule();
         LoadAvatarVoice();
-        // TextToSpeech();
     }, []);
 
+    TextToSpeech();
     OnlineManager();
     OnAppFocus();
     KeyboardManager();

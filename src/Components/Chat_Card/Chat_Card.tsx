@@ -7,6 +7,8 @@ import Colors from '../../Configs/Colors/Colors';
 import BasicText from '../Basic_Text/Basic_Text';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
 import { observer } from 'mobx-react';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 interface ChatCardProps {
     chat: INTF_Conversation;
@@ -55,7 +57,15 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             }}>
                             <BasicText inputText={chat?.chat} textSize={15} />
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.5}>
+                        <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    TextToSpeechStore.play_speech({
+                                        speech: chat?.chat,
+                                    });
+                                },
+                            })}
+                            activeOpacity={0.5}>
                             <TranscribeIcon width={30} height={30} />
                         </TouchableOpacity>
                     </View>
@@ -104,7 +114,15 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 textSize={15}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.5}>
+                        <TouchableOpacity
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    TextToSpeechStore.play_speech({
+                                        speech: chat?.chat,
+                                    });
+                                },
+                            })}
+                            activeOpacity={0.5}>
                             <TranscribeIcon width={30} height={30} />
                         </TouchableOpacity>
                     </View>

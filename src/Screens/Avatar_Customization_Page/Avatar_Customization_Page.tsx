@@ -212,7 +212,6 @@ const AvatarCustomizationPage: FunctionComponent = observer(() => {
                             />
                         </View>
                     </TouchableOpacity>
-
                     <TouchableOpacity
                         style={styles.avatar_bg}
                         onPress={() => update_avatar({ isMale: true })}>
@@ -232,6 +231,13 @@ const AvatarCustomizationPage: FunctionComponent = observer(() => {
                         </View>
                     </TouchableOpacity>
                 </View>
+                <BasicText
+                    inputText="Select an Avatar as your Tutor and the other Avatar becomes your Homework Assistant."
+                    width={300}
+                    marginLeft={'auto'}
+                    marginRight={'auto'}
+                    textAlign="center"
+                />
             </ScrollView>
             <BasicButton
                 buttonText="Continue"

@@ -20,13 +20,14 @@ import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
-import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import TextButton from '../../Components/Text_Button/Text_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import BasicText from '../../Components/Basic_Text/Basic_Text';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const PreTestPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -75,6 +76,13 @@ const PreTestPage: FunctionComponent = observer(() => {
                     alignItems: 'center',
                 }}>
                 <BackButton />
+                <BasicText
+                    inputText="01:58"
+                    marginLeft={'auto'}
+                    textColor={Colors.Primary}
+                    textWeight={600}
+                    textSize={15}
+                />
                 <TextButton
                     buttonText="Skip"
                     marginLeft={'auto'}
@@ -149,21 +157,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                     marginLeft={12}
                     marginRight={12}
                     paddingBottom={7}
-                    // marginBottom={
-                    //     Platform.OS === 'ios'
-                    //         ? KeyboardStore.keyboard_active
-                    //             ? 1
-                    //             : screen_height_less_than({
-                    //                   if_false: 35,
-                    //                   if_true: 20,
-                    //               })
-                    //         : KeyboardStore.keyboard_active
-                    //         ? screen_height_less_than({
-                    //               if_true: 7,
-                    //               if_false: 30,
-                    //           })
-                    //         : 8
-                    // }
                     paddingTop={3}
                     placeHolderText="Type here.."
                     inputValue={micText}
@@ -181,6 +174,9 @@ const PreTestPage: FunctionComponent = observer(() => {
                     onSend={no_double_clicks({
                         execFunc: () => {
                             if (micText) {
+                                TextToSpeechStore.play_speech({
+                                    speech: micText,
+                                });
                                 setChats(prev_chats => [
                                     ...prev_chats,
                                     { isAI: false, chat: micText },

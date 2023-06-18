@@ -11,6 +11,7 @@ import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const LessonPage: FunctionComponent = () => {
     return (
@@ -61,8 +62,8 @@ const LessonPage: FunctionComponent = () => {
                             {() => (
                                 <BasicText
                                     inputText={
-                                        StudentInfoStore?.student_info
-                                            ?.assigned_class as string
+                                        (UserInfoStore?.user_info
+                                            ?.level as string) || 'Beginner'
                                     }
                                     textColor={Colors.White}
                                     textSize={18}

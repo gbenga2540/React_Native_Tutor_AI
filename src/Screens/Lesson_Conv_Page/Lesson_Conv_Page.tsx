@@ -26,6 +26,7 @@ import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const LessonConvPage: FunctionComponent = observer(() => {
     const route = useRoute<RouteProp<any>>();
@@ -199,6 +200,9 @@ const LessonConvPage: FunctionComponent = observer(() => {
                     onSend={no_double_clicks({
                         execFunc: () => {
                             if (micText) {
+                                TextToSpeechStore.play_speech({
+                                    speech: micText,
+                                });
                                 setChats(prev_chats => [
                                     ...prev_chats,
                                     { isAI: false, chat: micText },

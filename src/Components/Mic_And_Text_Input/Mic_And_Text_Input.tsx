@@ -145,15 +145,16 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                 }}>
                 <View
                     style={{
-                        // alignItems: 'center',
                         flexDirection: 'row',
-                        height: 56,
+                        minHeight: 56,
+                        maxHeight: 110,
                         borderRadius: 8,
                         borderColor: Colors.Border,
                         borderWidth: 1,
                         backgroundColor: Colors.InputBackground,
                         flex: 1,
                         marginRight: 10,
+                        marginBottom: 2,
                     }}>
                     <TextInput
                         style={[
@@ -178,51 +179,60 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                         multiline
                     />
                 </View>
-                {!inputValue && (
-                    <Pressable
-                        onPressIn={handlePressIn}
-                        onPressOut={handlePressOut}
-                        onPress={exec_func}
-                        disabled={disabled || false}
-                        style={[
-                            styles.pressable,
-                            {
+                <View
+                    style={{
+                        justifyContent: 'flex-end',
+                    }}>
+                    {!inputValue && (
+                        <Pressable
+                            onPressIn={handlePressIn}
+                            onPressOut={handlePressOut}
+                            onPress={exec_func}
+                            disabled={disabled || false}
+                            style={[
+                                styles.pressable,
+                                {
+                                    width: 56,
+                                    height: 56,
+                                    borderRadius: 56,
+                                },
+                            ]}>
+                            <Animated.View
+                                style={[
+                                    styles.background,
+                                    {
+                                        borderRadius: 56,
+                                    },
+                                    pressableStyle,
+                                ]}
+                            />
+                            <AnimatedFeatherIcon
+                                name="mic"
+                                size={Math.round(56 / 2.67)}
+                                style={[{ position: 'absolute' }, micStyle]}
+                            />
+                        </Pressable>
+                    )}
+                    {inputValue && (
+                        <TouchableOpacity
+                            onPress={() => onSend !== undefined && onSend()}
+                            activeOpacity={0.55}
+                            style={{
                                 width: 56,
                                 height: 56,
                                 borderRadius: 56,
-                            },
-                        ]}>
-                        <Animated.View
-                            style={[
-                                styles.background,
-                                {
-                                    borderRadius: 56,
-                                },
-                                pressableStyle,
-                            ]}
-                        />
-                        <AnimatedFeatherIcon
-                            name="mic"
-                            size={Math.round(56 / 2.67)}
-                            style={[{ position: 'absolute' }, micStyle]}
-                        />
-                    </Pressable>
-                )}
-                {inputValue && (
-                    <TouchableOpacity
-                        onPress={() => onSend !== undefined && onSend()}
-                        activeOpacity={0.55}
-                        style={{
-                            width: 56,
-                            height: 56,
-                            borderRadius: 56,
-                            backgroundColor: Colors.Primary,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}>
-                        <Feather name="send" size={24} color={Colors.White} />
-                    </TouchableOpacity>
-                )}
+                                backgroundColor: Colors.Primary,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                            <Feather
+                                name="send"
+                                size={24}
+                                color={Colors.White}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View>
             </View>
         </KeyboardAvoidingView>
     );

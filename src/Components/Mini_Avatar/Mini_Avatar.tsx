@@ -7,6 +7,7 @@ import { DebouncedFuncLeading } from 'lodash';
 import SubtitleIcon from '../../Images/SVGs/Subtitle_Icon.svg';
 import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
 import { observer } from 'mobx-react';
+import { AvatarSpeakStore } from '../../MobX/Avatar_Speak/Avatar_Speak';
 
 const width = '100%';
 const height = 200;
@@ -28,6 +29,8 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
         hideIcons,
     }) => {
         const isMale = AvatarVoiceStore?.is_avatar_male || false;
+        const isSpeaking = AvatarSpeakStore.should_avatar_speak;
+
         return (
             <View
                 style={{

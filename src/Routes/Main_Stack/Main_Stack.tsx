@@ -8,8 +8,10 @@ import HomeStack from '../Home_Stack/Home_Stack';
 import { INTF_AppInfo } from '../../Interface/App_Info/App_Info';
 import { AppInfoStore } from '../../MobX/App_Info/App_Info';
 import { sort_apps_by_name } from '../../Utils/Sort_Apps_By_Name/Sort_Apps_By_Name';
-// import SInfo from 'react-native-sensitive-info';
-// import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { INTF_UserInfo } from '../../Interface/User_Info/User_Info';
 
 type MainStackParamList = {
     AuthStack: {};
@@ -28,63 +30,66 @@ const Main_Stack = createNativeStackNavigator<MainStackParamList>();
 
 const MainStack: FunctionComponent = () => {
     const [render, setRender] = useState<boolean>(false);
-    // const [userToken, setUserToken] = useState<string>('');
+    const [userID, setUserID] = useState<string>('');
+    const [userVerified, setUserVerified] = useState<boolean>(false);
+    const [userPWD, setUserPWD] = useState<string>('');
 
     useEffect(() => {
-        // setRender(false);
-        setRender(true);
-        // const get_token = async () => {
-        //     try {
-        //         await SInfo.getItem(SECURE_STORAGE_USER_INFO, {
-        //             sharedPreferencesName: SECURE_STORAGE_NAME,
-        //             keychainService: SECURE_STORAGE_NAME,
-        //         })
-        //             ?.catch(err => {
-        //                 setRender(true);
-        //                 if (err) {
-        //                     setUserToken('');
-        //                     // UserInfoStore.set_user_info({
-        //                     //     data: {
-        //                     //         email_v: false,
-        //                     //         token: '',
-        //                     //         uid: '',
-        //                     //     },
-        //                     // });
-        //                 }
-        //             })
-        //             ?.then(async res => {
-        //                 if (res) {
-        //                     const json_res = JSON.parse(res);
-        //                     // UserInfoStore.set_user_info({
-        //                     //     data: json_res,
-        //                     // });
-        //                     setUserToken(json_res?.token);
-        //                     setRender(true);
-        //                 } else {
-        //                     setUserToken('');
-        //                     // UserInfoStore.set_user_info({
-        //                     //     data: {
-        //                     //         email_v: false,
-        //                     //         token: '',
-        //                     //         uid: '',
-        //                     //     },
-        //                     // });
-        //                     setRender(true);
-        //                 }
-        //             });
-        //     } catch (error) {
-        //         setUserToken('');
-        //         // UserInfoStore.set_user_info({
-        //         //     data: {
-        //         //         email_v: false,
-        //         //         token: '',
-        //         //         uid: '',
-        //         //     },
-        //         // });
-        //         setRender(true);
-        //     }
-        // };
-        // get_token();
+        setRender(false);
+        setUserID('');
+        setUserVerified(false);
+        setUserPWD('');
+        const get_user_info = async () => {
+            try {
+                await SInfo.getItem(SECURE_STORAGE_USER_INFO, {
+                    sharedPreferencesName: SECURE_STORAGE_NAME,
+                    keychainService: SECURE_STORAGE_NAME,
+                })
+                    .catch(err => {
+                        if (err) {
+                            setUserID('');
+                            setUserVerified(false);
+                            setUserPWD('');
+                            UserInfoStore.set_user_info({
+                                user_info: {},
+                            });
+                        }
+                        setRender(true);
+                    })
+                    .then(async res => {
+                        if (res) {
+                            const json_res: { user_info: INTF_UserInfo } =
+                                JSON.parse(res);
+                            setUserID(json_res?.user_info?._id || '');
+                            setUserVerified(
+                                json_res?.user_info?.verified || false,
+                            );
+                            setUserPWD(json_res?.user_info?.password || '');
+                            UserInfoStore.set_user_info({
+                                user_info: json_res?.user_info || {},
+                            });
+                            setRender(true);
+                        } else {
+                            setUserID('');
+                            setUserVerified(false);
+                            setUserPWD('');
+                            UserInfoStore.set_user_info({
+                                user_info: {},
+                            });
+                            setRender(true);
+                        }
+                    });
+            } catch (error) {
+                setUserID('');
+                setUserVerified(false);
+                setUserPWD('');
+                UserInfoStore.set_user_info({
+                    user_info: {},
+                });
+                setRender(true);
+            }
+        };
+        get_user_info();
     }, []);
 
     useEffect(() => {
@@ -106,8 +111,13 @@ const MainStack: FunctionComponent = () => {
     if (render) {
         return (
             <Main_Stack.Navigator
-                initialRouteName={'AuthStack'}
-                // initialRouteName={'HomeStack'}
+                initialRouteName={
+                    userID
+                        ? userVerified && userPWD
+                            ? 'HomeStack'
+                            : 'AuthStack'
+                        : 'AuthStack'
+                }
                 screenOptions={{
                     headerShown: false,
                 }}>

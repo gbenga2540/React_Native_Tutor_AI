@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { Fragment, FunctionComponent } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
@@ -16,6 +16,10 @@ import {
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { Observer } from 'mobx-react';
+import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
+import { mongo_date_converter_1 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
 
 const ProfilePage: FunctionComponent = () => {
     return (
@@ -40,41 +44,58 @@ const ProfilePage: FunctionComponent = () => {
                 textSize={25}
             />
             <ScrollView style={{ flex: 1 }}>
-                <View style={styles.p_i_c_w}>
-                    <View style={styles.p_i_c}>
-                        {'' ? (
-                            <Image
-                                style={styles.p_i}
-                                source={{
-                                    uri: http_link_fix({
-                                        http_link: '',
-                                    }),
-                                    width: 150,
-                                    height: 150,
-                                }}
+                <Observer>
+                    {() => (
+                        <Fragment>
+                            <View style={styles.p_i_c_w}>
+                                <View style={styles.p_i_c}>
+                                    {UserInfoStore?.user_info?.dp?.url ? (
+                                        <Image
+                                            style={styles.p_i}
+                                            source={{
+                                                uri: http_link_fix({
+                                                    http_link: UserInfoStore
+                                                        ?.user_info?.dp
+                                                        ?.url as string,
+                                                }),
+                                                width: 150,
+                                                height: 150,
+                                            }}
+                                        />
+                                    ) : (
+                                        <Image
+                                            style={styles.p_i}
+                                            source={require('../../Images/Extra/default_user_dp_light.jpg')}
+                                        />
+                                    )}
+                                </View>
+                            </View>
+                            <BasicText
+                                inputText={shorten_text({
+                                    text: UserInfoStore?.user_info
+                                        ?.fullname as string,
+                                    limit: 27,
+                                })}
+                                textWeight={700}
+                                marginTop={10}
+                                textSize={20}
+                                textAlign="center"
                             />
-                        ) : (
-                            <Image
-                                style={styles.p_i}
-                                source={require('../../Images/Extra/default_user_dp_light.jpg')}
+                            <BasicText
+                                inputText={`Joined since ${mongo_date_converter_1(
+                                    {
+                                        input_date: UserInfoStore?.user_info
+                                            ?.createdAt as string,
+                                    },
+                                )}`}
+                                textWeight={500}
+                                marginTop={5}
+                                textAlign="center"
+                                textColor={Colors.DarkGrey}
                             />
-                        )}
-                    </View>
-                </View>
-                <BasicText
-                    inputText="Akindeju Oluwagbemiga"
-                    textWeight={700}
-                    marginTop={10}
-                    textSize={20}
-                    textAlign="center"
-                />
-                <BasicText
-                    inputText="Joined since 10 May, 2023"
-                    textWeight={500}
-                    marginTop={5}
-                    textAlign="center"
-                    textColor={Colors.DarkGrey}
-                />
+                        </Fragment>
+                    )}
+                </Observer>
                 <View style={styles.p_menu_headers}>
                     <View style={styles.p_menu_img}>
                         <ProfileAccountIcon

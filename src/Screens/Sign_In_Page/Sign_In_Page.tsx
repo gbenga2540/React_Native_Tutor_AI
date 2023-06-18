@@ -13,7 +13,7 @@ import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import TextButton from '../../Components/Text_Button/Text_Button';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import SecureTextEntry from '../../Components/Secure_Text_Entry/Secure_Text_Entry';
@@ -21,11 +21,15 @@ import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { useMutation } from 'react-query';
-import { sign_in } from '../../Configs/Queries/Users/Users';
+import { login } from '../../Configs/Queries/Users/Users';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { observer } from 'mobx-react';
 
-const SignInPage: FunctionComponent = () => {
+const SignInPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [email, setEmail] = useState<string>('');
@@ -33,74 +37,55 @@ const SignInPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
-    const { mutate: sign_in_mutate } = useMutation(sign_in, {
+    const { mutate: login_mutate } = useMutation(login, {
         onMutate: () => {
             setDisableButton(true);
             setShowSpinner(true);
         },
         onSettled: async data => {
-            setShowSpinner(false);
-            setDisableButton(false);
-            console.log(data);
-            // if (data?.error) {
-            //     error_handler({
-            //         navigation: navigation,
-            //         error_mssg: data?.data,
-            //     });
-            // } else {
-            // try {
-            //     await SInfo.setItem(
-            //         SECURE_STORAGE_USER_INFO,
-            //         JSON.stringify({
-            //             ...data?.data,
-            //         }),
-            //         {
-            //             sharedPreferencesName: SECURE_STORAGE_NAME,
-            //             keychainService: SECURE_STORAGE_NAME,
-            //         },
-            //     )
-            //         ?.catch(error => {
-            //             if (error) {
-            //                 UserInfoStore.set_user_info({
-            //                     data: { ...data?.data },
-            //                 });
-            //                 navigation.dispatch(
-            //                     CommonActions.reset({
-            //                         index: 0,
-            //                         routes: [{ name: 'HomeStack' }],
-            //                     }),
-            //                 );
-            //             }
-            //         })
-            //         ?.then(() => {
-            //             UserInfoStore.set_user_info({
-            //                 data: { ...data?.data },
-            //             });
-            //             navigation.dispatch(
-            //                 CommonActions.reset({
-            //                     index: 0,
-            //                     routes: [{ name: 'HomeStack' }],
-            //                 }),
-            //             );
-            //         });
-            // } catch (err) {
-            //     UserInfoStore.set_user_info({
-            //         data: { ...data?.data },
-            //     });
-            //     navigation.dispatch(
-            //         CommonActions.reset({
-            //             index: 0,
-            //             routes: [{ name: 'HomeStack' }],
-            //         }),
-            //     );
-            // }
-            // navigation.dispatch(
-            //     CommonActions.reset({
-            //         index: 0,
-            //         routes: [{ name: 'HomeStack' }],
-            //     }),
-            // );
-            // }
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'An error occured while trying to Sign In!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const proceed = () => {
+                    setShowSpinner(false);
+                    setDisableButton(false);
+                    UserInfoStore.set_user_info({
+                        user_info: { ...data?.data?.user },
+                    });
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: 'HomeStack' }],
+                        }),
+                    );
+                };
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: { ...data?.data?.user },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(err => {
+                            err && proceed();
+                        })
+                        .then(() => {
+                            proceed();
+                        });
+                } catch (error) {
+                    proceed();
+                }
+            }
         },
     });
 
@@ -108,7 +93,7 @@ const SignInPage: FunctionComponent = () => {
         execFunc: () => {
             if (regex_email_checker({ email: email })) {
                 if (password) {
-                    sign_in_mutate({
+                    login_mutate({
                         email: email,
                         password: password,
                     });
@@ -221,7 +206,7 @@ const SignInPage: FunctionComponent = () => {
             />
         </View>
     );
-};
+});
 
 export default SignInPage;
 

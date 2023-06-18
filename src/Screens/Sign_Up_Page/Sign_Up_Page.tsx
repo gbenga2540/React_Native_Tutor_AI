@@ -8,6 +8,7 @@ import React, {
 import {
     BackHandler,
     Image,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -38,17 +39,39 @@ import CheckBox from '../../Components/Check_Box/Check_Box';
 import { get_age } from '../../Utils/Get_Age/Get_Age';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import OTPTextView from 'react-native-otp-textinput';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { useMutation } from 'react-query';
+import {
+    register,
+    resend_otp,
+    set_password,
+    verify_otp,
+} from '../../Configs/Queries/Users/Users';
+import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { observer } from 'mobx-react';
 
 const IMAGE_SIZE = screen_height_less_than({
     if_true: 180,
     if_false: 220,
 });
-const TOTAL_PAGES = 3;
+const TOTAL_PAGES = 4;
 
-const SignUpPage: FunctionComponent = () => {
+const SignUpPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const [question, setQuestion] = useState<number>(1);
+    const [question, setQuestion] = useState<number>(
+        UserInfoStore.user_info?._id &&
+            UserInfoStore?.user_info?.verified === false
+            ? 3
+            : UserInfoStore.user_info?._id &&
+              !UserInfoStore?.user_info?.password
+            ? 4
+            : 1,
+    );
 
     const [name, setName] = useState<string>('');
     const [dob, setDOB] = useState<Date>(() => {
@@ -59,28 +82,292 @@ const SignUpPage: FunctionComponent = () => {
     const [openDateModal, setOpenDateModal] = useState<boolean>(false);
     const [phoneNo, setPhoneNo] = useState<string>('');
     const [phoneNoValid, setPhoneNoValid] = useState<boolean>(false);
-    const [parentPhoneNo, setParentPhoneNo] = useState<string>('');
-    const [parentPhoneNoValid, setParentPhoneNoValid] =
-        useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [displayPicture, setDisplayPicture] = useState<string>('');
+    const [OTP, setOTP] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [cPassword, setCPassword] = useState<string>('');
     const [acceptedTC, setAcceptedTC] = useState<boolean>(false);
 
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [disableButton, setDisableButton] = useState<boolean>(false);
     const [agePHColor, setAgePHColor] = useState<string>(Colors.Grey);
 
-    console.log(phoneNo, phoneNoValid, parentPhoneNo, parentPhoneNoValid);
+    const { mutate: register_mutate } = useMutation(register, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'An error occured while trying to Register User!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: { ...data?.data },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(error => {
+                            if (error) {
+                                UserInfoStore.set_user_info({
+                                    user_info: { ...data?.data },
+                                });
+                                setQuestion(
+                                    clamp_value({
+                                        value: question + 1,
+                                        minValue: 1,
+                                        maxValue: TOTAL_PAGES,
+                                    }),
+                                );
+                            }
+                        })
+                        .then(() => {
+                            UserInfoStore.set_user_info({
+                                user_info: { ...data?.data },
+                            });
+                            setQuestion(
+                                clamp_value({
+                                    value: question + 1,
+                                    minValue: 1,
+                                    maxValue: TOTAL_PAGES,
+                                }),
+                            );
+                        });
+                } catch (err) {
+                    UserInfoStore.set_user_info({
+                        user_info: { ...data?.data },
+                    });
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                }
+            }
+        },
+    });
+
+    const { mutate: verify_otp_mutate } = useMutation(verify_otp, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'An error occured while trying to Verify OTP!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const TempUserInfo = { ...UserInfoStore?.user_info };
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: { ...TempUserInfo, verified: true },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(error => {
+                            if (error) {
+                                setShowSpinner(false);
+                                setDisableButton(false);
+                                UserInfoStore.set_user_info({
+                                    user_info: {
+                                        ...TempUserInfo,
+                                        verified: true,
+                                    },
+                                });
+                                setQuestion(
+                                    clamp_value({
+                                        value: question + 1,
+                                        minValue: 1,
+                                        maxValue: TOTAL_PAGES,
+                                    }),
+                                );
+                            }
+                        })
+                        .then(() => {
+                            setShowSpinner(false);
+                            setDisableButton(false);
+                            UserInfoStore.set_user_info({
+                                user_info: { ...TempUserInfo, verified: true },
+                            });
+                            setQuestion(
+                                clamp_value({
+                                    value: question + 1,
+                                    minValue: 1,
+                                    maxValue: TOTAL_PAGES,
+                                }),
+                            );
+                        });
+                } catch (err) {
+                    setShowSpinner(false);
+                    setDisableButton(false);
+                    UserInfoStore.set_user_info({
+                        user_info: { ...TempUserInfo, verified: true },
+                    });
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                }
+            }
+        },
+    });
+
+    const { mutate: set_password_mutate } = useMutation(set_password, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'An error occured while trying to Set Password!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const proceed = () => {
+                    setShowSpinner(false);
+                    setDisableButton(false);
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...TempUserInfo,
+                            password: data?.data?.password,
+                        },
+                    });
+                    navigation.push(
+                        'AuthStack' as never,
+                        {
+                            screen: 'CongratulationsPage',
+                            params: {
+                                header_txt: 'Congratulations',
+                                message_txt:
+                                    "Your account has been created, Now let's set up your profile.",
+                                nextPage: 1,
+                            },
+                        } as never,
+                    );
+                    setPassword('');
+                    setCPassword('');
+                };
+
+                const TempUserInfo = { ...UserInfoStore?.user_info };
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: {
+                                ...TempUserInfo,
+                                password: data?.data?.password,
+                            },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(error => {
+                            error && proceed();
+                        })
+                        .then(() => {
+                            proceed();
+                        });
+                } catch (err) {
+                    proceed();
+                }
+            }
+        },
+    });
+
+    const { mutate: resend_otp_mutate } = useMutation(resend_otp, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'An error occured while trying to resend OTP!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                // handle reset timer
+                console.log('Sent');
+            }
+        },
+    });
+
+    const resend_mail = no_double_clicks({
+        execFunc: () => {
+            if (true && UserInfoStore?.user_info?._id) {
+                resend_otp_mutate({
+                    uid: UserInfoStore?.user_info?._id,
+                });
+            }
+        },
+    });
 
     const submit_data = no_double_clicks({
         execFunc: () => {
-            navigation.push(
-                'AuthStack' as never,
-                {
-                    screen: 'VerifyOTPPage',
-                } as never,
-            );
+            if (password?.length >= 6) {
+                if (password === cPassword) {
+                    if (acceptedTC) {
+                        set_password_mutate({
+                            uid: UserInfoStore?.user_info?._id as string,
+                            password: password,
+                        });
+                    } else {
+                        error_handler({
+                            navigation: navigation,
+                            error_mssg:
+                                'You have not accepted the Terms and Condition!',
+                        });
+                    }
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Passwords do not match!',
+                    });
+                }
+            } else {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'Password field cannot be less than six!',
+                });
+            }
         },
     });
 
@@ -101,13 +388,66 @@ const SignUpPage: FunctionComponent = () => {
 
     const next_question = no_double_clicks({
         execFunc: () => {
-            setQuestion(
-                clamp_value({
-                    value: question + 1,
-                    minValue: 1,
-                    maxValue: TOTAL_PAGES,
-                }),
-            );
+            if (question === 1) {
+                if (regex_email_checker({ email: email }) && name && dob) {
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Some fields are missing / incorrect!',
+                    });
+                }
+            } else if (question === 2) {
+                if (phoneNoValid && phoneNo) {
+                    if (displayPicture) {
+                        register_mutate({
+                            email: email,
+                            displayPicture: displayPicture || '',
+                            fullname: name,
+                            mobile: phoneNo,
+                            dob: dob?.toString(),
+                        });
+                    } else {
+                        error_handler({
+                            navigation: navigation,
+                            error_mssg: 'No Profile Picture Added!',
+                        });
+                    }
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Invalid Mobile Number!',
+                    });
+                }
+            } else if (question === 3) {
+                if (OTP?.length === 4) {
+                    if (true && UserInfoStore?.user_info?._id) {
+                        verify_otp_mutate({
+                            uid: UserInfoStore?.user_info?._id,
+                            otp: OTP?.split('').join(' '),
+                        });
+                    }
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Incorrect One-Time-Password (OTP).',
+                    });
+                }
+            } else {
+                setQuestion(
+                    clamp_value({
+                        value: question + 1,
+                        minValue: 1,
+                        maxValue: TOTAL_PAGES,
+                    }),
+                );
+            }
         },
     });
 
@@ -125,6 +465,20 @@ const SignUpPage: FunctionComponent = () => {
     const handle_go_back = () => {
         if (question === 1) {
             navigation.canGoBack() && navigation.goBack();
+        } else if (question === 3) {
+            if (
+                (UserInfoStore.user_info?._id &&
+                    UserInfoStore?.user_info?.verified === false) === false
+            ) {
+                navigation.canGoBack() && navigation.goBack();
+            }
+        } else if (question === 4) {
+            if (
+                (UserInfoStore.user_info?._id &&
+                    UserInfoStore?.user_info?.password === '') === false
+            ) {
+                navigation.canGoBack() && navigation.goBack();
+            }
         } else {
             prev_question();
         }
@@ -151,8 +505,12 @@ const SignUpPage: FunctionComponent = () => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        if (err) {
-                            clear_image();
+                        clear_image();
+                        if (err?.code !== 'E_PICKER_CANCELLED') {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg: err?.message,
+                            });
                         }
                     })
                     .then(res => {
@@ -186,8 +544,12 @@ const SignUpPage: FunctionComponent = () => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        if (err) {
-                            clear_image();
+                        clear_image();
+                        if (err?.code !== 'E_PICKER_CANCELLED') {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg: err?.message,
+                            });
                         }
                     })
                     .then(res => {
@@ -209,7 +571,8 @@ const SignUpPage: FunctionComponent = () => {
 
     useEffect(() => {
         ImagePicker.clean();
-    }, []);
+        setDisplayPicture('');
+    }, [question]);
 
     useFocusEffect(
         useCallback(() => {
@@ -242,18 +605,12 @@ const SignUpPage: FunctionComponent = () => {
             <View
                 style={{
                     marginLeft: 22,
-                    marginTop: navigation?.canGoBack()
-                        ? Platform.OS === 'ios'
-                            ? 60
-                            : 20
-                        : Platform.OS === 'ios'
-                        ? 70
-                        : 20,
+                    marginTop: Platform.OS === 'ios' ? 60 : 20,
                     marginBottom: 10,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                <BackButton execFunc={handle_go_back} />
+                <BackButton show_back_button execFunc={handle_go_back} />
                 <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
             <ScrollView style={{ flex: 1 }}>
@@ -323,34 +680,42 @@ const SignUpPage: FunctionComponent = () => {
                             execFunc={open_dob}
                             textColor={Colors.LightPink}
                         />
-                        {(get_age({
-                            input_date: dob?.toString(),
-                        }) as number) >= 15 && (
-                            <Fragment>
-                                <BasicText
-                                    inputText="What is your Email Address?"
-                                    marginTop={25}
-                                    textWeight={700}
-                                    textSize={24}
-                                    marginLeft={22}
-                                    marginRight={22}
-                                />
-                                <BasicTextEntry
-                                    placeHolderText="johndoe@gmail.com"
-                                    inputValue={email}
-                                    setInputValue={setEmail}
-                                    marginTop={15}
-                                    marginBottom={12}
-                                    inputMode="text"
-                                />
-                            </Fragment>
-                        )}
+                        <Fragment>
+                            <BasicText
+                                inputText={
+                                    (get_age({
+                                        input_date: dob?.toString(),
+                                    }) as number) >= 15
+                                        ? 'What is your Email Address?'
+                                        : "Your Parent's Email Address?"
+                                }
+                                marginTop={25}
+                                textWeight={700}
+                                textSize={24}
+                                marginLeft={22}
+                                marginRight={22}
+                            />
+                            <BasicTextEntry
+                                placeHolderText="johndoe@gmail.com"
+                                inputValue={email}
+                                setInputValue={setEmail}
+                                marginTop={15}
+                                marginBottom={12}
+                                inputMode="text"
+                            />
+                        </Fragment>
                     </Fragment>
                 )}
                 {question === 2 && (
                     <Fragment>
                         <BasicText
-                            inputText="What is your Mobile Number?"
+                            inputText={
+                                (get_age({
+                                    input_date: dob?.toString(),
+                                }) as number) >= 15
+                                    ? 'What is your Mobile Number?'
+                                    : "Your Parent's WhatsApp Number?"
+                            }
                             marginTop={20}
                             textWeight={700}
                             textSize={24}
@@ -363,26 +728,6 @@ const SignUpPage: FunctionComponent = () => {
                             defaultCode="US"
                             marginTop={15}
                         />
-                        {(get_age({
-                            input_date: dob?.toString(),
-                        }) as number) < 15 && (
-                            <Fragment>
-                                <BasicText
-                                    inputText="Your Parent's WhatsApp Number?"
-                                    marginTop={25}
-                                    textWeight={700}
-                                    textSize={24}
-                                    marginLeft={22}
-                                    marginRight={22}
-                                />
-                                <PhoneNumberInput
-                                    setInputValue={setParentPhoneNo}
-                                    setIsValid={setParentPhoneNoValid}
-                                    defaultCode="US"
-                                    marginTop={15}
-                                />
-                            </Fragment>
-                        )}
                         <BasicText
                             inputText="Add a Profile Picture"
                             marginTop={25}
@@ -496,6 +841,75 @@ const SignUpPage: FunctionComponent = () => {
                 {question === 3 && (
                     <Fragment>
                         <BasicText
+                            inputText="Let's Verify your Email Address"
+                            marginBottom={50}
+                            marginLeft={22}
+                            width={320}
+                            textSize={30}
+                            textWeight={700}
+                        />
+                        <BasicText
+                            inputText="We have sent you your OTP code to change your Password. Please, check your Email."
+                            width={330}
+                            textSize={15}
+                            marginBottom={12}
+                            textAlign="center"
+                            marginLeft={'auto'}
+                            marginRight={'auto'}
+                            textColor={Colors.DarkGrey}
+                            textWeight={500}
+                        />
+                        <View
+                            style={{
+                                maxWidth: 240,
+                                alignSelf: 'center',
+                            }}>
+                            <OTPTextView
+                                inputCount={4}
+                                handleTextChange={(text: string) => {
+                                    setOTP(text);
+                                    if (text?.length >= 4) {
+                                        if (Keyboard.isVisible()) {
+                                            Keyboard.dismiss();
+                                        }
+                                    }
+                                }}
+                                offTintColor={Colors.DarkBorder}
+                                tintColor={Colors.Primary}
+                                textInputStyle={{
+                                    borderRadius: 5,
+                                    borderWidth: 1,
+                                    borderBottomWidth: 1,
+                                }}
+                            />
+                        </View>
+                        <BasicText
+                            inputText={`Didn’t get an OTP? Click Resend in ${'30'} seconds`}
+                            width={330}
+                            textSize={15}
+                            textAlign="center"
+                            marginLeft={'auto'}
+                            marginRight={'auto'}
+                            textColor={Colors.DarkGrey}
+                            textWeight={500}
+                            marginTop={30}
+                        />
+                        <TextButton
+                            textColor={Colors.LightPink}
+                            isFontLight={true}
+                            fontSize={17}
+                            marginTop={5}
+                            marginLeft={'auto'}
+                            marginRight={'auto'}
+                            buttonText={'Resend Mail'}
+                            marginBottom={'auto'}
+                            execFunc={resend_mail}
+                        />
+                    </Fragment>
+                )}
+                {question === 4 && (
+                    <Fragment>
+                        <BasicText
                             inputText="Create a Password"
                             marginTop={20}
                             textWeight={700}
@@ -549,6 +963,7 @@ const SignUpPage: FunctionComponent = () => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <BasicButton
+                    disabled={disableButton}
                     buttonText={
                         question === TOTAL_PAGES ? 'Submit' : 'Continue'
                     }
@@ -586,7 +1001,7 @@ const SignUpPage: FunctionComponent = () => {
             />
         </View>
     );
-};
+});
 
 export default SignUpPage;
 

@@ -1,4 +1,9 @@
-import React, { FunctionComponent, ReactElement, useState } from 'react';
+import React, {
+    FunctionComponent,
+    ReactElement,
+    Suspense,
+    useState,
+} from 'react';
 import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
@@ -52,42 +57,46 @@ const GlossaryPage: FunctionComponent = () => {
                     placeHolderText="Search"
                 />
             </View>
-            <FlatList
-                data={p_glossary}
-                keyExtractor={(item, index) =>
-                    `${item?.word as string}-${index}`
-                }
-                renderItem={({ item, index }) => (
-                    <GlossaryItem
-                        key={`${item?.word as string}-${index}`}
-                        word={item?.word}
-                        meaning={item?.meaning}
-                        index={index}
-                        lastWordInit={
-                            index === 0 ? '' : p_glossary[index - 1]?.word?.[0]
-                        }
-                    />
-                )}
-                style={{
-                    flex: 1,
-                    paddingHorizontal: 20,
-                    paddingTop: 20,
-                    marginHorizontal: 2,
-                    paddingBottom: Platform.OS === 'ios' ? 25 : 5,
-                    marginBottom:
-                        Platform.OS === 'ios'
-                            ? screen_height_less_than({
-                                  if_true: 10,
-                                  if_false: 20,
-                              })
-                            : 5,
-                }}
-                ListFooterComponent={() =>
-                    (
-                        <View style={{ marginBottom: 50 }}>{''}</View>
-                    ) as ReactElement<any>
-                }
-            />
+            <Suspense fallback={null}>
+                <FlatList
+                    data={p_glossary}
+                    keyExtractor={(item, index) =>
+                        `${item?.word as string}-${index}`
+                    }
+                    renderItem={({ item, index }) => (
+                        <GlossaryItem
+                            key={`${item?.word as string}-${index}`}
+                            word={item?.word}
+                            meaning={item?.meaning}
+                            index={index}
+                            lastWordInit={
+                                index === 0
+                                    ? ''
+                                    : p_glossary[index - 1]?.word?.[0]
+                            }
+                        />
+                    )}
+                    style={{
+                        flex: 1,
+                        paddingHorizontal: 20,
+                        paddingTop: 20,
+                        marginHorizontal: 2,
+                        paddingBottom: Platform.OS === 'ios' ? 25 : 5,
+                        marginBottom:
+                            Platform.OS === 'ios'
+                                ? screen_height_less_than({
+                                      if_true: 10,
+                                      if_false: 20,
+                                  })
+                                : 5,
+                    }}
+                    ListFooterComponent={() =>
+                        (
+                            <View style={{ marginBottom: 50 }}>{''}</View>
+                        ) as ReactElement<any>
+                    }
+                />
+            </Suspense>
         </View>
     );
 };

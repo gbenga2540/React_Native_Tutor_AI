@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { Fragment, FunctionComponent, useState } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -21,6 +21,7 @@ import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import TextDivider from '../../Components/Text_Divider/Text_Divider';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import Feather from 'react-native-vector-icons/Feather';
 
 const VocabularyPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -94,7 +95,7 @@ const VocabularyPage: FunctionComponent = () => {
                         marginTop: 22,
                         backgroundColor: Colors.Primary,
                         borderRadius: 20,
-                        minHeight: 400,
+                        minHeight: 360,
                         padding: 10,
                     }}>
                     <View
@@ -120,104 +121,127 @@ const VocabularyPage: FunctionComponent = () => {
                             marginLeft: 16,
                             marginRight: 16,
                             marginTop: 5,
+                            alignItems: 'center',
                         }}>
                         <TouchableOpacity
                             activeOpacity={0.5}
                             onPress={translate_text}>
                             <TranslateIcon width={30} height={30} />
                         </TouchableOpacity>
+                        <View
+                            style={{
+                                backgroundColor: Colors.White,
+                                width: 70,
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 7,
+                                borderWidth: 3,
+                                borderColor: Colors.DarkBorder,
+                            }}>
+                            <BasicText inputText="4 of 10" textWeight={600} />
+                        </View>
                         <TouchableOpacity
                             activeOpacity={0.5}
                             onPress={transcribe_text}>
                             <TranscribeIcon width={30} height={30} />
                         </TouchableOpacity>
                     </View>
-                    <BasicText
-                        inputText="Accord"
-                        textSize={18}
-                        marginTop={20}
-                        textColor={Colors.White}
-                        textWeight={700}
-                        textAlign="center"
-                    />
-                    <Text
-                        style={{
-                            fontFamily: fonts.Urbanist_600,
-                            fontSize: 15,
-                            color: Colors.White,
-                            textAlign: 'center',
-                            marginTop: 20,
-                            marginBottom: 10,
-                            marginHorizontal: 20,
-                        }}>
-                        {'Meaning: '}
-                        <BasicText
-                            inputText="concurrence of opinion"
-                            textColor={Colors.White}
-                            textSize={14}
-                            textWeight={500}
-                        />
-                    </Text>
-                    <Text
-                        style={{
-                            fontFamily: fonts.Urbanist_600,
-                            fontSize: 15,
-                            color: Colors.White,
-                            textAlign: 'center',
-                            marginHorizontal: 20,
-                        }}>
-                        {'Example: '}
-                        <BasicText
-                            inputText="The committee worked in accord on the bill, and it
-                            eventually passed."
-                            textColor={Colors.White}
-                            textSize={14}
-                            textWeight={500}
-                        />
-                    </Text>
-                    {showTranslated && (
-                        <View>
-                            <TextDivider
-                                singleLine
-                                marginTop={20}
-                                marginBottom={20}
-                                marginHorizontal={10}
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                        <TouchableOpacity
+                            activeOpacity={0.55}
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: 10,
+                            }}>
+                            <Feather
+                                name="chevron-left"
+                                size={30}
+                                color={Colors.White}
                             />
+                        </TouchableOpacity>
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: 'center',
+                            }}>
                             <BasicText
-                                inputText="Translated Text"
+                                inputText="Accord"
                                 textSize={18}
+                                marginTop={showTranslated ? 20 : 0.1}
                                 textColor={Colors.White}
                                 textWeight={700}
                                 textAlign="center"
-                                marginBottom={20}
                             />
-                            <Text
-                                style={{
-                                    fontFamily: fonts.Urbanist_600,
-                                    fontSize: 15,
-                                    color: Colors.White,
-                                    textAlign: 'center',
-                                    marginHorizontal: 20,
-                                }}>
-                                {'Meaning: '}
-                                <BasicText
-                                    inputText="concurrence of opinion"
-                                    textColor={Colors.White}
-                                    textSize={14}
-                                    textWeight={500}
-                                />
-                            </Text>
-                            <BasicText
-                                inputText="Translated Text"
-                                textSize={14}
-                                textColor={Colors.White}
-                                textWeight={500}
-                                marginTop={10}
-                                marginBottom={20}
-                                textAlign="center"
-                            />
+                            {showTranslated && (
+                                <View>
+                                    <Text
+                                        style={{
+                                            fontFamily: fonts.Urbanist_600,
+                                            fontSize: 15,
+                                            color: Colors.White,
+                                            textAlign: 'center',
+                                            marginTop: 20,
+                                            marginBottom: 10,
+                                            marginHorizontal: 20,
+                                        }}>
+                                        {'Meaning: '}
+                                        <BasicText
+                                            inputText="concurrence of opinion"
+                                            textColor={Colors.White}
+                                            textSize={14}
+                                            textWeight={500}
+                                        />
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: fonts.Urbanist_600,
+                                            fontSize: 15,
+                                            color: Colors.White,
+                                            textAlign: 'center',
+                                            marginHorizontal: 20,
+                                        }}>
+                                        {'Example: '}
+                                        <BasicText
+                                            inputText="The committee worked in accord on the bill, and it
+                            eventually passed."
+                                            textColor={Colors.White}
+                                            textSize={14}
+                                            textWeight={500}
+                                        />
+                                    </Text>
+                                    <TextDivider
+                                        singleLine
+                                        marginTop={20}
+                                        marginBottom={20}
+                                        marginHorizontal={10}
+                                    />
+                                    <BasicText
+                                        inputText="Translated Version of (Accord)"
+                                        textSize={18}
+                                        textColor={Colors.White}
+                                        textWeight={700}
+                                        textAlign="center"
+                                        marginBottom={20}
+                                    />
+                                </View>
+                            )}
                         </View>
-                    )}
+                        <TouchableOpacity
+                            activeOpacity={0.55}
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: 10,
+                            }}>
+                            <Feather
+                                name="chevron-right"
+                                size={30}
+                                color={Colors.White}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>

@@ -18,15 +18,13 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
-import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import MicrophoneButton from '../../Components/Microphone_Button/Microphone_Button';
 
 const ConversationPage: FunctionComponent = observer(() => {
     const [chats, setChats] = useState<INTF_Conversation[]>([]);
-    const [micText, setMicText] = useState<string>('');
     const flatListRef = useRef<FlatList<any> | null>(null);
 
     useEffect(() => {
@@ -148,38 +146,12 @@ const ConversationPage: FunctionComponent = observer(() => {
                         ) as ReactElement<any>
                     }
                 />
-                <MicAndTextInput
-                    inputMode="text"
-                    marginTop={3}
-                    marginLeft={10}
-                    marginRight={10}
-                    paddingBottom={7}
-                    paddingTop={3}
-                    placeHolderText="Type here.."
-                    inputValue={micText}
-                    setInputValue={setMicText}
-                    onChange={no_double_clicks({
-                        execFunc: () => {
-                            flatListRef?.current?.scrollToEnd();
-                        },
-                    })}
-                    onFocus={no_double_clicks({
-                        execFunc: () => {
-                            flatListRef?.current?.scrollToEnd();
-                        },
-                    })}
-                    onSend={no_double_clicks({
-                        execFunc: () => {
-                            if (micText) {
-                                setChats(prev_chats => [
-                                    ...prev_chats,
-                                    { isAI: false, chat: micText },
-                                ]);
-                            }
-                            Keyboard.isVisible() && Keyboard.dismiss();
-                            setMicText('');
-                        },
-                    })}
+                <MicrophoneButton
+                    microphoneSize={60}
+                    marginBottom={10}
+                    marginTop={2}
+                    marginLeft={'auto'}
+                    marginRight={'auto'}
                 />
             </KeyboardAvoidingView>
         </View>

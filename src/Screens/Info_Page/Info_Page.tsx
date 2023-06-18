@@ -15,11 +15,19 @@ import BackButton from '../../Components/Back_Button/Back_Button';
 import LottieView from 'lottie-react-native';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import SInfo from 'react-native-sensitive-info';
-import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import {
+    SECURE_STORAGE_NAME,
+    SECURE_STORAGE_SCHEDULE_INFO,
+    SECURE_STORAGE_USER_INFO,
+    SECURE_STORAGE_VOICE_INFO,
+} from '@env';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { MutationCache, QueryCache } from 'react-query';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
 
 const InfoPage: FunctionComponent = () => {
     const queryCache = new QueryCache();
@@ -38,6 +46,11 @@ const InfoPage: FunctionComponent = () => {
         const reset_data = () => {
             queryCache.clear();
             mutationCache.clear();
+            UserInfoStore.clear_user_info();
+            ScheduleInfoStore.clear_schedule_info();
+            AvatarVoiceStore.clear_avatar_voice_info();
+            setDisableButton(false);
+            setShowSpinner(false);
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
@@ -46,16 +59,21 @@ const InfoPage: FunctionComponent = () => {
             );
         };
         try {
+            setDisableButton(true);
+            setShowSpinner(true);
             await SInfo.deleteItem(SECURE_STORAGE_USER_INFO, {
                 sharedPreferencesName: SECURE_STORAGE_NAME,
                 keychainService: SECURE_STORAGE_NAME,
-            })
-                ?.catch(() => {
-                    reset_data();
-                })
-                ?.then(() => {
-                    reset_data();
-                });
+            });
+            await SInfo.deleteItem(SECURE_STORAGE_SCHEDULE_INFO, {
+                sharedPreferencesName: SECURE_STORAGE_NAME,
+                keychainService: SECURE_STORAGE_NAME,
+            });
+            await SInfo.deleteItem(SECURE_STORAGE_VOICE_INFO, {
+                sharedPreferencesName: SECURE_STORAGE_NAME,
+                keychainService: SECURE_STORAGE_NAME,
+            });
+            reset_data();
         } catch (error) {
             reset_data();
         }
@@ -71,6 +89,27 @@ const InfoPage: FunctionComponent = () => {
                             routes: [
                                 {
                                     name: 'AuthStack',
+                                },
+                            ],
+                        }),
+                    );
+                    break;
+                case 2:
+                    sign_out();
+                    break;
+                case 3:
+                    navigation.navigate(
+                        'AuthStack' as never,
+                        { screen: 'SignInPage' } as never,
+                    );
+                    break;
+                case 4:
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                {
+                                    name: 'HomeStack',
                                 },
                             ],
                         }),

@@ -26,6 +26,8 @@ import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import { Observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
 
 const HomePage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -35,21 +37,43 @@ const HomePage: FunctionComponent = () => {
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.h_header_cont}>
                 <View style={styles.h_header_txt_c}>
+                    <Observer>
+                        {() => (
+                            <BasicText
+                                inputText={`Hello, ${
+                                    UserInfoStore?.user_info?.fullname?.split(
+                                        ' ',
+                                    )?.[0]
+                                }`}
+                                textSize={22}
+                                textWeight={700}
+                            />
+                        )}
+                    </Observer>
                     <BasicText
-                        inputText="Hello, Oluwagbemiga"
-                        textSize={22}
-                        textWeight={700}
-                    />
-                    <BasicText
-                        inputText="5 Pending Homework"
+                        inputText="No Pending Homework"
                         textSize={14}
                         textFamily={fonts.OpenSans_400}
                     />
                 </View>
-                <Image
-                    source={require('../../../test/Images/Test_DP.png')}
-                    style={styles.h_header_img}
-                />
+                <Observer>
+                    {() => (
+                        <Image
+                            source={
+                                UserInfoStore?.user_info?.dp?.url
+                                    ? {
+                                          uri: http_link_fix({
+                                              http_link: UserInfoStore
+                                                  ?.user_info?.dp
+                                                  ?.url as string,
+                                          }),
+                                      }
+                                    : require('../../Images/Extra/default_user_dp_light.jpg')
+                            }
+                            style={styles.h_header_img}
+                        />
+                    )}
+                </Observer>
             </View>
             <ScrollView
                 style={{
@@ -94,8 +118,8 @@ const HomePage: FunctionComponent = () => {
                                 {() => (
                                     <BasicText
                                         inputText={
-                                            StudentInfoStore?.student_info
-                                                ?.assigned_class as string
+                                            (UserInfoStore?.user_info
+                                                ?.level as string) || 'Beginner'
                                         }
                                         textColor={Colors.White}
                                         textWeight={600}
@@ -163,14 +187,14 @@ const HomePage: FunctionComponent = () => {
                             />
                             <ProgressBar
                                 marginTop={15}
-                                progress={(55 / 70) * 100}
+                                progress={(1 / 20) * 100}
                                 height={4}
                                 backgroundColor={Colors.White}
                                 progressBackgroundColor={Colors.DeepBlue}
                                 marginHorizontal={17}
                             />
                             <BasicText
-                                inputText="55/70"
+                                inputText="1/20"
                                 textWeight={700}
                                 textColor={Colors.White}
                                 marginTop={5}
@@ -371,15 +395,6 @@ const HomePage: FunctionComponent = () => {
                                     }}
                                 />
                             </View>
-                            <BasicText
-                                inputText="Download your result here"
-                                textColor={Colors.Primary}
-                                textSize={13}
-                                textWeight={500}
-                                marginTop={5}
-                                marginLeft={'auto'}
-                                marginRight={'auto'}
-                            />
                         </TouchableOpacity>
                     </View>
                 </View>

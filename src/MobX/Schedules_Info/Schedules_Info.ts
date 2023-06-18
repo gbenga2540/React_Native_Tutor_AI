@@ -15,6 +15,7 @@ class ScheduleInfoClass {
             delete_schedule: action,
             set_schedule_info: action,
             set_edit_index: action,
+            clear_schedule_info: action,
         });
     }
 
@@ -56,6 +57,11 @@ class ScheduleInfoClass {
 
     set_edit_index = ({ index }: { index: number }) => {
         this.edit_index = index;
+    };
+
+    clear_schedule_info = () => {
+        this.schedule_info = [];
+        this.edit_index = 0;
     };
 }
 

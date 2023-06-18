@@ -4,6 +4,7 @@ import Colors from '../../Configs/Colors/Colors';
 import BasicText from '../Basic_Text/Basic_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import TextDivider from '../Text_Divider/Text_Divider';
+import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
 
 interface GlossaryItemProps {
     word: string;
@@ -18,6 +19,10 @@ const GlossaryItem: FunctionComponent<GlossaryItemProps> = ({
     index,
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const transcribe_text = no_double_clicks({
+        execFunc: () => {},
+    });
 
     return (
         <View>
@@ -66,30 +71,49 @@ const GlossaryItem: FunctionComponent<GlossaryItemProps> = ({
                         <View
                             style={{
                                 flexDirection: 'row',
-                                marginTop: 7,
                             }}>
-                            <BasicText
-                                inputText={'Meaning: '}
-                                textSize={15}
-                                textWeight={600}
-                            />
                             <View style={{ flex: 1 }}>
-                                <BasicText inputText={meaning} textSize={14} />
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginTop: 7,
+                                    }}>
+                                    <BasicText
+                                        inputText={'Meaning: '}
+                                        textSize={15}
+                                        textWeight={600}
+                                    />
+                                    <View style={{ flex: 1 }}>
+                                        <BasicText
+                                            inputText={meaning}
+                                            textSize={14}
+                                        />
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginTop: 7,
+                                    }}>
+                                    <BasicText
+                                        inputText={'Translated: '}
+                                        textSize={15}
+                                        textWeight={600}
+                                    />
+                                    <View style={{ flex: 1 }}>
+                                        <BasicText
+                                            inputText={meaning}
+                                            textSize={14}
+                                        />
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                marginTop: 7,
-                            }}>
-                            <BasicText
-                                inputText={'Translated: '}
-                                textSize={15}
-                                textWeight={600}
-                            />
-                            <View style={{ flex: 1 }}>
-                                <BasicText inputText={meaning} textSize={14} />
-                            </View>
+                            <TouchableOpacity
+                                style={{ marginTop: 7 }}
+                                activeOpacity={0.5}
+                                onPress={transcribe_text}>
+                                <TranscribeIcon width={30} height={30} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                 )}

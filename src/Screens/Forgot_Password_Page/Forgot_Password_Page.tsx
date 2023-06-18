@@ -20,6 +20,9 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { useMutation } from 'react-query';
+import { forgot_password } from '../../Configs/Queries/Users/Users';
+import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 
 const ForgotPasswordPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -28,15 +31,41 @@ const ForgotPasswordPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
+    const { mutate: forgot_password_mutate } = useMutation(forgot_password, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'An error occured while trying to send new Password to your Email!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                info_handler({
+                    navigation: navigation,
+                    proceed_type: 3,
+                    success_mssg:
+                        'A New Password has been sent to your Email Address!',
+                    svr_success_mssg: '',
+                    hide_back_btn: false,
+                    hide_header: false,
+                });
+            }
+        },
+    });
+
     const send_mail = no_double_clicks({
         execFunc: () => {
             if (regex_email_checker({ email: email })) {
-                navigation.push(
-                    'AuthStack' as never,
-                    {
-                        screen: 'ChangePasswordPage',
-                    } as never,
-                );
+                forgot_password_mutate({
+                    email: email,
+                });
             } else {
                 error_handler({
                     navigation: navigation,

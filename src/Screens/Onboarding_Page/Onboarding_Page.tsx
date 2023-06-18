@@ -3,6 +3,7 @@ import React, {
     useState,
     Fragment,
     useCallback,
+    Suspense,
 } from 'react';
 import {
     BackHandler,
@@ -57,6 +58,7 @@ const TOTAL_PAGES = 7;
 const OnboardingPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
+    const testTimer = '02:32';
     const [question, setQuestion] = useState<number>(1);
     const [answer_1, setAnswer_1] = useState<number | null>(null);
     const [test2Answers, setTest2Answers] = useState<INTF_Test2Answers>({
@@ -172,373 +174,366 @@ const OnboardingPage: FunctionComponent = () => {
                 <BackButton execFunc={handle_go_back} />
                 <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
-            {question !== 5 && question !== 6 && question !== 7 && (
+            {(question === 1 ||
+                question === 2 ||
+                question === 3 ||
+                question === 4) && (
+                <BasicText
+                    inputText={testTimer}
+                    marginBottom={10}
+                    marginRight={22}
+                    marginLeft={'auto'}
+                    textColor={Colors.Primary}
+                    textWeight={600}
+                />
+            )}
+
+            <MiniAvatar marginBottom={20} marginHorizontal={22} />
+            {question === 1 && (
                 <ScrollView style={{ flex: 1 }}>
-                    {question === 1 && (
-                        <Fragment>
-                            <MiniAvatar
-                                marginBottom={20}
-                                marginHorizontal={22}
-                            />
-                            <BasicText
-                                inputText="Test 1"
-                                marginBottom={3}
-                                marginTop={10}
-                                textColor={Colors.Black}
-                                marginLeft={22}
-                                marginRight={22}
-                                textWeight={700}
-                                textSize={22}
-                            />
-                            <BasicText
-                                inputText={test_1_question}
-                                textFamily={fonts.OpenSans_400}
-                                textColor={Colors.Black}
-                                textSize={16}
-                                marginLeft={22}
-                                marginRight={22}
-                            />
-                            <Text
-                                style={{
-                                    marginTop: 12,
-                                    marginHorizontal: 22,
-                                    fontSize: 16,
-                                    fontFamily: fonts.OpenSans_400,
-                                    color: Colors.Black,
-                                }}>
-                                <BasicText
-                                    inputText="Question:"
-                                    textFamily={fonts.OpenSans_700}
-                                    textColor={Colors.Black}
-                                    textSize={16}
-                                    marginLeft={22}
-                                    marginRight={22}
-                                />{' '}
-                                Who won the Game?
-                            </Text>
-                            <View>
-                                {test_1_options?.map((item, index) => (
-                                    <View
-                                        key={index}
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            marginTop: 10,
-                                        }}>
-                                        <BasicText
-                                            inputText={
-                                                index === 0
-                                                    ? 'A'
-                                                    : index === 1
-                                                    ? 'B'
-                                                    : index === 2
-                                                    ? 'C'
-                                                    : 'D'
-                                            }
-                                            marginLeft={22}
-                                            marginRight={10}
-                                            textSize={15}
-                                            textWeight={500}
-                                        />
-                                        <SingleRadioButton
-                                            option={item}
-                                            index={index}
-                                            answer={answer_1}
-                                            setAnswer={setAnswer_1}
-                                        />
-                                    </View>
-                                ))}
-                            </View>
-                        </Fragment>
-                    )}
-                    {question === 2 && (
-                        <Fragment>
-                            <MiniAvatar
-                                marginBottom={20}
-                                marginHorizontal={22}
-                            />
-                            <BasicText
-                                inputText="Test 2"
-                                marginBottom={3}
-                                marginTop={10}
-                                textColor={Colors.Black}
-                                marginLeft={22}
-                                marginRight={22}
-                                textWeight={700}
-                                textSize={22}
-                            />
-                            <BasicText
-                                inputText={test_2_question}
-                                textFamily={fonts.OpenSans_400}
-                                textColor={Colors.Black}
-                                textSize={16}
-                                marginLeft={22}
-                                marginRight={22}
-                            />
-                            <Text
-                                style={{
-                                    marginTop: 12,
-                                    fontSize: 16,
-                                    marginHorizontal: 22,
-                                    color: Colors.Black,
-                                    fontFamily: fonts.OpenSans_400,
-                                }}>
-                                <BasicText
-                                    inputText="Question:"
-                                    textFamily={fonts.OpenSans_700}
-                                    textColor={Colors.Black}
-                                    textSize={16}
-                                    marginLeft={22}
-                                    marginRight={22}
-                                />{' '}
-                                Fil in the gaps
-                            </Text>
+                    <BasicText
+                        inputText="Test 1"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
+                    />
+                    <BasicText
+                        inputText={test_1_question}
+                        textFamily={fonts.OpenSans_400}
+                        textColor={Colors.Black}
+                        textSize={16}
+                        marginLeft={22}
+                        marginRight={22}
+                    />
+                    <Text
+                        style={{
+                            marginTop: 12,
+                            marginHorizontal: 22,
+                            fontSize: 16,
+                            fontFamily: fonts.OpenSans_400,
+                            color: Colors.Black,
+                        }}>
+                        <BasicText
+                            inputText="Question:"
+                            textFamily={fonts.OpenSans_700}
+                            textColor={Colors.Black}
+                            textSize={16}
+                            marginLeft={22}
+                            marginRight={22}
+                        />{' '}
+                        Who won the Game?
+                    </Text>
+                    <View>
+                        {test_1_options?.map((item, index) => (
                             <View
+                                key={index}
                                 style={{
                                     flexDirection: 'row',
-                                    marginHorizontal: 22,
-                                    marginTop: test2Answers.a ? 10 : 0,
-                                    marginBottom: test2Answers.a ? 15 : 0,
-                                    justifyContent: test2Answers?.d
-                                        ? 'space-evenly'
-                                        : undefined,
-                                }}>
-                                {test2Answers.a && (
-                                    <TestRadioButton
-                                        option={test2Answers.a}
-                                        isSelected={true}
-                                        marginRight={10}
-                                        buttonWidth={80}
-                                        buttonHeight={43}
-                                    />
-                                )}
-                                {test2Answers.b && (
-                                    <TestRadioButton
-                                        option={test2Answers.b}
-                                        isSelected={true}
-                                        marginRight={10}
-                                        buttonWidth={80}
-                                        buttonHeight={43}
-                                    />
-                                )}
-                                {test2Answers.c && (
-                                    <TestRadioButton
-                                        option={test2Answers.c}
-                                        isSelected={true}
-                                        marginRight={10}
-                                        buttonWidth={80}
-                                        buttonHeight={43}
-                                    />
-                                )}
-                                {test2Answers.d && (
-                                    <TestRadioButton
-                                        option={test2Answers.d}
-                                        isSelected={true}
-                                        marginRight={10}
-                                        buttonWidth={80}
-                                        buttonHeight={43}
-                                    />
-                                )}
-                            </View>
-                            {test2Answers?.a && (
-                                <TextDivider singleLine marginHorizontal={22} />
-                            )}
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    marginHorizontal: 22,
-                                    paddingTop: 20,
-                                    justifyContent: 'center',
-                                }}>
-                                {test_2_options?.map((item, index) => (
-                                    <TestRadioButton
-                                        key={index}
-                                        option={item}
-                                        isSelected={false}
-                                        marginRight={15}
-                                        marginBottom={15}
-                                        buttonWidth={screen_width_less_than({
-                                            if_true: 90,
-                                            if_false: 100,
-                                        })}
-                                        buttonHeight={43}
-                                        answers={test2Answers}
-                                        setAnswers={setTest2Answers}
-                                    />
-                                ))}
-                                <BasicButton2
-                                    buttonText="Clear Answers"
-                                    backgroundColor="red"
-                                    textColor="red"
-                                    borderRadius={6}
-                                    buttonHeight={43}
-                                    execFunc={no_double_clicks({
-                                        execFunc: () =>
-                                            setTest2Answers({
-                                                a: null,
-                                                b: null,
-                                                c: null,
-                                                d: null,
-                                            }),
-                                    })}
-                                />
-                            </View>
-                        </Fragment>
-                    )}
-                    {question === 3 && (
-                        <Fragment>
-                            <MiniAvatar
-                                marginBottom={20}
-                                marginHorizontal={22}
-                            />
-                            <BasicText
-                                inputText="Test 3"
-                                marginBottom={3}
-                                marginTop={10}
-                                textColor={Colors.Black}
-                                marginLeft={22}
-                                marginRight={22}
-                                textWeight={700}
-                                textSize={22}
-                            />
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    marginHorizontal: 22,
+                                    alignItems: 'center',
                                     marginTop: 10,
-                                    marginBottom: 20,
-                                    alignItems: 'center',
-                                }}>
-                                <TouchableOpacity
-                                    activeOpacity={0.65}
-                                    onPress={() => setTest_3_PP(!test_3_PP)}
-                                    style={{
-                                        width: 35,
-                                    }}>
-                                    {test_3_PP ? (
-                                        <Feather
-                                            name="pause"
-                                            size={30}
-                                            color={Colors.Primary}
-                                        />
-                                    ) : (
-                                        <Feather
-                                            name="play"
-                                            size={30}
-                                            color={Colors.Primary}
-                                        />
-                                    )}
-                                </TouchableOpacity>
-                                <View>
-                                    <AudioProgressBar
-                                        progress={72}
-                                        height={8}
-                                        progressWidth={250}
-                                        marginHorizontal={1}
-                                    />
-                                </View>
-                            </View>
-                            <Text
-                                style={{
-                                    marginHorizontal: 22,
-                                    fontFamily: fonts.OpenSans_400,
-                                    color: Colors.Black,
-                                    fontSize: 16,
-                                    marginTop: 1,
                                 }}>
                                 <BasicText
-                                    inputText="Question:"
-                                    textFamily={fonts.OpenSans_700}
-                                    textColor={Colors.Black}
-                                    textSize={16}
+                                    inputText={
+                                        index === 0
+                                            ? 'A'
+                                            : index === 1
+                                            ? 'B'
+                                            : index === 2
+                                            ? 'C'
+                                            : 'D'
+                                    }
                                     marginLeft={22}
-                                    marginRight={22}
-                                />{' '}
-                                What did you hear?
-                            </Text>
-                            <BasicTextEntry
-                                placeHolderText="Enter what you heard here..."
-                                inputValue={test_3}
-                                setInputValue={setTest_3}
-                                marginTop={10}
-                                marginBottom={2}
-                                inputMode="text"
-                            />
-                        </Fragment>
-                    )}
-                    {question === 4 && (
-                        <Fragment>
-                            <MiniAvatar
-                                marginBottom={20}
-                                marginHorizontal={22}
-                            />
-                            <BasicText
-                                inputText="Test 4"
-                                marginBottom={3}
-                                marginTop={10}
-                                textColor={Colors.Black}
-                                marginLeft={22}
-                                marginRight={22}
-                                textWeight={700}
-                                textSize={22}
-                            />
-                            <BasicText
-                                inputText={test_4_question}
-                                textFamily={fonts.OpenSans_400}
-                                textColor={Colors.Black}
-                                textSize={16}
-                                marginLeft={22}
-                                marginRight={22}
-                            />
-                            <Text
-                                style={{
-                                    marginTop: 12,
-                                    fontSize: 16,
-                                    marginHorizontal: 22,
-                                    color: Colors.Black,
-                                }}>
-                                <BasicText
-                                    inputText="Question:"
-                                    textFamily={fonts.OpenSans_700}
-                                    textColor={Colors.Black}
-                                    textSize={16}
-                                    marginLeft={22}
-                                    marginRight={22}
-                                />{' '}
-                                Speak the above sentence with the microphone
-                                below.
-                            </Text>
-                            <View
-                                style={{
-                                    alignItems: 'center',
-                                    marginTop: screen_height_less_than({
-                                        if_true: 25,
-                                        if_false: 30,
-                                    }),
-                                }}>
-                                <MicrophoneButton
-                                    microphoneSize={screen_height_less_than({
-                                        if_true: 60,
-                                        if_false: 75,
-                                    })}
-                                    animationSpeed={300}
+                                    marginRight={10}
+                                    textSize={15}
+                                    textWeight={500}
+                                />
+                                <SingleRadioButton
+                                    option={item}
+                                    index={index}
+                                    answer={answer_1}
+                                    setAnswer={setAnswer_1}
                                 />
                             </View>
-                            <BasicText
-                                inputText='Hold the "Microphone" Button to Speak.'
-                                textAlign="center"
-                                textColor={Colors.Black}
-                                textWeight={600}
-                                marginTop={10}
+                        ))}
+                    </View>
+                </ScrollView>
+            )}
+            {question === 2 && (
+                <ScrollView style={{ flex: 1 }}>
+                    <BasicText
+                        inputText="Test 2"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
+                    />
+                    <BasicText
+                        inputText={test_2_question}
+                        textFamily={fonts.OpenSans_400}
+                        textColor={Colors.Black}
+                        textSize={16}
+                        marginLeft={22}
+                        marginRight={22}
+                    />
+                    <Text
+                        style={{
+                            marginTop: 12,
+                            fontSize: 16,
+                            marginHorizontal: 22,
+                            color: Colors.Black,
+                            fontFamily: fonts.OpenSans_400,
+                        }}>
+                        <BasicText
+                            inputText="Question:"
+                            textFamily={fonts.OpenSans_700}
+                            textColor={Colors.Black}
+                            textSize={16}
+                            marginLeft={22}
+                            marginRight={22}
+                        />{' '}
+                        Fil in the gaps
+                    </Text>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginHorizontal: 22,
+                            marginTop: test2Answers.a ? 10 : 0,
+                            marginBottom: test2Answers.a ? 15 : 0,
+                            justifyContent: test2Answers?.d
+                                ? 'space-evenly'
+                                : undefined,
+                        }}>
+                        {test2Answers.a && (
+                            <TestRadioButton
+                                option={test2Answers.a}
+                                isSelected={true}
+                                marginRight={10}
+                                buttonWidth={80}
+                                buttonHeight={43}
                             />
-                        </Fragment>
+                        )}
+                        {test2Answers.b && (
+                            <TestRadioButton
+                                option={test2Answers.b}
+                                isSelected={true}
+                                marginRight={10}
+                                buttonWidth={80}
+                                buttonHeight={43}
+                            />
+                        )}
+                        {test2Answers.c && (
+                            <TestRadioButton
+                                option={test2Answers.c}
+                                isSelected={true}
+                                marginRight={10}
+                                buttonWidth={80}
+                                buttonHeight={43}
+                            />
+                        )}
+                        {test2Answers.d && (
+                            <TestRadioButton
+                                option={test2Answers.d}
+                                isSelected={true}
+                                marginRight={10}
+                                buttonWidth={80}
+                                buttonHeight={43}
+                            />
+                        )}
+                    </View>
+                    {test2Answers?.a && (
+                        <TextDivider singleLine marginHorizontal={22} />
                     )}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            marginHorizontal: 22,
+                            paddingTop: 20,
+                            justifyContent: 'center',
+                        }}>
+                        {test_2_options?.map((item, index) => (
+                            <TestRadioButton
+                                key={index}
+                                option={item}
+                                isSelected={false}
+                                marginRight={15}
+                                marginBottom={15}
+                                buttonWidth={screen_width_less_than({
+                                    if_true: 90,
+                                    if_false: 100,
+                                })}
+                                buttonHeight={43}
+                                answers={test2Answers}
+                                setAnswers={setTest2Answers}
+                            />
+                        ))}
+                        <BasicButton2
+                            buttonText="Clear Answers"
+                            backgroundColor="red"
+                            textColor="red"
+                            borderRadius={6}
+                            buttonHeight={43}
+                            execFunc={no_double_clicks({
+                                execFunc: () =>
+                                    setTest2Answers({
+                                        a: null,
+                                        b: null,
+                                        c: null,
+                                        d: null,
+                                    }),
+                            })}
+                        />
+                    </View>
+                </ScrollView>
+            )}
+            {question === 3 && (
+                <ScrollView style={{ flex: 1 }}>
+                    <BasicText
+                        inputText="Test 3"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
+                    />
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginHorizontal: 22,
+                            marginTop: 10,
+                            marginBottom: 20,
+                            alignItems: 'center',
+                        }}>
+                        <TouchableOpacity
+                            activeOpacity={0.65}
+                            onPress={() => setTest_3_PP(!test_3_PP)}
+                            style={{
+                                width: 35,
+                            }}>
+                            {test_3_PP ? (
+                                <Feather
+                                    name="pause"
+                                    size={30}
+                                    color={Colors.Primary}
+                                />
+                            ) : (
+                                <Feather
+                                    name="play"
+                                    size={30}
+                                    color={Colors.Primary}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <View>
+                            <AudioProgressBar
+                                progress={72}
+                                height={8}
+                                progressWidth={250}
+                                marginHorizontal={1}
+                            />
+                        </View>
+                    </View>
+                    <Text
+                        style={{
+                            marginHorizontal: 22,
+                            fontFamily: fonts.OpenSans_400,
+                            color: Colors.Black,
+                            fontSize: 16,
+                            marginTop: 1,
+                        }}>
+                        <BasicText
+                            inputText="Question:"
+                            textFamily={fonts.OpenSans_700}
+                            textColor={Colors.Black}
+                            textSize={16}
+                            marginLeft={22}
+                            marginRight={22}
+                        />{' '}
+                        What did you hear?
+                    </Text>
+                    <BasicTextEntry
+                        placeHolderText="Enter what you heard here..."
+                        inputValue={test_3}
+                        setInputValue={setTest_3}
+                        marginTop={10}
+                        marginBottom={2}
+                        inputMode="text"
+                    />
+                </ScrollView>
+            )}
+            {question === 4 && (
+                <ScrollView style={{ flex: 1 }}>
+                    <BasicText
+                        inputText="Test 4"
+                        marginBottom={3}
+                        marginTop={10}
+                        textColor={Colors.Black}
+                        marginLeft={22}
+                        marginRight={22}
+                        textWeight={700}
+                        textSize={22}
+                    />
+                    <BasicText
+                        inputText={test_4_question}
+                        textFamily={fonts.OpenSans_400}
+                        textColor={Colors.Black}
+                        textSize={16}
+                        marginLeft={22}
+                        marginRight={22}
+                    />
+                    <Text
+                        style={{
+                            marginTop: 12,
+                            fontSize: 16,
+                            marginHorizontal: 22,
+                            color: Colors.Black,
+                        }}>
+                        <BasicText
+                            inputText="Question:"
+                            textFamily={fonts.OpenSans_700}
+                            textColor={Colors.Black}
+                            textSize={16}
+                            marginLeft={22}
+                            marginRight={22}
+                        />{' '}
+                        Speak the above sentence with the microphone below.
+                    </Text>
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            marginTop: screen_height_less_than({
+                                if_true: 25,
+                                if_false: 30,
+                            }),
+                        }}>
+                        <MicrophoneButton
+                            microphoneSize={screen_height_less_than({
+                                if_true: 60,
+                                if_false: 75,
+                            })}
+                            animationSpeed={300}
+                        />
+                    </View>
+                    <BasicText
+                        inputText='Hold the "Microphone" Button to Speak.'
+                        textAlign="center"
+                        textColor={Colors.Black}
+                        textWeight={600}
+                        marginTop={10}
+                    />
                 </ScrollView>
             )}
             {question === 5 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
                     <BasicText
                         inputText="Your Native Language?"
                         marginBottom={3}
@@ -556,32 +551,33 @@ const OnboardingPage: FunctionComponent = () => {
                             flex: 1,
                             paddingHorizontal: 4,
                         }}>
-                        <FlatList
-                            style={{
-                                paddingHorizontal: 18,
-                            }}
-                            keyExtractor={item => item?.name}
-                            data={native_languages}
-                            windowSize={3}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <SingleRadioButton
-                                        answer={nativeLang}
-                                        setAnswer={setNativeLang}
-                                        index={index}
-                                        option={item?.name}
-                                        marginBottom={10}
-                                        buttonHeight={43}
-                                    />
-                                );
-                            }}
-                        />
+                        <Suspense fallback={null}>
+                            <FlatList
+                                style={{
+                                    paddingHorizontal: 18,
+                                }}
+                                keyExtractor={item => item?.name}
+                                data={native_languages}
+                                windowSize={3}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <SingleRadioButton
+                                            answer={nativeLang}
+                                            setAnswer={setNativeLang}
+                                            index={index}
+                                            option={item?.name}
+                                            marginBottom={10}
+                                            buttonHeight={43}
+                                        />
+                                    );
+                                }}
+                            />
+                        </Suspense>
                     </View>
                 </View>
             )}
             {question === 6 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
                     <BasicText
                         inputText="Your study target per day?"
                         marginBottom={3}
@@ -626,7 +622,6 @@ const OnboardingPage: FunctionComponent = () => {
             )}
             {question === 7 && (
                 <View style={{ flex: 1 }}>
-                    <MiniAvatar marginBottom={20} marginHorizontal={22} />
                     <BasicText
                         inputText="Your Interests?"
                         marginBottom={3}
@@ -644,27 +639,29 @@ const OnboardingPage: FunctionComponent = () => {
                             flex: 1,
                             paddingHorizontal: 4,
                         }}>
-                        <FlatList
-                            style={{
-                                paddingHorizontal: 18,
-                            }}
-                            keyExtractor={item => item}
-                            data={topics_interests}
-                            windowSize={3}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <MultiRadioButton
-                                        answers={userInterests}
-                                        setAnswers={setUserInterests}
-                                        index={index}
-                                        option={item}
-                                        marginBottom={10}
-                                        buttonHeight={43}
-                                        borderRadius={8}
-                                    />
-                                );
-                            }}
-                        />
+                        <Suspense fallback={null}>
+                            <FlatList
+                                style={{
+                                    paddingHorizontal: 18,
+                                }}
+                                keyExtractor={item => item}
+                                data={topics_interests}
+                                windowSize={3}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <MultiRadioButton
+                                            answers={userInterests}
+                                            setAnswers={setUserInterests}
+                                            index={index}
+                                            option={item}
+                                            marginBottom={10}
+                                            buttonHeight={43}
+                                            borderRadius={8}
+                                        />
+                                    );
+                                }}
+                            />
+                        </Suspense>
                     </View>
                 </View>
             )}

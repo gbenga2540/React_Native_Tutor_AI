@@ -83,7 +83,7 @@ export const profile_menu_4: INTF_ProfileMenu[] = [
         params: {
             success_mssg: 'Are you sure you want to sign out?',
             svr_success_mssg: '',
-            proceed_type: 1,
+            proceed_type: 2,
             hide_back_btn: false,
             hide_header: true,
         },

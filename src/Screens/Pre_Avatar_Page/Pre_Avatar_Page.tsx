@@ -225,9 +225,9 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                     </View>
                 </View>
                 <BasicText
-                    inputText="Select an Avatar and a Voice for each Avatar."
+                    inputText="Select an Avatar and a Voice for each Avatar. Your Selected Avatar becomes your Tutor and the other Avatar becomes your Homework Assistant."
                     marginTop={50}
-                    width={200}
+                    width={300}
                     marginLeft={'auto'}
                     marginRight={'auto'}
                     textAlign="center"

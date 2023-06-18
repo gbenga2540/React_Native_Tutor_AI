@@ -5,53 +5,165 @@ const api_base_url = Axios.create({
     baseURL: base_url,
 });
 
-export const sign_up = async ({
+export const register = async ({
+    fullname,
+    mobile,
     email,
-    username,
-    password,
+    dob,
     displayPicture,
 }: {
+    fullname: string;
+    mobile: string;
     email: string;
-    username: string;
-    password: string;
+    dob: string;
     displayPicture: string;
 }) => {
     return await api_base_url
         .post('auth/register', {
+            fullname: fullname,
+            mobile: mobile,
             email: email,
-            username: username,
-            password: password,
+            dateOfBirth: dob,
             dp: displayPicture,
         })
-        ?.catch(err => {
+        .catch(err => {
             return {
                 error: true,
                 data: err?.message,
             };
         })
-        ?.then((res: any) => {
-            if (res?.status === 'error') {
+        .then((res: any) => {
+            if (res?.error) {
                 return {
                     error: true,
                     data: res?.data,
                 };
             } else {
-                if (res?.data?.status === 'success') {
+                if (res?.data?.error) {
                     return {
-                        error: false,
-                        data: res?.data?.response,
+                        error: true,
+                        data: res?.data,
                     };
                 } else {
                     return {
-                        error: true,
-                        data: 'An error occured. Please check your Internet Connectivity and try again!',
+                        error: false,
+                        data: res?.data,
                     };
                 }
             }
         });
 };
 
-export const sign_in = async ({
+export const resend_otp = async ({ uid }: { uid: string }) => {
+    return await api_base_url
+        .post(`auth/token/resend/${uid}`)
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const verify_otp = async ({
+    uid,
+    otp,
+}: {
+    uid: string;
+    otp: string;
+}) => {
+    return await api_base_url
+        .post(`auth/token/verify/${uid}`, {
+            otp: otp,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const set_password = async ({
+    uid,
+    password,
+}: {
+    uid: string;
+    password: string;
+}) => {
+    return await api_base_url
+        .post(`auth/password/${uid}`, {
+            password: password,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const login = async ({
     email,
     password,
 }: {
@@ -63,16 +175,156 @@ export const sign_in = async ({
             email: email,
             password: password,
         })
-        ?.catch(err => {
+        .catch(err => {
             return {
                 error: true,
                 data: err?.message,
             };
         })
-        ?.then((res: any) => {
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const forgot_password = async ({ email }: { email: string }) => {
+    return await api_base_url
+        .post('user/forgot-password', {
+            email: email,
+        })
+        .catch(err => {
             return {
-                error: false,
-                data: res,
+                error: true,
+                data: err?.message,
             };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const change_password = async ({
+    uid,
+    oldPassword,
+    newPassword,
+}: {
+    uid: string;
+    oldPassword: string;
+    newPassword: string;
+}) => {
+    return await api_base_url
+        .patch(`user/change-password/${uid}`, {
+            old: oldPassword,
+            password: newPassword,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const update_user_info = async ({
+    uid,
+    dateOfBirth,
+    email,
+    fullname,
+    mobile,
+    language,
+}: {
+    uid: string;
+    dateOfBirth: string;
+    email: string;
+    fullname: string;
+    mobile: string;
+    language: string;
+}) => {
+    return await api_base_url
+        .patch(`user/${uid}`, {
+            dateOfBirth: dateOfBirth,
+            email: email,
+            fullname: fullname,
+            mobile: mobile,
+            language: language,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
         });
 };

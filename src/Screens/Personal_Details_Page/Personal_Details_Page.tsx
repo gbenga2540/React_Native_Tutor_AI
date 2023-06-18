@@ -29,17 +29,24 @@ import { mongo_date_converter_4 } from '../../Utils/Mongo_Date_Converter/Mongo_D
 import { get_age } from '../../Utils/Get_Age/Get_Age';
 import DatePicker from 'react-native-date-picker';
 import { useRef } from 'react';
-import { useEffect } from 'react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { useMutation } from 'react-query';
+import { update_user_info } from '../../Configs/Queries/Users/Users';
+import { observer } from 'mobx-react';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 
-const PersonalDetailsPage: FunctionComponent = () => {
+const PersonalDetailsPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const scrollViewRef = useRef<ScrollView | null>(null);
 
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
+    const [fullName, setFullName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [phoneNo, setPhoneNo] = useState<string>('');
     const [phoneNoValid, setPhoneNoValid] = useState<boolean>(false);
@@ -52,6 +59,79 @@ const PersonalDetailsPage: FunctionComponent = () => {
     const [openDateModal, setOpenDateModal] = useState<boolean>(false);
     const [agePHColor, setAgePHColor] = useState<string>(Colors.Grey);
     const [displayPicture, setDisplayPicture] = useState<string>('');
+
+    const { mutate: update_user_info_mutate } = useMutation(update_user_info, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'An error occured while trying to Sign In!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const prevUserInfo = UserInfoStore?.user_info;
+
+                const proceed = () => {
+                    setShowSpinner(false);
+                    setDisableButton(false);
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...prevUserInfo,
+                            language: language,
+                            email: email,
+                            mobile: phoneNo,
+                            dateOfBirth: dob.toString(),
+                            fullname: fullName,
+                        },
+                    });
+                    info_handler({
+                        navigation: navigation,
+                        proceed_type: 4,
+                        success_mssg:
+                            'Your Personal Details has been updated successfully!',
+                        svr_success_mssg: '',
+                        hide_back_btn: false,
+                        hide_header: false,
+                    });
+                };
+
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: {
+                                ...prevUserInfo,
+                                language: language,
+                                email: email,
+                                mobile: phoneNo,
+                                dateOfBirth: dob.toString(),
+                                fullname: fullName,
+                            },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(err => {
+                            err && proceed();
+                        })
+                        .then(() => {
+                            proceed();
+                        });
+                } catch (error) {
+                    proceed();
+                }
+            }
+        },
+    });
+
     const open_dob = no_double_clicks({
         execFunc: () => {
             setOpenDateModal(true);
@@ -60,11 +140,41 @@ const PersonalDetailsPage: FunctionComponent = () => {
 
     const edit_personal_details = no_double_clicks({
         execFunc: () => {
-            if (regex_email_checker({ email: email })) {
+            if (language !== NativeLanguagesChooser[0]?.value) {
+                if (regex_email_checker({ email: email })) {
+                    if (fullName) {
+                        if (phoneNoValid && phoneNo) {
+                            update_user_info_mutate({
+                                uid: UserInfoStore?.user_info?._id as string,
+                                email: email,
+                                dateOfBirth: dob.toString(),
+                                fullname: fullName,
+                                language: language,
+                                mobile: phoneNo,
+                            });
+                        } else {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg:
+                                    'Invalid / Incorrect Mobile Number!',
+                            });
+                        }
+                    } else {
+                        error_handler({
+                            navigation: navigation,
+                            error_mssg: 'FullName field cannot be empty!',
+                        });
+                    }
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Email field cannot be empty!',
+                    });
+                }
             } else {
                 error_handler({
                     navigation: navigation,
-                    error_mssg: 'Email field cannot be empty!',
+                    error_mssg: 'Please Select a Native Language!',
                 });
             }
         },
@@ -93,8 +203,12 @@ const PersonalDetailsPage: FunctionComponent = () => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        if (err) {
-                            clear_image();
+                        clear_image();
+                        if (err?.code !== 'E_PICKER_CANCELLED') {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg: err?.message,
+                            });
                         }
                     })
                     .then(res => {
@@ -129,8 +243,12 @@ const PersonalDetailsPage: FunctionComponent = () => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        if (err) {
-                            clear_image();
+                        clear_image();
+                        if (err?.code !== 'E_PICKER_CANCELLED') {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg: err?.message,
+                            });
                         }
                     })
                     .then(res => {
@@ -150,13 +268,13 @@ const PersonalDetailsPage: FunctionComponent = () => {
         },
     });
 
-    useEffect(() => {
-        const first_timer = setTimeout(() => {
-            scrollViewRef.current !== null &&
-                scrollViewRef.current?.scrollToEnd();
-        }, 500);
-        return () => clearTimeout(first_timer);
-    }, []);
+    // useEffect(() => {
+    //     const first_timer = setTimeout(() => {
+    //         scrollViewRef.current !== null &&
+    //             scrollViewRef.current?.scrollToEnd();
+    //     }, 100);
+    //     return () => clearTimeout(first_timer);
+    // }, []);
 
     return (
         <View style={styles.pdp_main}>
@@ -262,7 +380,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     </View>
                 </View>
                 <BasicText
-                    inputText="Language"
+                    inputText="Native Language"
                     marginLeft={22}
                     textWeight={500}
                 />
@@ -278,39 +396,6 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     marginLeft={22}
                     marginTop={10}
                     marginBottom={30}
-                />
-                <BasicText
-                    inputText="Full Name"
-                    marginLeft={22}
-                    textWeight={500}
-                />
-                <BasicTextEntry
-                    placeHolderText="John Doe"
-                    inputValue={email}
-                    setInputValue={setEmail}
-                    marginTop={10}
-                    marginBottom={30}
-                    inputMode="text"
-                />
-                <BasicText
-                    inputText="Phone Number"
-                    marginLeft={22}
-                    textWeight={500}
-                />
-                <PhoneNumberInput
-                    setInputValue={setPhoneNo}
-                    setIsValid={setPhoneNoValid}
-                    defaultCode="US"
-                    marginTop={10}
-                />
-                <BasicText inputText="Email" marginLeft={22} textWeight={500} />
-                <BasicTextEntry
-                    placeHolderText="johndoe@gmail.com"
-                    inputValue={email}
-                    setInputValue={setEmail}
-                    marginTop={10}
-                    marginBottom={30}
-                    inputMode="text"
                 />
                 <BasicText
                     inputText="Date of Birth"
@@ -357,6 +442,60 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     execFunc={open_dob}
                     textColor={Colors.LightPink}
                 />
+                <BasicText
+                    inputText={
+                        (get_age({
+                            input_date: dob?.toString(),
+                        }) as number) >= 15
+                            ? 'Email'
+                            : "Parent's Email"
+                    }
+                    marginLeft={22}
+                    textWeight={500}
+                />
+                <BasicTextEntry
+                    placeHolderText="johndoe@gmail.com"
+                    inputValue={email}
+                    setInputValue={setEmail}
+                    marginTop={10}
+                    marginBottom={30}
+                    inputMode="text"
+                    onFocus={() =>
+                        scrollViewRef.current !== null &&
+                        scrollViewRef.current?.scrollToEnd()
+                    }
+                />
+                <BasicText
+                    inputText="Full Name"
+                    marginLeft={22}
+                    textWeight={500}
+                />
+                <BasicTextEntry
+                    placeHolderText="John Doe"
+                    inputValue={fullName}
+                    setInputValue={setFullName}
+                    marginTop={10}
+                    marginBottom={30}
+                    inputMode="text"
+                />
+                <BasicText
+                    inputText={
+                        (get_age({
+                            input_date: dob?.toString(),
+                        }) as number) >= 15
+                            ? 'Mobile Number'
+                            : "Parent's Mobile Number"
+                    }
+                    marginLeft={22}
+                    textWeight={500}
+                />
+                <PhoneNumberInput
+                    setInputValue={setPhoneNo}
+                    setIsValid={setPhoneNoValid}
+                    defaultCode="US"
+                    marginTop={10}
+                    marginBottom={10}
+                />
                 <BasicButton
                     buttonText="Edit Details"
                     borderRadius={8}
@@ -365,14 +504,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
                     buttonHeight={56}
                     disabled={disableButton}
                     marginTop={20}
-                    marginBottom={
-                        Platform.OS === 'ios'
-                            ? screen_height_less_than({
-                                  if_true: 10,
-                                  if_false: 30,
-                              })
-                            : 20
-                    }
+                    marginBottom={250}
                 />
             </ScrollView>
             <DatePicker
@@ -392,7 +524,7 @@ const PersonalDetailsPage: FunctionComponent = () => {
             />
         </View>
     );
-};
+});
 
 export default PersonalDetailsPage;
 

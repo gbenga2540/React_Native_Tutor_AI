@@ -11,12 +11,14 @@ interface BackButtonProps {
     backgroundColor?: string;
     borderColor?: string;
     arrowColor?: string;
+    show_back_button?: boolean;
 }
 const BackButton: FunctionComponent<BackButtonProps> = ({
     execFunc,
     backgroundColor,
     borderColor,
     arrowColor,
+    show_back_button,
 }) => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
@@ -33,7 +35,7 @@ const BackButton: FunctionComponent<BackButtonProps> = ({
         },
     });
 
-    if (navigation.canGoBack()) {
+    if (navigation.canGoBack() || show_back_button) {
         return (
             <TouchableOpacity
                 style={[

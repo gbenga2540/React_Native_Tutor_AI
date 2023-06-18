@@ -1,8 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
-import {
-    INTF_AssignedClass,
-    INTF_StudentInfo,
-} from '../../Interface/Student_Info/Student_Info';
+import { INTF_StudentInfo } from '../../Interface/Student_Info/Student_Info';
+import { INTF_AssignedClass } from '../../Interface/Assigned_Class/Assigned_Class';
 
 class StudentInfoClass {
     student_info: INTF_StudentInfo = {
