@@ -1,7 +1,6 @@
 import React, {
     FunctionComponent,
     useState,
-    Fragment,
     useCallback,
     Suspense,
 } from 'react';
@@ -52,10 +51,17 @@ import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { useMutation } from 'react-query';
+import { update_misc } from '../../Configs/Queries/Users/Users';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { observer } from 'mobx-react';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
+import SInfo from 'react-native-sensitive-info';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const TOTAL_PAGES = 7;
 
-const OnboardingPage: FunctionComponent = () => {
+const OnboardingPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const testTimer = '02:32';
@@ -74,21 +80,104 @@ const OnboardingPage: FunctionComponent = () => {
     const [userInterests, setUserInterests] = useState<number[]>([]);
 
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [disableButton, setDisableButton] = useState<boolean>(false);
+
+    const { mutate: update_misc_mutate } = useMutation(update_misc, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        "An error occured while trying to save User's Preferences!",
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const proceed = () => {
+                    const TempUserInfo = UserInfoStore.user_info;
+
+                    const user_Interests: string[] = [];
+                    userInterests?.map(item =>
+                        user_Interests.push(topics_interests[item]),
+                    );
+
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...TempUserInfo,
+                            language: `${
+                                native_languages[nativeLang || 0]?.name
+                            } - ${native_languages[nativeLang || 0]?.code}`,
+                            study_target: studyTarget === 1 ? 60 : 30,
+                            interests: user_Interests,
+                        },
+                    });
+
+                    navigation.push(
+                        'AuthStack' as never,
+                        {
+                            screen: 'CongratulationsPage',
+                            params: {
+                                header_txt: 'You did well.',
+                                message_txt: `You have been assigned to ${
+                                    UserInfoStore?.user_info?.level ||
+                                    'Beginner'
+                                } Class.`,
+                                nextPage: 3,
+                            },
+                        } as never,
+                    );
+                };
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: { ...data?.data },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch((error: any) => {
+                            error && proceed();
+                        })
+                        .then(() => {
+                            proceed();
+                        });
+                } catch (err) {
+                    proceed();
+                }
+            }
+        },
+    });
 
     const submit_data = no_double_clicks({
         execFunc: () => {
-            navigation.push(
-                'AuthStack' as never,
-                {
-                    screen: 'CongratulationsPage',
-                    params: {
-                        header_txt: 'You did well.',
-                        message_txt:
-                            'You have been assigned to Confident Class.',
-                        nextPage: 3,
-                    },
-                } as never,
+            const user_Interests: string[] = [];
+            userInterests?.map(item =>
+                user_Interests.push(topics_interests[item]),
             );
+
+            if (userInterests?.length > 0) {
+                update_misc_mutate({
+                    uid: UserInfoStore?.user_info?._id as string,
+                    language: `${native_languages[nativeLang || 0]?.name} - ${
+                        native_languages[nativeLang || 0]?.code
+                    }`,
+                    study_target: studyTarget === 1 ? 60 : 30,
+                    interests: user_Interests,
+                });
+            } else {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'Please, Select atleast One Interest Topic!',
+                });
+            }
         },
     });
 
@@ -102,13 +191,45 @@ const OnboardingPage: FunctionComponent = () => {
 
     const next_question = no_double_clicks({
         execFunc: async () => {
-            setQuestion(
-                clamp_value({
-                    value: question + 1,
-                    minValue: 1,
-                    maxValue: TOTAL_PAGES,
-                }),
-            );
+            if (question === 5) {
+                if (nativeLang === null) {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Please, Select a Language!',
+                    });
+                } else {
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                }
+            } else if (question === 6) {
+                if (studyTarget === null) {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Please, Select a Study Target!',
+                    });
+                } else {
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                }
+            } else {
+                setQuestion(
+                    clamp_value({
+                        value: question + 1,
+                        minValue: 1,
+                        maxValue: TOTAL_PAGES,
+                    }),
+                );
+            }
         },
     });
 
@@ -668,6 +789,7 @@ const OnboardingPage: FunctionComponent = () => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <BasicButton
+                    disabled={disableButton}
                     buttonText={
                         question === TOTAL_PAGES ? 'Submit' : 'Continue'
                     }
@@ -690,7 +812,7 @@ const OnboardingPage: FunctionComponent = () => {
             </KeyboardAvoidingView>
         </View>
     );
-};
+});
 
 export default OnboardingPage;
 

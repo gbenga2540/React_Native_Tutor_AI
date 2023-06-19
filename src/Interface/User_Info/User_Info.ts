@@ -13,6 +13,7 @@ export interface INTF_UserInfo {
     paymentStatus?: boolean;
     updatedAt?: string;
     verified?: boolean;
+    study_target?: number;
     language?: string;
     dp?: {
         public_id?: string;

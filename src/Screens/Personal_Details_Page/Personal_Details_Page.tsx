@@ -205,10 +205,12 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         setDisplayPicture('');
                         clear_image();
                         if (err?.code !== 'E_PICKER_CANCELLED') {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg: err?.message,
-                            });
+                            if (err?.code !== 'E_NO_LIBRARY_PERMISSION') {
+                                error_handler({
+                                    navigation: navigation,
+                                    error_mssg: err?.message,
+                                });
+                            }
                         }
                     })
                     .then(res => {
@@ -245,10 +247,12 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         setDisplayPicture('');
                         clear_image();
                         if (err?.code !== 'E_PICKER_CANCELLED') {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg: err?.message,
-                            });
+                            if (err?.code !== 'E_NO_CAMERA_PERMISSION') {
+                                error_handler({
+                                    navigation: navigation,
+                                    error_mssg: err?.message,
+                                });
+                            }
                         }
                     })
                     .then(res => {

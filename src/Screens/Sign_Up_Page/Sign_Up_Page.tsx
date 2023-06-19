@@ -109,6 +109,18 @@ const SignUpPage: FunctionComponent = observer(() => {
                     svr_error_mssg: data?.data,
                 });
             } else {
+                const proceed = () => {
+                    UserInfoStore.set_user_info({
+                        user_info: { ...data?.data },
+                    });
+                    setQuestion(
+                        clamp_value({
+                            value: question + 1,
+                            minValue: 1,
+                            maxValue: TOTAL_PAGES,
+                        }),
+                    );
+                };
                 try {
                     await SInfo.setItem(
                         SECURE_STORAGE_USER_INFO,
@@ -121,42 +133,13 @@ const SignUpPage: FunctionComponent = observer(() => {
                         },
                     )
                         .catch(error => {
-                            if (error) {
-                                UserInfoStore.set_user_info({
-                                    user_info: { ...data?.data },
-                                });
-                                setQuestion(
-                                    clamp_value({
-                                        value: question + 1,
-                                        minValue: 1,
-                                        maxValue: TOTAL_PAGES,
-                                    }),
-                                );
-                            }
+                            error && proceed();
                         })
                         .then(() => {
-                            UserInfoStore.set_user_info({
-                                user_info: { ...data?.data },
-                            });
-                            setQuestion(
-                                clamp_value({
-                                    value: question + 1,
-                                    minValue: 1,
-                                    maxValue: TOTAL_PAGES,
-                                }),
-                            );
+                            proceed();
                         });
                 } catch (err) {
-                    UserInfoStore.set_user_info({
-                        user_info: { ...data?.data },
-                    });
-                    setQuestion(
-                        clamp_value({
-                            value: question + 1,
-                            minValue: 1,
-                            maxValue: TOTAL_PAGES,
-                        }),
-                    );
+                    proceed();
                 }
             }
         },
@@ -265,6 +248,8 @@ const SignUpPage: FunctionComponent = observer(() => {
                             password: data?.data?.password,
                         },
                     });
+                    setPassword('');
+                    setCPassword('');
                     navigation.push(
                         'AuthStack' as never,
                         {
@@ -277,8 +262,6 @@ const SignUpPage: FunctionComponent = observer(() => {
                             },
                         } as never,
                     );
-                    setPassword('');
-                    setCPassword('');
                 };
 
                 const TempUserInfo = { ...UserInfoStore?.user_info };
@@ -389,7 +372,11 @@ const SignUpPage: FunctionComponent = observer(() => {
     const next_question = no_double_clicks({
         execFunc: () => {
             if (question === 1) {
-                if (regex_email_checker({ email: email }) && name && dob) {
+                if (
+                    regex_email_checker({ email: email?.trim() }) &&
+                    name &&
+                    dob
+                ) {
                     setQuestion(
                         clamp_value({
                             value: question + 1,
@@ -407,7 +394,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                 if (phoneNoValid && phoneNo) {
                     if (displayPicture) {
                         register_mutate({
-                            email: email,
+                            email: email?.trim(),
                             displayPicture: displayPicture || '',
                             fullname: name,
                             mobile: phoneNo,
@@ -507,10 +494,12 @@ const SignUpPage: FunctionComponent = observer(() => {
                         setDisplayPicture('');
                         clear_image();
                         if (err?.code !== 'E_PICKER_CANCELLED') {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg: err?.message,
-                            });
+                            if (err?.code !== 'E_NO_LIBRARY_PERMISSION') {
+                                error_handler({
+                                    navigation: navigation,
+                                    error_mssg: err?.message,
+                                });
+                            }
                         }
                     })
                     .then(res => {
@@ -546,10 +535,12 @@ const SignUpPage: FunctionComponent = observer(() => {
                         setDisplayPicture('');
                         clear_image();
                         if (err?.code !== 'E_PICKER_CANCELLED') {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg: err?.message,
-                            });
+                            if (err?.code !== 'E_NO_CAMERA_PERMISSION') {
+                                error_handler({
+                                    navigation: navigation,
+                                    error_mssg: err?.message,
+                                });
+                            }
                         }
                     })
                     .then(res => {

@@ -24,6 +24,8 @@ import { change_password } from '../../Configs/Queries/Users/Users';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 import { observer } from 'mobx-react';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 
 const ChangePasswordPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -49,15 +51,53 @@ const ChangePasswordPage: FunctionComponent = observer(() => {
                     svr_error_mssg: data?.data,
                 });
             } else {
-                info_handler({
-                    navigation: navigation,
-                    proceed_type: 4,
-                    success_mssg:
-                        'Your password has been updated successfully!',
-                    svr_success_mssg: '',
-                    hide_back_btn: false,
-                    hide_header: false,
-                });
+                const proceed = () => {
+                    setShowSpinner(false);
+                    setDisableButton(false);
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...TempUserInfo,
+                            password: data?.data?.password,
+                        },
+                    });
+                    setOldPassword('');
+                    setNewPassword('');
+                    setNewCPassword('');
+                    info_handler({
+                        navigation: navigation,
+                        proceed_type: 4,
+                        success_mssg:
+                            'Your password has been updated successfully!',
+                        svr_success_mssg: '',
+                        hide_back_btn: false,
+                        hide_header: false,
+                    });
+                };
+
+                const TempUserInfo = { ...UserInfoStore?.user_info };
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: {
+                                ...TempUserInfo,
+                                password: data?.data?.password,
+                            },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(error => {
+                            error && proceed();
+                        })
+                        .then(() => {
+                            proceed();
+                        });
+                } catch (err) {
+                    proceed();
+                }
             }
         },
     });

@@ -49,25 +49,24 @@ const ProfilePage: FunctionComponent = () => {
                         <Fragment>
                             <View style={styles.p_i_c_w}>
                                 <View style={styles.p_i_c}>
-                                    {UserInfoStore?.user_info?.dp?.url ? (
-                                        <Image
-                                            style={styles.p_i}
-                                            source={{
-                                                uri: http_link_fix({
-                                                    http_link: UserInfoStore
-                                                        ?.user_info?.dp
-                                                        ?.url as string,
-                                                }),
-                                                width: 150,
-                                                height: 150,
-                                            }}
-                                        />
-                                    ) : (
-                                        <Image
-                                            style={styles.p_i}
-                                            source={require('../../Images/Extra/default_user_dp_light.jpg')}
-                                        />
-                                    )}
+                                    <Image
+                                        style={styles.p_i}
+                                        source={
+                                            UserInfoStore?.user_info?.dp?.url
+                                                ? {
+                                                      uri: http_link_fix({
+                                                          http_link:
+                                                              UserInfoStore
+                                                                  ?.user_info
+                                                                  ?.dp
+                                                                  ?.url as string,
+                                                      }),
+                                                      width: 150,
+                                                      height: 150,
+                                                  }
+                                                : require('../../Images/Extra/default_user_dp_light.jpg')
+                                        }
+                                    />
                                 </View>
                             </View>
                             <BasicText

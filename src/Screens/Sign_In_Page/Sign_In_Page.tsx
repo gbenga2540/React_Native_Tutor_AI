@@ -94,7 +94,7 @@ const SignInPage: FunctionComponent = observer(() => {
             if (regex_email_checker({ email: email })) {
                 if (password) {
                     login_mutate({
-                        email: email,
+                        email: email?.trim(),
                         password: password,
                     });
                 } else {

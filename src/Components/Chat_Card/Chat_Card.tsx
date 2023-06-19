@@ -9,6 +9,8 @@ import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
 import { observer } from 'mobx-react';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
 
 interface ChatCardProps {
     chat: INTF_Conversation;
@@ -78,7 +80,17 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             marginBottom: 20,
                         }}>
                         <Image
-                            source={require('../../../test/Images/Test_DP.png')}
+                            source={
+                                UserInfoStore?.user_info?.dp?.url
+                                    ? {
+                                          uri: http_link_fix({
+                                              http_link: UserInfoStore
+                                                  ?.user_info?.dp
+                                                  ?.url as string,
+                                          }),
+                                      }
+                                    : require('../../Images/Extra/default_user_dp_light.jpg')
+                            }
                             style={{
                                 width: 31,
                                 height: 31,

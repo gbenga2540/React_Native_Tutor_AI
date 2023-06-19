@@ -328,3 +328,48 @@ export const update_user_info = async ({
             }
         });
 };
+
+export const update_misc = async ({
+    uid,
+    language,
+    study_target,
+    interests,
+}: {
+    uid: string;
+    language: string;
+    study_target: number;
+    interests: string[];
+}) => {
+    return await api_base_url
+        .post(`user/language/${uid}`, {
+            language: language,
+            study_target: study_target,
+            interests: interests,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};

@@ -4,7 +4,6 @@ import Colors from '../../Configs/Colors/Colors';
 import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
 import { test_lessons } from '../../../test/Data/Lessons';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import { Observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import {

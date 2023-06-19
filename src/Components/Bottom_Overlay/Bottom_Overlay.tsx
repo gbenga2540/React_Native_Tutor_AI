@@ -5,26 +5,15 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import {
-    KeyboardAvoidingView,
-    Platform,
-    BackHandler,
-    TouchableOpacity,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, BackHandler } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import BottomSheet, {
-    BottomSheetScrollView,
-    BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
-import { assigned_class } from '../../Data/Assigned_Class/Assigned_Class';
-import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import BasicText from '../Basic_Text/Basic_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { INTF_AssignedClass } from '../../Interface/Student_Info/Student_Info';
 import BasicTextEntry from '../Basic_Text_Entry/Basic_Text_Entry';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
 import { mongo_date_converter_4 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
@@ -35,8 +24,8 @@ import BasicButton from '../Basic_Button/Basic_Button';
 import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
 import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_SCHEDULE_INFO } from '@env';
-import { sort_schedule } from '../../Utils/Sort_Schedule/Sort_Schedule';
 import { INTF_SchedulesInfo } from '../../Interface/Schedules_Info/Schedules_Info';
+import { sort_schedule } from '../../Utils/Sort_Schedule/Sort_Schedule';
 
 const BottomOverlay: FunctionComponent = observer(() => {
     const BottomSheetRef = useRef<BottomSheetMethods | null>(null);
@@ -280,56 +269,6 @@ const BottomOverlay: FunctionComponent = observer(() => {
                 BottomSheetRef?.current?.close();
             }}>
             <KeyboardAvoidingView style={{ flex: 1 }}>
-                {/* // !To be Updated */}
-                {BottomSheetStore.component_type === 1 && (
-                    <BottomSheetScrollView
-                        style={{
-                            flex: 1,
-                            paddingHorizontal: 20,
-                            paddingTop: 30,
-                        }}>
-                        {assigned_class.map((item, index) => (
-                            <TouchableOpacity
-                                onPress={no_double_clicks({
-                                    execFunc: () => {
-                                        StudentInfoStore.update_assigned_class({
-                                            assigned_class: assigned_class[
-                                                index
-                                            ] as INTF_AssignedClass,
-                                        });
-                                    },
-                                })}
-                                activeOpacity={0.5}
-                                style={{
-                                    backgroundColor:
-                                        StudentInfoStore?.student_info
-                                            ?.assigned_class ===
-                                        assigned_class[index]
-                                            ? Colors.Primary
-                                            : Colors.LightPrimary,
-                                    marginBottom: 15,
-                                    height: 60,
-                                    borderRadius: 10,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                                key={item + index}>
-                                <BasicText
-                                    inputText={item}
-                                    textWeight={600}
-                                    textSize={16}
-                                    textColor={
-                                        StudentInfoStore?.student_info
-                                            ?.assigned_class ===
-                                        assigned_class[index]
-                                            ? Colors.White
-                                            : Colors.Dark
-                                    }
-                                />
-                            </TouchableOpacity>
-                        ))}
-                    </BottomSheetScrollView>
-                )}
                 {BottomSheetStore.component_type === 2 && (
                     <BottomSheetView style={{ marginHorizontal: 28 }}>
                         <BasicText

@@ -32,6 +32,7 @@ import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const AVATAR_SIZE = screen_width_less_than({ if_false: 130, if_true: 120 });
 
@@ -162,7 +163,20 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             </TouchableOpacity>
                             <VoiceButton
                                 execFunc={no_double_clicks({
-                                    execFunc: () => console.log(femaleVoice),
+                                    execFunc: () => {
+                                        if (
+                                            femaleVoice ===
+                                            ('Choose Voice' as INTF_AvatarFemaleVoice)
+                                        ) {
+                                            TextToSpeechStore.play_speech({
+                                                speech: 'Please, select a Voice for the Female Avatar.',
+                                            });
+                                        } else {
+                                            TextToSpeechStore.play_speech({
+                                                speech: `Hi there, My Name is ${femaleVoice}. Welcome to TutorAI.`,
+                                            });
+                                        }
+                                    },
                                 })}
                                 buttonSize={38}
                                 borderRadius={8}
@@ -205,7 +219,20 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             </TouchableOpacity>
                             <VoiceButton
                                 execFunc={no_double_clicks({
-                                    execFunc: () => console.log(maleVoice),
+                                    execFunc: () => {
+                                        if (
+                                            maleVoice ===
+                                            ('Choose Voice' as INTF_AvatarMaleVoice)
+                                        ) {
+                                            TextToSpeechStore.play_speech({
+                                                speech: 'Please, select a Voice for the Male Avatar.',
+                                            });
+                                        } else {
+                                            TextToSpeechStore.play_speech({
+                                                speech: `Hi there, My Name is ${maleVoice}. Welcome to TutorAI.`,
+                                            });
+                                        }
+                                    },
                                 })}
                                 buttonSize={38}
                                 borderRadius={8}

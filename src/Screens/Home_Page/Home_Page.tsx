@@ -22,7 +22,6 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StudentInfoStore } from '../../MobX/Student_Info/Student_Info';
 import { Observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
