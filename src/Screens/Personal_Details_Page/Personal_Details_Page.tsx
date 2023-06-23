@@ -32,12 +32,13 @@ import { useRef } from 'react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { useMutation } from 'react-query';
-import { update_user_info } from '../../Configs/Queries/Users/Users';
+import { update_dp, update_user_info } from '../../Configs/Queries/Users/Users';
 import { observer } from 'mobx-react';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
+import { native_languages } from '../../Data/Languages/Languages';
 
 const PersonalDetailsPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -71,20 +72,26 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                 setDisableButton(false);
                 error_handler({
                     navigation: navigation,
-                    error_mssg: 'An error occured while trying to Sign In!',
+                    error_mssg:
+                        "An error occured while trying to update User's Information!",
                     svr_error_mssg: data?.data,
                 });
             } else {
                 const prevUserInfo = UserInfoStore?.user_info;
 
-                const proceed = () => {
+                const language_filter = native_languages.filter(
+                    item => item.name === language,
+                );
+                const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
+
+                const update_info_proceed = () => {
                     setShowSpinner(false);
                     setDisableButton(false);
                     UserInfoStore.set_user_info({
                         user_info: {
                             ...prevUserInfo,
-                            language: language,
-                            email: email,
+                            language: p_language,
+                            email: email?.trim(),
                             mobile: phoneNo,
                             dateOfBirth: dob.toString(),
                             fullname: fullName,
@@ -107,8 +114,8 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         JSON.stringify({
                             user_info: {
                                 ...prevUserInfo,
-                                language: language,
-                                email: email,
+                                language: p_language,
+                                email: email?.trim(),
                                 mobile: phoneNo,
                                 dateOfBirth: dob.toString(),
                                 fullname: fullName,
@@ -120,13 +127,80 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         },
                     )
                         .catch(err => {
-                            err && proceed();
+                            err && update_info_proceed();
                         })
                         .then(() => {
-                            proceed();
+                            update_info_proceed();
                         });
                 } catch (error) {
-                    proceed();
+                    update_info_proceed();
+                }
+            }
+        },
+    });
+
+    const { mutate: update_dp_mutate } = useMutation(update_dp, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                setDisableButton(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        "An error occured while trying to update User's Display Picture!",
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                const prevUserInfo = UserInfoStore?.user_info;
+
+                const change_dp_proceed = () => {
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...prevUserInfo,
+                            dp: data?.data?.dp,
+                        },
+                    });
+
+                    const language_filter = native_languages.filter(
+                        item => item.name === language,
+                    );
+                    const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
+                    update_user_info_mutate({
+                        uid: UserInfoStore?.user_info?._id as string,
+                        email: email?.trim(),
+                        dateOfBirth: dob.toString(),
+                        fullname: fullName,
+                        language: p_language,
+                        mobile: phoneNo,
+                    });
+                };
+
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: {
+                                ...prevUserInfo,
+                                dp: data?.data?.dp,
+                            },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(err => {
+                            err && change_dp_proceed();
+                        })
+                        .then(() => {
+                            change_dp_proceed();
+                        });
+                } catch (error) {
+                    change_dp_proceed();
                 }
             }
         },
@@ -140,18 +214,32 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
 
     const edit_personal_details = no_double_clicks({
         execFunc: () => {
-            if (language !== NativeLanguagesChooser[0]?.value) {
-                if (regex_email_checker({ email: email })) {
+            if (language !== NativeLanguagesChooser[0]?.value && language) {
+                if (regex_email_checker({ email: email?.trim() })) {
                     if (fullName) {
                         if (phoneNoValid && phoneNo) {
-                            update_user_info_mutate({
-                                uid: UserInfoStore?.user_info?._id as string,
-                                email: email,
-                                dateOfBirth: dob.toString(),
-                                fullname: fullName,
-                                language: language,
-                                mobile: phoneNo,
-                            });
+                            const language_filter = native_languages.filter(
+                                item => item.name === language,
+                            );
+                            const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
+
+                            if (displayPicture) {
+                                update_dp_mutate({
+                                    uid: UserInfoStore?.user_info
+                                        ?._id as string,
+                                    displayPicture: displayPicture,
+                                });
+                            } else {
+                                update_user_info_mutate({
+                                    uid: UserInfoStore?.user_info
+                                        ?._id as string,
+                                    email: email?.trim(),
+                                    dateOfBirth: dob.toString(),
+                                    fullname: fullName,
+                                    language: p_language,
+                                    mobile: phoneNo,
+                                });
+                            }
                         } else {
                             error_handler({
                                 navigation: navigation,

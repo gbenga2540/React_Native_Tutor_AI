@@ -324,7 +324,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                             <BasicButton
                                 buttonText="Add Reminder"
                                 marginTop={15}
-                                execFunc={add_to_schedule}
+                                execFunc={() => add_to_schedule({})}
                             />
                         )}
                     </BottomSheetView>
@@ -397,7 +397,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                             <BasicButton
                                 buttonText="Edit Reminder"
                                 marginTop={15}
-                                execFunc={edit_schedule}
+                                execFunc={() => edit_schedule({})}
                             />
                         )}
                     </BottomSheetView>
@@ -434,7 +434,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                                 <BasicButton
                                     buttonText="Yes"
                                     textSize={17}
-                                    execFunc={delete_schedule}
+                                    execFunc={() => delete_schedule({})}
                                 />
                             </BottomSheetView>
                             <BottomSheetView style={{ flex: 1, marginLeft: 6 }}>
@@ -442,7 +442,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                                     buttonText="No"
                                     textSize={17}
                                     execFunc={no_double_clicks({
-                                        execFunc: () =>
+                                        execFunc: ({}) =>
                                             BottomSheetStore.close_bottom_sheet(),
                                     })}
                                 />

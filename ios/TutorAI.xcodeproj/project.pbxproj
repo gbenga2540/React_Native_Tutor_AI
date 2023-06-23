@@ -578,6 +578,7 @@
 				INFOPLIST_FILE = TutorAI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TutorAI;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -608,6 +609,7 @@
 				INFOPLIST_FILE = TutorAI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TutorAI;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

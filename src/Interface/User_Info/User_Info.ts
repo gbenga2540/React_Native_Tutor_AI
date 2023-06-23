@@ -20,4 +20,5 @@ export interface INTF_UserInfo {
         url?: string;
     };
     password?: string;
+    accessToken?: string;
 }

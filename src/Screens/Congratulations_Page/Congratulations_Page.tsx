@@ -29,7 +29,7 @@ const CongratulationsPage: FunctionComponent = () => {
 
     const proceed = no_double_clicks({
         execFunc: () => {
-            switch (route?.params?.nextPage) {
+            switch (route.params?.nextPage) {
                 case 1:
                     navigation.push(
                         'AuthStack' as never,
@@ -54,6 +54,12 @@ const CongratulationsPage: FunctionComponent = () => {
                                 },
                             ],
                         }),
+                    );
+                    break;
+                case 4:
+                    navigation.push(
+                        'AuthStack' as never,
+                        { screen: 'OnboardingPage' } as never,
                     );
                     break;
                 default:
@@ -89,7 +95,8 @@ const CongratulationsPage: FunctionComponent = () => {
                                 : 25,
                             marginBottom: 15,
                         }}>
-                        {navigation.canGoBack() && <BackButton />}
+                        {!route.params?.hide_back_btn &&
+                            navigation.canGoBack() && <BackButton />}
                     </View>
                     <LottieView
                         style={{
@@ -97,9 +104,6 @@ const CongratulationsPage: FunctionComponent = () => {
                             width: 280,
                             minWidth: 280,
                             maxWidth: 280,
-                            // height: 190,
-                            // minHeight: 190,
-                            // maxHeight: 190,
                             position: 'relative',
                             alignSelf: 'center',
                         }}
@@ -150,7 +154,7 @@ const CongratulationsPage: FunctionComponent = () => {
             <BasicButton
                 buttonText="Continue"
                 marginHorizontal={22}
-                execFunc={proceed}
+                execFunc={() => proceed({})}
                 marginBottom={
                     Platform.OS === 'ios'
                         ? screen_height_less_than({

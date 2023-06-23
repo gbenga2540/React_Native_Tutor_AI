@@ -18,6 +18,11 @@ import SecureTextEntry from '../../Components/Secure_Text_Entry/Secure_Text_Entr
 import CheckBox from '../../Components/Check_Box/Check_Box';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { useMutation } from 'react-query';
+import { card_payment } from '../../Configs/Queries/Payment/Payment';
+import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const AddPaymentPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -30,6 +35,54 @@ const AddPaymentPage: FunctionComponent = () => {
     const [cvv, setCVV] = useState<string>('');
     const [cardPin, setCardPin] = useState<string>('');
     const [saveCard, setSaveCard] = useState<boolean>(false);
+
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [disableButton, setDisableButton] = useState<boolean>(false);
+
+    const { mutate: card_payment_mutate } = useMutation(card_payment, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'An error occured while trying to make Payment via Card!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                // const proceed = () => {
+                //     UserInfoStore.set_user_info({
+                //         user_info: { ...data?.data },
+                //     });
+                // };
+                // try {
+                //     await SInfo.setItem(
+                //         SECURE_STORAGE_USER_INFO,
+                //         JSON.stringify({
+                //             user_info: { ...data?.data },
+                //         }),
+                //         {
+                //             sharedPreferencesName: SECURE_STORAGE_NAME,
+                //             keychainService: SECURE_STORAGE_NAME,
+                //         },
+                //     )
+                //         .catch(error => {
+                //             error && proceed();
+                //         })
+                //         .then(() => {
+                //             proceed();
+                //         });
+                // } catch (err) {
+                //     proceed();
+                // }
+            }
+        },
+    });
 
     useEffect(() => {
         const fullCardNumber = cardNumber.replace(/\D/g, '');
@@ -51,24 +104,33 @@ const AddPaymentPage: FunctionComponent = () => {
 
     const nav_to_payment_successful_page = no_double_clicks({
         execFunc: () => {
-            navigation.push(
-                'AuthStack' as never,
-                {
-                    screen: 'CongratulationsPage',
-                    params: {
-                        header_txt: 'Payment Successful!',
-                        message_txt:
-                            'You have successfully subscribed for Tutor AI. We wish you Good Luck and Thanks!',
-                        nextPage: 3,
-                    },
-                } as never,
-            );
+            // navigation.push(
+            //     'AuthStack' as never,
+            //     {
+            //         screen: 'CongratulationsPage',
+            //         params: {
+            //             header_txt: 'Payment Successful!',
+            //             message_txt:
+            //                 'You have successfully subscribed for Tutor AI. We wish you Good Luck and Thanks!',
+            //             nextPage: 3,
+            //         },
+            //     } as never,
+            // );
+            card_payment_mutate({
+                userAuth: UserInfoStore?.user_info?.accessToken as string,
+                userPlan: 'Beginner',
+                paymentToken: '',
+            });
         },
     });
 
     return (
         <View style={styles.add_p_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
+            <OverlaySpinner
+                showSpinner={showSpinner}
+                setShowSpinner={setShowSpinner}
+            />
             <View
                 style={{
                     marginTop:
@@ -211,6 +273,7 @@ const AddPaymentPage: FunctionComponent = () => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <BasicButton
+                    disabled={disableButton}
                     buttonText="Confirm"
                     marginHorizontal={22}
                     marginTop={'auto'}
@@ -222,7 +285,7 @@ const AddPaymentPage: FunctionComponent = () => {
                               })
                             : 20
                     }
-                    execFunc={nav_to_payment_successful_page}
+                    execFunc={() => nav_to_payment_successful_page({})}
                 />
             </KeyboardAvoidingView>
         </View>

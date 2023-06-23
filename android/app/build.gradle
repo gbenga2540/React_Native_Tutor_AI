@@ -163,6 +163,7 @@ dependencies {
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-push-notification')
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

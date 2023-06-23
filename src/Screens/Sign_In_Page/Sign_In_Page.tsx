@@ -21,7 +21,7 @@ import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { useMutation } from 'react-query';
-import { login } from '../../Configs/Queries/Users/Users';
+import { login } from '../../Configs/Queries/Auth/Auth';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import SInfo from 'react-native-sensitive-info';
@@ -56,7 +56,10 @@ const SignInPage: FunctionComponent = observer(() => {
                     setShowSpinner(false);
                     setDisableButton(false);
                     UserInfoStore.set_user_info({
-                        user_info: { ...data?.data?.user },
+                        user_info: {
+                            ...data?.data?.user,
+                            accessToken: data?.data?.accessToken,
+                        },
                     });
                     navigation.dispatch(
                         CommonActions.reset({
@@ -69,7 +72,10 @@ const SignInPage: FunctionComponent = observer(() => {
                     await SInfo.setItem(
                         SECURE_STORAGE_USER_INFO,
                         JSON.stringify({
-                            user_info: { ...data?.data?.user },
+                            user_info: {
+                                ...data?.data?.user,
+                                accessToken: data?.data?.accessToken,
+                            },
                         }),
                         {
                             sharedPreferencesName: SECURE_STORAGE_NAME,
@@ -91,7 +97,7 @@ const SignInPage: FunctionComponent = observer(() => {
 
     const sign_in_user = no_double_clicks({
         execFunc: () => {
-            if (regex_email_checker({ email: email })) {
+            if (regex_email_checker({ email: email?.trim() })) {
                 if (password) {
                     login_mutate({
                         email: email?.trim(),

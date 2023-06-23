@@ -9,14 +9,11 @@ import {
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
-    TouchableOpacity,
     View,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import { fonts } from '../../Configs/Fonts/Fonts';
-import BasicTextEntry from '../../Components/Basic_Text_Entry/Basic_Text_Entry';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -25,32 +22,15 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import ProgressBar from '../../Components/Progress_Bar/Progress_Bar';
 import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import SingleRadioButton from '../../Components/Single_Radio_Button/Single_Radio_Button';
-import {
-    test_1_question,
-    test_1_options,
-    test_2_question,
-    test_2_options,
-    test_4_question,
-} from '../../Data/Tests/Tests';
-import AudioProgressBar from '../../Components/Audio_Progress_Bar/Audio_Progress_Bar';
-import Feather from 'react-native-vector-icons/Feather';
-import MicrophoneButton from '../../Components/Microphone_Button/Microphone_Button';
 import { native_languages } from '../../Data/Languages/Languages';
 import { study_target } from '../../Data/Study_Target/Study_Target';
 import { topics_interests } from '../../Data/Interests/Interests';
 import MultiRadioButton from '../../Components/Multi_Radio_Button/Multi_Radio_Button';
-import { INTF_Test2Answers } from '../../Interface/Test_2_Answers/Test_2_Answers';
-import TestRadioButton from '../../Components/Test_Radio_Button/Test_Radio_Button';
-import TextDivider from '../../Components/Text_Divider/Text_Divider';
-import BasicButton2 from '../../Components/Basic_Button_2/Basic_Button_2';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import {
-    screen_height_less_than,
-    screen_width_less_than,
-} from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { useMutation } from 'react-query';
 import { update_misc } from '../../Configs/Queries/Users/Users';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
@@ -59,22 +39,12 @@ import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import SInfo from 'react-native-sensitive-info';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
-const TOTAL_PAGES = 7;
+const TOTAL_PAGES = 3;
 
 const OnboardingPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const testTimer = '02:32';
     const [question, setQuestion] = useState<number>(1);
-    const [answer_1, setAnswer_1] = useState<number | null>(null);
-    const [test2Answers, setTest2Answers] = useState<INTF_Test2Answers>({
-        a: null,
-        b: null,
-        c: null,
-        d: null,
-    });
-    const [test_3, setTest_3] = useState<string>('');
-    const [test_3_PP, setTest_3_PP] = useState<boolean>(false);
     const [nativeLang, setNativeLang] = useState<number | null>(null);
     const [studyTarget, setStudyTarget] = useState<number | null>(null);
     const [userInterests, setUserInterests] = useState<number[]>([]);
@@ -98,14 +68,13 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     svr_error_mssg: data?.data,
                 });
             } else {
+                const TempUserInfo = UserInfoStore.user_info;
+                const user_Interests: string[] = [];
+                userInterests?.map(item =>
+                    user_Interests.push(topics_interests[item]),
+                );
+
                 const proceed = () => {
-                    const TempUserInfo = UserInfoStore.user_info;
-
-                    const user_Interests: string[] = [];
-                    userInterests?.map(item =>
-                        user_Interests.push(topics_interests[item]),
-                    );
-
                     UserInfoStore.set_user_info({
                         user_info: {
                             ...TempUserInfo,
@@ -123,10 +92,8 @@ const OnboardingPage: FunctionComponent = observer(() => {
                             screen: 'CongratulationsPage',
                             params: {
                                 header_txt: 'You did well.',
-                                message_txt: `You have been assigned to ${
-                                    UserInfoStore?.user_info?.level ||
-                                    'Beginner'
-                                } Class.`,
+                                message_txt:
+                                    'You have successfully completed your Registration. Welcome to Tutor AI',
                                 nextPage: 3,
                             },
                         } as never,
@@ -136,7 +103,14 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     await SInfo.setItem(
                         SECURE_STORAGE_USER_INFO,
                         JSON.stringify({
-                            user_info: { ...data?.data },
+                            user_info: {
+                                ...TempUserInfo,
+                                language: `${
+                                    native_languages[nativeLang || 0]?.name
+                                } - ${native_languages[nativeLang || 0]?.code}`,
+                                study_target: studyTarget === 1 ? 60 : 30,
+                                interests: user_Interests,
+                            },
                         }),
                         {
                             sharedPreferencesName: SECURE_STORAGE_NAME,
@@ -181,17 +155,20 @@ const OnboardingPage: FunctionComponent = observer(() => {
         },
     });
 
-    const handle_go_back = () => {
-        if (question === 1) {
-            navigation.canGoBack() && navigation.goBack();
-        } else {
-            prev_question();
-        }
-    };
+    const prev_question = no_double_clicks({
+        execFunc: () =>
+            setQuestion(
+                clamp_value({
+                    value: question - 1,
+                    minValue: 1,
+                    maxValue: TOTAL_PAGES,
+                }),
+            ),
+    });
 
     const next_question = no_double_clicks({
         execFunc: async () => {
-            if (question === 5) {
+            if (question === 1) {
                 if (nativeLang === null) {
                     error_handler({
                         navigation: navigation,
@@ -206,7 +183,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
                         }),
                     );
                 }
-            } else if (question === 6) {
+            } else if (question === 2) {
                 if (studyTarget === null) {
                     error_handler({
                         navigation: navigation,
@@ -233,16 +210,13 @@ const OnboardingPage: FunctionComponent = observer(() => {
         },
     });
 
-    const prev_question = no_double_clicks({
-        execFunc: () =>
-            setQuestion(
-                clamp_value({
-                    value: question - 1,
-                    minValue: 1,
-                    maxValue: TOTAL_PAGES,
-                }),
-            ),
-    });
+    const handle_go_back = () => {
+        if (question === 1) {
+            navigation.canGoBack() && navigation.goBack();
+        } else {
+            prev_question({});
+        }
+    };
 
     useFocusEffect(
         useCallback(() => {
@@ -251,7 +225,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     navigation.canGoBack() && navigation.goBack();
                     return true;
                 } else {
-                    prev_question();
+                    prev_question({});
                     return true;
                 }
             };
@@ -275,385 +249,18 @@ const OnboardingPage: FunctionComponent = observer(() => {
             <View
                 style={{
                     marginLeft: 22,
-                    marginTop: navigation?.canGoBack()
-                        ? Platform.OS === 'ios'
-                            ? screen_height_less_than({
-                                  if_false: 60,
-                                  if_true: 40,
-                              })
-                            : 20
-                        : Platform.OS === 'ios'
-                        ? screen_height_less_than({
-                              if_false: 70,
-                              if_true: 45,
-                          })
-                        : 20,
-                    marginBottom: 28,
+                    marginTop: Platform.OS === 'ios' ? 60 : 40,
+                    marginBottom: 10,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                <BackButton execFunc={handle_go_back} />
+                <BackButton show_back_button execFunc={handle_go_back} />
                 <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
-            {(question === 1 ||
-                question === 2 ||
-                question === 3 ||
-                question === 4) && (
-                <BasicText
-                    inputText={testTimer}
-                    marginBottom={10}
-                    marginRight={22}
-                    marginLeft={'auto'}
-                    textColor={Colors.Primary}
-                    textWeight={600}
-                />
-            )}
 
             <MiniAvatar marginBottom={20} marginHorizontal={22} />
+
             {question === 1 && (
-                <ScrollView style={{ flex: 1 }}>
-                    <BasicText
-                        inputText="Test 1"
-                        marginBottom={3}
-                        marginTop={10}
-                        textColor={Colors.Black}
-                        marginLeft={22}
-                        marginRight={22}
-                        textWeight={700}
-                        textSize={22}
-                    />
-                    <BasicText
-                        inputText={test_1_question}
-                        textFamily={fonts.OpenSans_400}
-                        textColor={Colors.Black}
-                        textSize={16}
-                        marginLeft={22}
-                        marginRight={22}
-                    />
-                    <Text
-                        style={{
-                            marginTop: 12,
-                            marginHorizontal: 22,
-                            fontSize: 16,
-                            fontFamily: fonts.OpenSans_400,
-                            color: Colors.Black,
-                        }}>
-                        <BasicText
-                            inputText="Question:"
-                            textFamily={fonts.OpenSans_700}
-                            textColor={Colors.Black}
-                            textSize={16}
-                            marginLeft={22}
-                            marginRight={22}
-                        />{' '}
-                        Who won the Game?
-                    </Text>
-                    <View>
-                        {test_1_options?.map((item, index) => (
-                            <View
-                                key={index}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginTop: 10,
-                                }}>
-                                <BasicText
-                                    inputText={
-                                        index === 0
-                                            ? 'A'
-                                            : index === 1
-                                            ? 'B'
-                                            : index === 2
-                                            ? 'C'
-                                            : 'D'
-                                    }
-                                    marginLeft={22}
-                                    marginRight={10}
-                                    textSize={15}
-                                    textWeight={500}
-                                />
-                                <SingleRadioButton
-                                    option={item}
-                                    index={index}
-                                    answer={answer_1}
-                                    setAnswer={setAnswer_1}
-                                />
-                            </View>
-                        ))}
-                    </View>
-                </ScrollView>
-            )}
-            {question === 2 && (
-                <ScrollView style={{ flex: 1 }}>
-                    <BasicText
-                        inputText="Test 2"
-                        marginBottom={3}
-                        marginTop={10}
-                        textColor={Colors.Black}
-                        marginLeft={22}
-                        marginRight={22}
-                        textWeight={700}
-                        textSize={22}
-                    />
-                    <BasicText
-                        inputText={test_2_question}
-                        textFamily={fonts.OpenSans_400}
-                        textColor={Colors.Black}
-                        textSize={16}
-                        marginLeft={22}
-                        marginRight={22}
-                    />
-                    <Text
-                        style={{
-                            marginTop: 12,
-                            fontSize: 16,
-                            marginHorizontal: 22,
-                            color: Colors.Black,
-                            fontFamily: fonts.OpenSans_400,
-                        }}>
-                        <BasicText
-                            inputText="Question:"
-                            textFamily={fonts.OpenSans_700}
-                            textColor={Colors.Black}
-                            textSize={16}
-                            marginLeft={22}
-                            marginRight={22}
-                        />{' '}
-                        Fil in the gaps
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            marginHorizontal: 22,
-                            marginTop: test2Answers.a ? 10 : 0,
-                            marginBottom: test2Answers.a ? 15 : 0,
-                            justifyContent: test2Answers?.d
-                                ? 'space-evenly'
-                                : undefined,
-                        }}>
-                        {test2Answers.a && (
-                            <TestRadioButton
-                                option={test2Answers.a}
-                                isSelected={true}
-                                marginRight={10}
-                                buttonWidth={80}
-                                buttonHeight={43}
-                            />
-                        )}
-                        {test2Answers.b && (
-                            <TestRadioButton
-                                option={test2Answers.b}
-                                isSelected={true}
-                                marginRight={10}
-                                buttonWidth={80}
-                                buttonHeight={43}
-                            />
-                        )}
-                        {test2Answers.c && (
-                            <TestRadioButton
-                                option={test2Answers.c}
-                                isSelected={true}
-                                marginRight={10}
-                                buttonWidth={80}
-                                buttonHeight={43}
-                            />
-                        )}
-                        {test2Answers.d && (
-                            <TestRadioButton
-                                option={test2Answers.d}
-                                isSelected={true}
-                                marginRight={10}
-                                buttonWidth={80}
-                                buttonHeight={43}
-                            />
-                        )}
-                    </View>
-                    {test2Answers?.a && (
-                        <TextDivider singleLine marginHorizontal={22} />
-                    )}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            marginHorizontal: 22,
-                            paddingTop: 20,
-                            justifyContent: 'center',
-                        }}>
-                        {test_2_options?.map((item, index) => (
-                            <TestRadioButton
-                                key={index}
-                                option={item}
-                                isSelected={false}
-                                marginRight={15}
-                                marginBottom={15}
-                                buttonWidth={screen_width_less_than({
-                                    if_true: 90,
-                                    if_false: 100,
-                                })}
-                                buttonHeight={43}
-                                answers={test2Answers}
-                                setAnswers={setTest2Answers}
-                            />
-                        ))}
-                        <BasicButton2
-                            buttonText="Clear Answers"
-                            backgroundColor="red"
-                            textColor="red"
-                            borderRadius={6}
-                            buttonHeight={43}
-                            execFunc={no_double_clicks({
-                                execFunc: () =>
-                                    setTest2Answers({
-                                        a: null,
-                                        b: null,
-                                        c: null,
-                                        d: null,
-                                    }),
-                            })}
-                        />
-                    </View>
-                </ScrollView>
-            )}
-            {question === 3 && (
-                <ScrollView style={{ flex: 1 }}>
-                    <BasicText
-                        inputText="Test 3"
-                        marginBottom={3}
-                        marginTop={10}
-                        textColor={Colors.Black}
-                        marginLeft={22}
-                        marginRight={22}
-                        textWeight={700}
-                        textSize={22}
-                    />
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            marginHorizontal: 22,
-                            marginTop: 10,
-                            marginBottom: 20,
-                            alignItems: 'center',
-                        }}>
-                        <TouchableOpacity
-                            activeOpacity={0.65}
-                            onPress={() => setTest_3_PP(!test_3_PP)}
-                            style={{
-                                width: 35,
-                            }}>
-                            {test_3_PP ? (
-                                <Feather
-                                    name="pause"
-                                    size={30}
-                                    color={Colors.Primary}
-                                />
-                            ) : (
-                                <Feather
-                                    name="play"
-                                    size={30}
-                                    color={Colors.Primary}
-                                />
-                            )}
-                        </TouchableOpacity>
-                        <View>
-                            <AudioProgressBar
-                                progress={72}
-                                height={8}
-                                progressWidth={250}
-                                marginHorizontal={1}
-                            />
-                        </View>
-                    </View>
-                    <Text
-                        style={{
-                            marginHorizontal: 22,
-                            fontFamily: fonts.OpenSans_400,
-                            color: Colors.Black,
-                            fontSize: 16,
-                            marginTop: 1,
-                        }}>
-                        <BasicText
-                            inputText="Question:"
-                            textFamily={fonts.OpenSans_700}
-                            textColor={Colors.Black}
-                            textSize={16}
-                            marginLeft={22}
-                            marginRight={22}
-                        />{' '}
-                        What did you hear?
-                    </Text>
-                    <BasicTextEntry
-                        placeHolderText="Enter what you heard here..."
-                        inputValue={test_3}
-                        setInputValue={setTest_3}
-                        marginTop={10}
-                        marginBottom={2}
-                        inputMode="text"
-                    />
-                </ScrollView>
-            )}
-            {question === 4 && (
-                <ScrollView style={{ flex: 1 }}>
-                    <BasicText
-                        inputText="Test 4"
-                        marginBottom={3}
-                        marginTop={10}
-                        textColor={Colors.Black}
-                        marginLeft={22}
-                        marginRight={22}
-                        textWeight={700}
-                        textSize={22}
-                    />
-                    <BasicText
-                        inputText={test_4_question}
-                        textFamily={fonts.OpenSans_400}
-                        textColor={Colors.Black}
-                        textSize={16}
-                        marginLeft={22}
-                        marginRight={22}
-                    />
-                    <Text
-                        style={{
-                            marginTop: 12,
-                            fontSize: 16,
-                            marginHorizontal: 22,
-                            color: Colors.Black,
-                        }}>
-                        <BasicText
-                            inputText="Question:"
-                            textFamily={fonts.OpenSans_700}
-                            textColor={Colors.Black}
-                            textSize={16}
-                            marginLeft={22}
-                            marginRight={22}
-                        />{' '}
-                        Speak the above sentence with the microphone below.
-                    </Text>
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            marginTop: screen_height_less_than({
-                                if_true: 25,
-                                if_false: 30,
-                            }),
-                        }}>
-                        <MicrophoneButton
-                            microphoneSize={screen_height_less_than({
-                                if_true: 60,
-                                if_false: 75,
-                            })}
-                            animationSpeed={300}
-                        />
-                    </View>
-                    <BasicText
-                        inputText='Hold the "Microphone" Button to Speak.'
-                        textAlign="center"
-                        textColor={Colors.Black}
-                        textWeight={600}
-                        marginTop={10}
-                    />
-                </ScrollView>
-            )}
-            {question === 5 && (
                 <View style={{ flex: 1 }}>
                     <BasicText
                         inputText="Your Native Language?"
@@ -697,7 +304,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     </View>
                 </View>
             )}
-            {question === 6 && (
+            {question === 2 && (
                 <View style={{ flex: 1 }}>
                     <BasicText
                         inputText="Your study target per day?"
@@ -741,7 +348,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     </View>
                 </View>
             )}
-            {question === 7 && (
+            {question === 3 && (
                 <View style={{ flex: 1 }}>
                     <BasicText
                         inputText="Your Interests?"
@@ -796,7 +403,9 @@ const OnboardingPage: FunctionComponent = observer(() => {
                     borderRadius={8}
                     marginHorizontal={22}
                     execFunc={
-                        question === TOTAL_PAGES ? submit_data : next_question
+                        question === TOTAL_PAGES
+                            ? () => submit_data({})
+                            : () => next_question({})
                     }
                     buttonHeight={56}
                     marginTop={2}

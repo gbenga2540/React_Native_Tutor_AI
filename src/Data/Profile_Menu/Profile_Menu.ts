@@ -22,6 +22,19 @@ export const profile_menu_1: INTF_ProfileMenu[] = [
         screen: 'ScheduleClassPage',
         params: {},
     },
+    {
+        id: 4,
+        name: 'Delete Account',
+        stack: 'InfoPage',
+        screen: '',
+        params: {
+            success_mssg: 'Are you sure you want to delete your account?',
+            svr_success_mssg: '',
+            proceed_type: 2,
+            hide_back_btn: false,
+            hide_header: true,
+        },
+    },
 ];
 
 export const profile_menu_2: INTF_ProfileMenu[] = [

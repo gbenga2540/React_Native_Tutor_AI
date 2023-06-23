@@ -7,6 +7,6 @@ export const get_age = ({ input_date }: { input_date: string }) => {
         const age = Math.floor(age_in_years);
         return age;
     } else {
-        return '';
+        return 1;
     }
 };

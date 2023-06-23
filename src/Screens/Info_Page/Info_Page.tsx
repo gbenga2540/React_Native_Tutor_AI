@@ -42,6 +42,10 @@ const InfoPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
+    const delete_account = () => {
+        sign_out();
+    };
+
     const sign_out = async () => {
         const reset_data = () => {
             queryCache.clear();
@@ -114,6 +118,9 @@ const InfoPage: FunctionComponent = () => {
                             ],
                         }),
                     );
+                    break;
+                case 5:
+                    delete_account();
                     break;
                 default:
                     navigation.dispatch(

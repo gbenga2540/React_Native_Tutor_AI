@@ -35,59 +35,6 @@ const LessonConvPage: FunctionComponent = observer(() => {
     const flatListRef = useRef<FlatList<any> | null>(null);
 
     useEffect(() => {
-        setChats([
-            {
-                isAI: true,
-                chat: 'Hello Oluwagbemiga, How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Have you been paying close attention to your lectures both online and offline?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-        ]);
-    }, []);
-
-    useEffect(() => {
         const first_timer = setTimeout(() => {
             flatListRef.current !== null && flatListRef.current?.scrollToEnd();
             if (Keyboard.isVisible()) {
@@ -96,6 +43,22 @@ const LessonConvPage: FunctionComponent = observer(() => {
         }, 100);
         return () => clearTimeout(first_timer);
     }, [chats]);
+
+    const send_message = no_double_clicks({
+        execFunc: () => {
+            if (micText) {
+                TextToSpeechStore.play_speech({
+                    speech: micText,
+                });
+                setChats(prev_chats => [
+                    ...prev_chats,
+                    { isAI: false, chat: micText },
+                ]);
+            }
+            Keyboard.isVisible() && Keyboard.dismiss();
+            setMicText('');
+        },
+    });
 
     return (
         <View style={styles.conversation_main}>
@@ -141,42 +104,58 @@ const LessonConvPage: FunctionComponent = observer(() => {
                                   if_false: 35,
                                   if_true: 10,
                               })
-                            : 15,
+                            : 8,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                <FlatList
-                    ref={flatListRef}
-                    ListHeaderComponent={() =>
-                        (
-                            <View style={{ marginTop: 16 }}>{''}</View>
-                        ) as ReactElement<any>
-                    }
-                    data={chats}
-                    keyExtractor={(item, index) =>
-                        item?.chat?.slice(0, 6) + index
-                    }
-                    renderItem={({ item, index }) => (
-                        <ChatCard
-                            key={index}
-                            chat={item}
-                            index={index}
-                            last_index={chats?.length - 1}
+                {chats?.length > 0 ? (
+                    <FlatList
+                        ref={flatListRef}
+                        ListHeaderComponent={() =>
+                            (
+                                <View style={{ marginTop: 16 }}>{''}</View>
+                            ) as ReactElement<any>
+                        }
+                        data={chats}
+                        keyExtractor={(item, index) =>
+                            item?.chat?.slice(0, 6) + index
+                        }
+                        renderItem={({ item, index }) => (
+                            <ChatCard
+                                key={index}
+                                chat={item}
+                                index={index}
+                                last_index={chats?.length - 1}
+                            />
+                        )}
+                        style={{
+                            paddingHorizontal: 22,
+                        }}
+                        ListFooterComponent={() =>
+                            (
+                                <View
+                                    style={{
+                                        marginBottom: 1,
+                                    }}>
+                                    {''}
+                                </View>
+                            ) as ReactElement<any>
+                        }
+                    />
+                ) : (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                        <BasicText
+                            inputText="Press the Microphone Button down to start a Conversation."
+                            textSize={16}
+                            width={250}
+                            textAlign="center"
                         />
-                    )}
-                    style={{
-                        paddingHorizontal: 22,
-                    }}
-                    ListFooterComponent={() =>
-                        (
-                            <View
-                                style={{
-                                    marginBottom: 1,
-                                }}>
-                                {''}
-                            </View>
-                        ) as ReactElement<any>
-                    }
-                />
+                    </View>
+                )}
                 <MicAndTextInput
                     inputMode="text"
                     marginTop={3}
@@ -197,21 +176,7 @@ const LessonConvPage: FunctionComponent = observer(() => {
                             flatListRef?.current?.scrollToEnd();
                         },
                     })}
-                    onSend={no_double_clicks({
-                        execFunc: () => {
-                            if (micText) {
-                                TextToSpeechStore.play_speech({
-                                    speech: micText,
-                                });
-                                setChats(prev_chats => [
-                                    ...prev_chats,
-                                    { isAI: false, chat: micText },
-                                ]);
-                            }
-                            Keyboard.isVisible() && Keyboard.dismiss();
-                            setMicText('');
-                        },
-                    })}
+                    onSend={send_message}
                 />
             </KeyboardAvoidingView>
         </View>

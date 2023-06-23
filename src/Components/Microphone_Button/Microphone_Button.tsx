@@ -1,5 +1,16 @@
-import React, { FunctionComponent } from 'react';
-import { Keyboard, StyleSheet, Pressable } from 'react-native';
+import React, {
+    Dispatch,
+    FunctionComponent,
+    SetStateAction,
+    useState,
+} from 'react';
+import {
+    Keyboard,
+    StyleSheet,
+    Pressable,
+    View,
+    TouchableOpacity,
+} from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import { DebouncedFuncLeading } from 'lodash';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
@@ -10,6 +21,7 @@ import Animated, {
     interpolateColor,
 } from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
+import Voice from '@react-native-voice/voice';
 
 const mic_size = 80;
 const anim_speed = 200;
@@ -21,9 +33,11 @@ interface MicrophoneButtonProps {
     marginLeft?: number | 'auto';
     marginRight?: number | 'auto';
     marginHorizontal?: number | 'auto';
-    onMicPress?: DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     animationSpeed?: number;
+    setMicText: Dispatch<SetStateAction<string>>;
+    setIsRecording?: Dispatch<SetStateAction<boolean>>;
+    onMicSend?: DebouncedFuncLeading<() => void>;
 }
 
 const AnimatedFeatherIcon = Animated.createAnimatedComponent(Feather);
@@ -34,13 +48,43 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
     marginLeft,
     marginRight,
     marginHorizontal,
-    onMicPress,
     disabled,
     animationSpeed,
+    setMicText,
+    setIsRecording,
+    onMicSend,
 }) => {
+    const [isOptionsShown, setIsOptionsShown] = useState<boolean>(false);
+
     const opacityValue = useSharedValue(0);
     const micSize = useSharedValue(0);
     const micColor = useSharedValue(0);
+
+    const cbOpacity = useSharedValue(0);
+    const cbPosition = useSharedValue(0);
+
+    Voice.onSpeechResults = result => {
+        console.log(result);
+        setMicText(result.value?.[0] || '');
+    };
+    Voice.onSpeechError = error => console.log(error);
+
+    const start_recording = async () => {
+        try {
+            await Voice.start('en-US');
+        } catch (error) {
+            console.log('START:', error);
+        }
+    };
+    const stop_recording = async () => {
+        try {
+            await Voice.stop();
+            setIsOptionsShown(true);
+            open_options();
+        } catch (error) {
+            console.log('STOP:', error);
+        }
+    };
 
     const pressableStyle = useAnimatedStyle(() => {
         return {
@@ -61,6 +105,13 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         };
     });
 
+    const cbStyle = useAnimatedStyle(() => {
+        return {
+            opacity: cbOpacity.value,
+            top: cbPosition.value,
+        };
+    });
+
     const handlePressIn = () => {
         opacityValue.value = withTiming(1, {
             duration: animationSpeed || anim_speed,
@@ -77,9 +128,12 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
                 duration: animationSpeed || anim_speed,
             });
         }
+        start_recording();
+        setIsRecording !== undefined && setIsRecording(true);
     };
 
     const handlePressOut = () => {
+        stop_recording();
         opacityValue.value = withTiming(0, {
             duration: animationSpeed || anim_speed,
         });
@@ -91,51 +145,130 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         });
     };
 
-    const exec_func = no_double_clicks({
+    const open_options = () => {
+        cbOpacity.value = withTiming(1, {
+            duration: animationSpeed || anim_speed,
+        });
+        cbPosition.value = withTiming(
+            -1 * (microphoneSize || mic_size) -
+                (microphoneSize || mic_size) / 8,
+            {
+                duration: animationSpeed || anim_speed,
+            },
+        );
+    };
+
+    const close_options = () => {
+        cbOpacity.value = withTiming(0, {
+            duration: animationSpeed || anim_speed,
+        });
+        cbPosition.value = withTiming(0, {
+            duration: animationSpeed || anim_speed,
+        });
+        setMicText('');
+        setIsOptionsShown(false);
+        setIsRecording !== undefined && setIsRecording(false);
+    };
+
+    const exec_mic_send = no_double_clicks({
         execFunc: () => {
             if (Keyboard.isVisible()) {
                 Keyboard.dismiss();
             }
-            if (onMicPress !== undefined) {
-                onMicPress();
-            }
+            onMicSend !== undefined && onMicSend();
+            close_options();
         },
     });
 
     return (
-        <Pressable
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-            onPress={exec_func}
-            disabled={disabled || false}
-            style={[
-                styles.pressable,
-                {
-                    marginTop: marginTop || 0,
-                    marginBottom: marginBottom || 0,
-                    marginLeft: marginLeft || 0,
-                    marginRight: marginRight || 0,
-                    marginHorizontal: marginHorizontal || 0,
-                    width: microphoneSize || mic_size,
-                    height: microphoneSize || mic_size,
-                    borderRadius: microphoneSize || mic_size,
-                },
-            ]}>
+        <View
+            style={{
+                marginTop: marginTop || 0,
+                marginBottom: marginBottom || 0,
+                marginLeft: marginLeft || 0,
+                marginRight: marginRight || 0,
+                marginHorizontal: marginHorizontal || 0,
+            }}>
             <Animated.View
                 style={[
-                    styles.background,
                     {
+                        position: 'absolute',
+                        backgroundColor: 'red',
+                        width: microphoneSize || mic_size,
+                        height: microphoneSize || mic_size,
                         borderRadius: microphoneSize || mic_size,
+                        zIndex: isOptionsShown ? 4 : 2,
+                        opacity: 0,
                     },
-                    pressableStyle,
-                ]}
-            />
-            <AnimatedFeatherIcon
-                name="mic"
-                size={microphoneSize ? Math.round(microphoneSize / 2.67) : 30}
-                style={[{ position: 'absolute' }, micStyle]}
-            />
-        </Pressable>
+                    cbStyle,
+                ]}>
+                <Pressable
+                    style={{
+                        width: microphoneSize || mic_size,
+                        height: microphoneSize || mic_size,
+                        borderRadius: microphoneSize || mic_size,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    onPress={() => close_options()}>
+                    <Feather name="x" size={30} color={Colors.White} />
+                </Pressable>
+            </Animated.View>
+            {isOptionsShown ? (
+                <TouchableOpacity
+                    activeOpacity={0.55}
+                    onPress={exec_mic_send}
+                    style={{
+                        width: microphoneSize || mic_size,
+                        height: microphoneSize || mic_size,
+                        borderRadius: microphoneSize || mic_size,
+                        zIndex: 3,
+                        backgroundColor: Colors.LightPurple,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                    <Feather
+                        name="send"
+                        size={28}
+                        color={Colors.Primary}
+                        style={{ marginRight: 2 }}
+                    />
+                </TouchableOpacity>
+            ) : (
+                <Pressable
+                    onPressIn={handlePressIn}
+                    onPressOut={handlePressOut}
+                    disabled={disabled || false}
+                    style={[
+                        styles.pressable,
+                        {
+                            width: microphoneSize || mic_size,
+                            height: microphoneSize || mic_size,
+                            borderRadius: microphoneSize || mic_size,
+                            zIndex: 3,
+                        },
+                    ]}>
+                    <Animated.View
+                        style={[
+                            styles.background,
+                            {
+                                borderRadius: microphoneSize || mic_size,
+                            },
+                            pressableStyle,
+                        ]}
+                    />
+                    <AnimatedFeatherIcon
+                        name="mic"
+                        size={
+                            microphoneSize
+                                ? Math.round(microphoneSize / 2.67)
+                                : 30
+                        }
+                        style={[{ position: 'absolute' }, micStyle]}
+                    />
+                </Pressable>
+            )}
+        </View>
     );
 };
 

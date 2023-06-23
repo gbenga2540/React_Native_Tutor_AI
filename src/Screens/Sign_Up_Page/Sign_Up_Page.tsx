@@ -47,7 +47,7 @@ import {
     resend_otp,
     set_password,
     verify_otp,
-} from '../../Configs/Queries/Users/Users';
+} from '../../Configs/Queries/Auth/Auth';
 import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
@@ -246,6 +246,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                         user_info: {
                             ...TempUserInfo,
                             password: data?.data?.password,
+                            accessToken: data?.data?.accessToken,
                         },
                     });
                     setPassword('');
@@ -272,6 +273,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                             user_info: {
                                 ...TempUserInfo,
                                 password: data?.data?.password,
+                                accessToken: data?.data?.accessToken,
                             },
                         }),
                         {
@@ -307,15 +309,14 @@ const SignUpPage: FunctionComponent = observer(() => {
                     svr_error_mssg: data?.data,
                 });
             } else {
-                // handle reset timer
-                console.log('Sent');
+                setTimer(30);
             }
         },
     });
 
     const resend_mail = no_double_clicks({
         execFunc: () => {
-            if (true && UserInfoStore?.user_info?._id) {
+            if (timer === 0 && UserInfoStore?.user_info?._id) {
                 resend_otp_mutate({
                     uid: UserInfoStore?.user_info?._id,
                 });
@@ -449,28 +450,6 @@ const SignUpPage: FunctionComponent = observer(() => {
             ),
     });
 
-    const handle_go_back = () => {
-        if (question === 1) {
-            navigation.canGoBack() && navigation.goBack();
-        } else if (question === 3) {
-            if (
-                (UserInfoStore.user_info?._id &&
-                    UserInfoStore?.user_info?.verified === false) === false
-            ) {
-                navigation.canGoBack() && navigation.goBack();
-            }
-        } else if (question === 4) {
-            if (
-                (UserInfoStore.user_info?._id &&
-                    UserInfoStore?.user_info?.password === '') === false
-            ) {
-                navigation.canGoBack() && navigation.goBack();
-            }
-        } else {
-            prev_question();
-        }
-    };
-
     const clear_image = no_double_clicks({
         execFunc: () => {
             setDisplayPicture('');
@@ -492,7 +471,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        clear_image();
+                        clear_image({});
                         if (err?.code !== 'E_PICKER_CANCELLED') {
                             if (err?.code !== 'E_NO_LIBRARY_PERMISSION') {
                                 error_handler({
@@ -509,12 +488,12 @@ const SignUpPage: FunctionComponent = observer(() => {
                             setDisplayPicture(processed_image);
                         } else {
                             setDisplayPicture('');
-                            clear_image();
+                            clear_image({});
                         }
                     });
             } catch (error) {
                 setDisplayPicture('');
-                clear_image();
+                clear_image({});
             }
         },
     });
@@ -533,7 +512,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                 })
                     .catch(err => {
                         setDisplayPicture('');
-                        clear_image();
+                        clear_image({});
                         if (err?.code !== 'E_PICKER_CANCELLED') {
                             if (err?.code !== 'E_NO_CAMERA_PERMISSION') {
                                 error_handler({
@@ -550,12 +529,12 @@ const SignUpPage: FunctionComponent = observer(() => {
                             setDisplayPicture(processed_image);
                         } else {
                             setDisplayPicture('');
-                            clear_image();
+                            clear_image({});
                         }
                     });
             } catch (error) {
                 setDisplayPicture('');
-                clear_image();
+                clear_image({});
             }
         },
     });
@@ -565,6 +544,39 @@ const SignUpPage: FunctionComponent = observer(() => {
         setDisplayPicture('');
     }, [question]);
 
+    const handle_go_back = () => {
+        if (question === 1) {
+            navigation.canGoBack() && navigation.goBack();
+        } else if (question === 3) {
+            if (
+                (UserInfoStore.user_info?._id &&
+                    UserInfoStore?.user_info?.verified === false) === false
+            ) {
+                navigation.canGoBack() && navigation.goBack();
+            }
+        } else if (question === 4) {
+            if (
+                (UserInfoStore.user_info?._id &&
+                    UserInfoStore?.user_info?.password === '') === false
+            ) {
+                navigation.canGoBack() && navigation.goBack();
+            }
+        } else {
+            prev_question({});
+        }
+    };
+
+    const [timer, setTimer] = useState<number>(30);
+    useEffect(() => {
+        let intervalId: any;
+        if (question === 3 && timer > 0) {
+            intervalId = setInterval(() => {
+                setTimer(prevTimer => prevTimer - 1);
+            }, 1000);
+        }
+        return () => clearInterval(intervalId);
+    }, [timer, question]);
+
     useFocusEffect(
         useCallback(() => {
             const handleBackPress = () => {
@@ -572,7 +584,7 @@ const SignUpPage: FunctionComponent = observer(() => {
                     navigation.canGoBack() && navigation.goBack();
                     return true;
                 } else {
-                    prev_question();
+                    prev_question({});
                     return true;
                 }
             };
@@ -875,7 +887,9 @@ const SignUpPage: FunctionComponent = observer(() => {
                             />
                         </View>
                         <BasicText
-                            inputText={`Didn’t get an OTP? Click Resend in ${'30'} seconds`}
+                            inputText={`Didn’t get an OTP? Click Resend in ${timer} ${
+                                timer === 1 ? 'second' : 'seconds'
+                            }`}
                             width={330}
                             textSize={15}
                             textAlign="center"
@@ -885,17 +899,19 @@ const SignUpPage: FunctionComponent = observer(() => {
                             textWeight={500}
                             marginTop={30}
                         />
-                        <TextButton
-                            textColor={Colors.LightPink}
-                            isFontLight={true}
-                            fontSize={17}
-                            marginTop={5}
-                            marginLeft={'auto'}
-                            marginRight={'auto'}
-                            buttonText={'Resend Mail'}
-                            marginBottom={'auto'}
-                            execFunc={resend_mail}
-                        />
+                        {timer === 0 && (
+                            <TextButton
+                                textColor={Colors.LightPink}
+                                isFontLight={true}
+                                fontSize={17}
+                                marginTop={5}
+                                marginLeft={'auto'}
+                                marginRight={'auto'}
+                                buttonText={'Resend Mail'}
+                                marginBottom={'auto'}
+                                execFunc={resend_mail}
+                            />
+                        )}
                     </Fragment>
                 )}
                 {question === 4 && (
@@ -961,7 +977,9 @@ const SignUpPage: FunctionComponent = observer(() => {
                     borderRadius={8}
                     marginHorizontal={22}
                     execFunc={
-                        question === TOTAL_PAGES ? submit_data : next_question
+                        question === TOTAL_PAGES
+                            ? () => submit_data({})
+                            : () => next_question({})
                     }
                     buttonHeight={56}
                     marginTop={10}

@@ -37,22 +37,22 @@ const SelectPaymentPage: FunctionComponent = () => {
                         } as never,
                     );
                     break;
-                case 3:
-                    navigation.push(
-                        'HomeStack' as never,
-                        {
-                            screen: 'AddPaymentPage',
-                        } as never,
-                    );
-                    break;
-                case 4:
-                    navigation.push(
-                        'HomeStack' as never,
-                        {
-                            screen: 'AddPaymentPage',
-                        } as never,
-                    );
-                    break;
+                // case 3:
+                //     navigation.push(
+                //         'HomeStack' as never,
+                //         {
+                //             screen: 'AddPaymentPage',
+                //         } as never,
+                //     );
+                //     break;
+                // case 4:
+                //     navigation.push(
+                //         'HomeStack' as never,
+                //         {
+                //             screen: 'AddPaymentPage',
+                //         } as never,
+                //     );
+                //     break;
                 default:
                     navigation.push(
                         'HomeStack' as never,
@@ -67,7 +67,10 @@ const SelectPaymentPage: FunctionComponent = () => {
 
     return (
         <View style={styles.sub_main}>
-            <CustomStatusBar backgroundColor={Colors.Amber} />
+            <CustomStatusBar
+                //  backgroundColor={Colors.Amber}
+                backgroundColor={Colors.Background}
+            />
             <View
                 style={{
                     marginTop:
@@ -82,8 +85,8 @@ const SelectPaymentPage: FunctionComponent = () => {
                     alignItems: 'center',
                 }}>
                 <BackButton
-                    backgroundColor={Colors.Amber}
-                    borderColor={Colors.DarkGrey}
+                // backgroundColor={Colors.Amber}
+                // borderColor={Colors.DarkGrey}
                 />
                 <BasicText
                     inputText="Payment Method"
@@ -95,7 +98,7 @@ const SelectPaymentPage: FunctionComponent = () => {
             <ScrollView style={{ flex: 1 }}>
                 <View
                     style={{
-                        backgroundColor: Colors.White,
+                        backgroundColor: Colors.Border,
                         marginHorizontal: 22,
                         marginTop: screen_height_less_than({
                             if_true: 20,
@@ -139,8 +142,8 @@ const SelectPaymentPage: FunctionComponent = () => {
             <BasicButton
                 buttonText="Continue"
                 marginHorizontal={22}
-                backgroundColor={Colors.Black}
-                textColor={Colors.White}
+                // backgroundColor={Colors.Black}
+                // textColor={Colors.White}
                 marginTop={2}
                 marginBottom={
                     Platform.OS === 'ios'
@@ -150,7 +153,7 @@ const SelectPaymentPage: FunctionComponent = () => {
                           })
                         : 20
                 }
-                execFunc={nav_to_add_payment_page}
+                execFunc={() => nav_to_add_payment_page({})}
             />
         </View>
     );
@@ -161,6 +164,6 @@ export default SelectPaymentPage;
 const styles = StyleSheet.create({
     sub_main: {
         flex: 1,
-        backgroundColor: Colors.Amber,
+        backgroundColor: Colors.Background,
     },
 });

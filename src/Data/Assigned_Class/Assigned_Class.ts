@@ -1,7 +1,7 @@
 export const assigned_class = [
     'Beginner',
-    'Elementary',
-    'Intermediary',
-    'Upper Intermediary',
+    'Pre-Intermediate',
+    'Intermediate',
+    'Upper-Intermediate',
     'Confident',
 ];

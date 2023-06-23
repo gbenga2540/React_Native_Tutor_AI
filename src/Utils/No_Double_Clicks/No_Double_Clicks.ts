@@ -5,7 +5,7 @@ export const no_double_clicks = ({
     execFunc,
     debounceTime,
 }: {
-    execFunc: () => void;
+    execFunc: ({}: any) => void;
     debounceTime?: number;
 }) =>
     debounce(execFunc, debounceTime || global_variables.debounceTime, {

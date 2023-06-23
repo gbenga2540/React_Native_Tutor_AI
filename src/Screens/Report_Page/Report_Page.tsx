@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, View, Platform, Image } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import SimpleBIcon from '../../Images/SVGs/Simple_B_Icon.svg';
 import FireIcon from '../../Images/SVGs/Fire_Icon.svg';
-import { test_assignments } from '../../../test/Data/Assignments';
 import CheckMark from '../../Components/Check_Mark/Check_Mark';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import BackButton from '../../Components/Back_Button/Back_Button';
@@ -17,6 +16,7 @@ import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { get_day_from_date } from '../../Utils/Get_Day_From_Date/Get_Day_From_Date';
 
 const ReportPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -97,7 +97,9 @@ const ReportPage: FunctionComponent = () => {
                             }}>
                             <FireIcon width={22} height={22} />
                             <BasicText
-                                inputText="3"
+                                inputText={get_day_from_date({
+                                    input_date: new Date(Date.now()),
+                                })?.toString()}
                                 textSize={20}
                                 textWeight={700}
                                 textColor={Colors.White}
@@ -109,11 +111,16 @@ const ReportPage: FunctionComponent = () => {
                                 flexDirection: 'row',
                                 marginTop: 10,
                             }}>
-                            {test_assignments?.map((item, index) => (
+                            {[...Array(7)]?.map((item, index) => (
                                 <CheckMark
                                     key={index}
-                                    day_num={item?.id}
-                                    isCompleted={item?.completed}
+                                    day_num={index + 1}
+                                    isCompleted={
+                                        get_day_from_date({
+                                            input_date: new Date(Date.now()),
+                                        }) >=
+                                        index + 1
+                                    }
                                 />
                             ))}
                         </View>

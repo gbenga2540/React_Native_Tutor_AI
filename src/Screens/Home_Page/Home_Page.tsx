@@ -13,7 +13,6 @@ import StarIcon from '../../Images/SVGs/Star_Icon.svg';
 import ProgressBar from '../../Components/Progress_Bar/Progress_Bar';
 import SimpleBIcon from '../../Images/SVGs/Simple_B_Icon.svg';
 import FireIcon from '../../Images/SVGs/Fire_Icon.svg';
-import { test_assignments } from '../../../test/Data/Assignments';
 import CheckMark from '../../Components/Check_Mark/Check_Mark';
 import Feather from 'react-native-vector-icons/Feather';
 import VocabularyIcon from '../../Images/SVGs/Vocabulary_Icon.svg';
@@ -27,6 +26,7 @@ import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
+import { get_day_from_date } from '../../Utils/Get_Day_From_Date/Get_Day_From_Date';
 
 const HomePage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -435,7 +435,9 @@ const HomePage: FunctionComponent = () => {
                             }}>
                             <FireIcon width={22} height={22} />
                             <BasicText
-                                inputText="3"
+                                inputText={get_day_from_date({
+                                    input_date: new Date(Date.now()),
+                                })?.toString()}
                                 textFamily={fonts.OpenSans_700}
                                 textColor={Colors.White}
                                 textSize={20}
@@ -446,11 +448,16 @@ const HomePage: FunctionComponent = () => {
                                 flexDirection: 'row',
                                 marginTop: 10,
                             }}>
-                            {test_assignments?.map((item, index) => (
+                            {[...Array(7)]?.map((item, index) => (
                                 <CheckMark
                                     key={index}
-                                    day_num={item?.id}
-                                    isCompleted={item?.completed}
+                                    day_num={index + 1}
+                                    isCompleted={
+                                        get_day_from_date({
+                                            input_date: new Date(Date.now()),
+                                        }) >=
+                                        index + 1
+                                    }
                                 />
                             ))}
                         </View>

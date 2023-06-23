@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
     Platform,
     ScrollView,
@@ -18,15 +18,44 @@ import ContactUsButton from '../../Components/Contact_Us_Button/Contact_Us_Butto
 import { RouteProp, useRoute } from '@react-navigation/native';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { INTF_FAQ, INTF_FAQTypes } from '../../Interface/FAQ/FAQ';
 
 const HelpCenterPage: FunctionComponent = () => {
     const route = useRoute<RouteProp<any>>();
     const [search, setSearch] = useState<string>('');
     const [activeFAQ, setActiveFAQ] = useState<number>(0);
+    const [newFAQs, setNewFAQs] = useState<INTF_FAQ[]>([]);
 
     const [currentTAB, setCurrentTAB] = useState<number>(
         route.params?.is_contact_page ? 2 : 1,
     );
+
+    useEffect(() => {
+        const faq_type: INTF_FAQTypes = faq_types[activeFAQ];
+
+        if (search) {
+            if (faq_type === 'All FAQs') {
+                setNewFAQs(
+                    faqs.filter(item => item.faq_title.includes(search)),
+                );
+            } else {
+                setNewFAQs(
+                    faqs.filter(
+                        item =>
+                            item.faq_type === faq_type &&
+                            item.faq_title.includes(search),
+                    ),
+                );
+            }
+        } else {
+            if (faq_type === 'All FAQs') {
+                setNewFAQs(faqs);
+            } else {
+                setNewFAQs(faqs.filter(item => item.faq_type === faq_type));
+            }
+        }
+    }, [activeFAQ, search]);
+
     return (
         <View style={styles.hcp_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -146,9 +175,27 @@ const HelpCenterPage: FunctionComponent = () => {
                             paddingHorizontal: 22,
                             paddingTop: 20,
                         }}>
-                        {faqs?.map((item, index) => (
-                            <FAQReader key={index} faq={item} />
-                        ))}
+                        {newFAQs?.length > 0 ? (
+                            newFAQs?.map((item, index) => (
+                                <FAQReader key={index} faq={item} />
+                            ))
+                        ) : (
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    minHeight: 200,
+                                }}>
+                                <BasicText
+                                    inputText="No Resource Found, Please Check All FAQs Tab!"
+                                    textSize={17}
+                                    width={260}
+                                    textAlign="center"
+                                />
+                            </View>
+                        )}
+                        <View style={{ marginBottom: 50 }}>{''}</View>
                     </ScrollView>
                 </View>
             )}

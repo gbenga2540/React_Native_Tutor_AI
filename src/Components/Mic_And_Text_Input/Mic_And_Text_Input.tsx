@@ -1,8 +1,11 @@
-import React, { Dispatch, FunctionComponent, SetStateAction } from 'react';
+import React, {
+    Dispatch,
+    FunctionComponent,
+    SetStateAction,
+    useState,
+} from 'react';
 import {
-    Keyboard,
     StyleSheet,
-    Pressable,
     KeyboardAvoidingView,
     TextInput,
     InputModeOptions,
@@ -13,16 +16,9 @@ import {
 import Colors from '../../Configs/Colors/Colors';
 import { DebouncedFuncLeading } from 'lodash';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    interpolateColor,
-} from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
 import { fonts } from '../../Configs/Fonts/Fonts';
-
-const anim_speed = 200;
+import MicrophoneButton from '../Microphone_Button/Microphone_Button';
 
 interface MicAndTextInputProps {
     marginTop?: number | 'auto';
@@ -32,13 +28,10 @@ interface MicAndTextInputProps {
     marginLeft?: number | 'auto';
     marginRight?: number | 'auto';
     marginHorizontal?: number | 'auto';
-    disabled?: boolean;
-    animationSpeed?: number;
     inputValue: string;
     placeHolderText?: string;
     setInputValue: Dispatch<SetStateAction<string>>;
     inputMode?: InputModeOptions;
-    onMicPress?: DebouncedFuncLeading<() => void>;
     onFocus?: DebouncedFuncLeading<() => void>;
     onChange?: DebouncedFuncLeading<() => void>;
     onSend?: DebouncedFuncLeading<() => void>;
@@ -47,7 +40,6 @@ interface MicAndTextInputProps {
     textColor?: string;
 }
 
-const AnimatedFeatherIcon = Animated.createAnimatedComponent(Feather);
 const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
     marginTop,
     marginBottom,
@@ -56,13 +48,10 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
     marginLeft,
     marginRight,
     marginHorizontal,
-    disabled,
-    animationSpeed,
     inputValue,
     placeHolderText,
     setInputValue,
     inputMode,
-    onMicPress,
     onFocus,
     onChange,
     onSend,
@@ -70,63 +59,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
     editable,
     textColor,
 }) => {
-    const opacityValue = useSharedValue(0);
-    const micSize = useSharedValue(0);
-    const micColor = useSharedValue(0);
-
-    const pressableStyle = useAnimatedStyle(() => {
-        return {
-            opacity: opacityValue.value,
-            width: micSize.value,
-            height: micSize.value,
-        };
-    });
-
-    const micStyle = useAnimatedStyle(() => {
-        const color = interpolateColor(
-            micColor.value,
-            [0, 1],
-            [Colors.Primary, Colors.White],
-        );
-        return {
-            color: color,
-        };
-    });
-
-    const handlePressIn = () => {
-        opacityValue.value = withTiming(1, {
-            duration: animationSpeed || anim_speed,
-        });
-        micColor.value = withTiming(1, {
-            duration: animationSpeed || anim_speed,
-        });
-        micSize.value = withTiming(56, {
-            duration: animationSpeed || anim_speed,
-        });
-    };
-
-    const handlePressOut = () => {
-        opacityValue.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
-        micColor.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
-        micSize.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
-    };
-
-    const exec_func = no_double_clicks({
-        execFunc: () => {
-            if (Keyboard.isVisible()) {
-                Keyboard.dismiss();
-            }
-            if (onMicPress !== undefined) {
-                onMicPress();
-            }
-        },
-    });
+    const [isRecording, setIsRecording] = useState<boolean>(false);
 
     return (
         <KeyboardAvoidingView
@@ -183,37 +116,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                     style={{
                         justifyContent: 'flex-end',
                     }}>
-                    {!inputValue && (
-                        <Pressable
-                            onPressIn={handlePressIn}
-                            onPressOut={handlePressOut}
-                            onPress={exec_func}
-                            disabled={disabled || false}
-                            style={[
-                                styles.pressable,
-                                {
-                                    width: 56,
-                                    height: 56,
-                                    borderRadius: 56,
-                                },
-                            ]}>
-                            <Animated.View
-                                style={[
-                                    styles.background,
-                                    {
-                                        borderRadius: 56,
-                                    },
-                                    pressableStyle,
-                                ]}
-                            />
-                            <AnimatedFeatherIcon
-                                name="mic"
-                                size={Math.round(56 / 2.67)}
-                                style={[{ position: 'absolute' }, micStyle]}
-                            />
-                        </Pressable>
-                    )}
-                    {inputValue && (
+                    {!isRecording && inputValue ? (
                         <TouchableOpacity
                             onPress={() => onSend !== undefined && onSend()}
                             activeOpacity={0.55}
@@ -231,6 +134,16 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                                 color={Colors.White}
                             />
                         </TouchableOpacity>
+                    ) : (
+                        <MicrophoneButton
+                            microphoneSize={56}
+                            onMicSend={no_double_clicks({
+                                execFunc: () =>
+                                    onSend !== undefined && onSend(),
+                            })}
+                            setMicText={setInputValue}
+                            setIsRecording={setIsRecording}
+                        />
                     )}
                 </View>
             </View>

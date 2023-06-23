@@ -40,11 +40,13 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to Location Services.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to use your microphone. Your record wont be shared without your permission.</string>
+	<string>Grant $(PRODUCT_NAME) the permission to use your microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs to access your gallery to select a photo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs to access your gallery to select a photo.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Grant $(PRODUCT_NAME) the permission for Speech Recognition.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -70,6 +72,10 @@
 		<string>Urbanist-Bold.ttf</string>
 		<string>Urbanist-Medium.ttf</string>
 		<string>Urbanist-SemiBold.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

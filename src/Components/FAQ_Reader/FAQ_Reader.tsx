@@ -29,25 +29,36 @@ const FAQReader: FunctionComponent<FAQReaderProps> = ({ faq }) => {
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            height: 50,
+                            minHeight: 50,
                             marginHorizontal: 20,
+                            paddingVertical: 10,
                         }}>
-                        <BasicText
-                            inputText={faq.faq_title}
-                            textSize={15}
-                            textWeight={700}
-                        />
-                        <DownArrowIcon
+                        <View
                             style={{
-                                marginLeft: 'auto',
-                                transform: [
-                                    {
-                                        rotate: '180deg',
-                                    },
-                                ],
-                            }}
-                            color={Colors.Primary}
-                        />
+                                marginRight: 'auto',
+                                flex: 1,
+                            }}>
+                            <BasicText
+                                inputText={faq.faq_title}
+                                textSize={15}
+                                textWeight={700}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                marginLeft: 3,
+                            }}>
+                            <DownArrowIcon
+                                style={{
+                                    transform: [
+                                        {
+                                            rotate: '180deg',
+                                        },
+                                    ],
+                                }}
+                                color={Colors.Primary}
+                            />
+                        </View>
                     </View>
                     <TextDivider
                         singleLine
@@ -69,19 +80,26 @@ const FAQReader: FunctionComponent<FAQReaderProps> = ({ faq }) => {
                     onPress={() => setOpenFAQ(!openFAQ)}
                     style={{
                         flexDirection: 'row',
-                        height: 56,
+                        minHeight: 56,
                         marginBottom: 20,
                         borderWidth: 1,
                         borderColor: Colors.DarkBorder,
                         alignItems: 'center',
                         borderRadius: 10,
+                        paddingVertical: 10,
                     }}>
-                    <BasicText
-                        inputText={faq.faq_title}
-                        textSize={15}
-                        textWeight={600}
-                        marginLeft={20}
-                    />
+                    <View
+                        style={{
+                            flex: 1,
+                            marginLeft: 20,
+                            marginRight: 10,
+                        }}>
+                        <BasicText
+                            inputText={faq.faq_title}
+                            textSize={15}
+                            textWeight={600}
+                        />
+                    </View>
                     <DownArrowIcon
                         style={{
                             marginLeft: 'auto',

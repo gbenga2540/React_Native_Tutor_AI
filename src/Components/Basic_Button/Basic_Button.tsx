@@ -12,11 +12,12 @@ interface BasicButtonProps {
     marginBottom?: number | 'auto';
     marginHorizontal?: number | 'auto';
     borderRadius?: number;
-    execFunc: DebouncedFuncLeading<() => void>;
+    execFunc: () => void | DebouncedFuncLeading<() => void>;
     disabled?: boolean;
     backgroundColor?: string;
     textColor?: string;
     textSize?: number;
+    disableDebounce?: boolean;
 }
 
 const BasicButton: FunctionComponent<BasicButtonProps> = ({
@@ -31,17 +32,27 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
     backgroundColor,
     textColor,
     textSize,
+    disableDebounce,
 }) => {
-    const exec_func = no_double_clicks({
-        execFunc: () => {
-            if (Keyboard.isVisible()) {
-                Keyboard.dismiss();
-            }
-            if (execFunc !== undefined) {
-                execFunc();
-            }
-        },
-    });
+    const exec_func = disableDebounce
+        ? () => {
+              if (Keyboard.isVisible()) {
+                  Keyboard.dismiss();
+              }
+              if (execFunc !== undefined) {
+                  execFunc();
+              }
+          }
+        : no_double_clicks({
+              execFunc: () => {
+                  if (Keyboard.isVisible()) {
+                      Keyboard.dismiss();
+                  }
+                  if (execFunc !== undefined) {
+                      execFunc();
+                  }
+              },
+          });
 
     return (
         <TouchableOpacity

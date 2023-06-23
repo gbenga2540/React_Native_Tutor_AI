@@ -22,7 +22,7 @@ public class MyAppHideModule extends ReactContextBaseJavaModule {
         }
 
         @ReactMethod
-        public void hideApp(String packageName, Promise promise) {
+        public void disableApp(String packageName, Promise promise) {
                 PackageManager packageManager = reactContext.getPackageManager();
                 try {
                         ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, 0);
@@ -39,7 +39,7 @@ public class MyAppHideModule extends ReactContextBaseJavaModule {
         }
 
         @ReactMethod
-        public void showApp(String packageName, Promise promise) {
+        public void enableApp(String packageName, Promise promise) {
                 PackageManager packageManager = reactContext.getPackageManager();
                 try {
                         ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, 0);

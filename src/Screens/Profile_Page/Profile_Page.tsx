@@ -20,6 +20,7 @@ import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { Observer } from 'mobx-react';
 import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
 import { mongo_date_converter_1 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
+import { get_age } from '../../Utils/Get_Age/Get_Age';
 
 const ProfilePage: FunctionComponent = () => {
     return (
@@ -156,11 +157,24 @@ const ProfilePage: FunctionComponent = () => {
                         marginLeft={10}
                     />
                 </View>
-                <MenuMaker
-                    borderRadius={15}
-                    backgroundColor={Colors.LightPurple2}
-                    menu={profile_menu_3}
-                />
+                <Observer>
+                    {() => (
+                        <MenuMaker
+                            borderRadius={15}
+                            backgroundColor={Colors.LightPurple2}
+                            menu={
+                                get_age({
+                                    input_date: UserInfoStore?.user_info
+                                        ?.dateOfBirth as string,
+                                }) > 14
+                                    ? profile_menu_3
+                                    : profile_menu_3.filter(
+                                          item => item?.id === 2,
+                                      )
+                            }
+                        />
+                    )}
+                </Observer>
                 <View style={styles.p_menu_headers}>
                     <View
                         style={[

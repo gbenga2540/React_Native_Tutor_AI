@@ -22,63 +22,36 @@ import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import MicrophoneButton from '../../Components/Microphone_Button/Microphone_Button';
+import { socketIO } from '../../Configs/Socket_IO/Socket_IO';
+import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 
 const ConversationPage: FunctionComponent = observer(() => {
     const [chats, setChats] = useState<INTF_Conversation[]>([]);
+    const [chat, setChat] = useState<string>(new Date(Date.now()).toString());
     const flatListRef = useRef<FlatList<any> | null>(null);
 
     useEffect(() => {
-        setChats([
-            {
-                isAI: true,
-                chat: 'Hello Oluwagbemiga, How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Have you been paying close attention to your lectures both online and offline?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-            {
-                isAI: true,
-                chat: 'Hello, Dominion How’s life going?',
-            },
-            {
-                isAI: false,
-                chat: 'I am fine.',
-            },
-        ]);
+        socketIO.on('chatMessage', reply => {
+            setChats(prevChat => [...prevChat, { isAI: true, chat: reply }]);
+        });
+        return () => {
+            socketIO.disconnect();
+        };
     }, []);
+
+    const send_message = no_double_clicks({
+        execFunc: () => {
+            if (chat) {
+                socketIO.emit('chatMessage', chat);
+                setChats(prevChat => [
+                    ...prevChat,
+                    { isAI: false, chat: chat },
+                ]);
+                // setChat('');
+            }
+        },
+    });
+    console.log(chat);
 
     useEffect(() => {
         const first_timer = setTimeout(() => {
@@ -113,45 +86,63 @@ const ConversationPage: FunctionComponent = observer(() => {
                     flex: 1,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                <FlatList
-                    ref={flatListRef}
-                    ListHeaderComponent={() =>
-                        (
-                            <View style={{ marginTop: 16 }}>{''}</View>
-                        ) as ReactElement<any>
-                    }
-                    data={chats}
-                    keyExtractor={(item, index) =>
-                        item?.chat?.slice(0, 6) + index
-                    }
-                    renderItem={({ item, index }) => (
-                        <ChatCard
-                            key={index}
-                            chat={item}
-                            index={index}
-                            last_index={chats?.length - 1}
+                {chats?.length > 0 ? (
+                    <FlatList
+                        ref={flatListRef}
+                        ListHeaderComponent={() =>
+                            (
+                                <View style={{ marginTop: 16 }}>{''}</View>
+                            ) as ReactElement<any>
+                        }
+                        data={chats}
+                        keyExtractor={(item, index) =>
+                            item?.chat?.slice(0, 6) + index
+                        }
+                        renderItem={({ item, index }) => (
+                            <ChatCard
+                                key={index}
+                                chat={item}
+                                index={index}
+                                last_index={chats?.length - 1}
+                            />
+                        )}
+                        style={{
+                            paddingHorizontal: 22,
+                        }}
+                        ListFooterComponent={() =>
+                            (
+                                <View
+                                    style={{
+                                        marginBottom: 1,
+                                    }}>
+                                    {''}
+                                </View>
+                            ) as ReactElement<any>
+                        }
+                    />
+                ) : (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                        <BasicText
+                            inputText="Press the Microphone Button down to start a Conversation."
+                            textSize={16}
+                            width={250}
+                            textAlign="center"
                         />
-                    )}
-                    style={{
-                        paddingHorizontal: 22,
-                    }}
-                    ListFooterComponent={() =>
-                        (
-                            <View
-                                style={{
-                                    marginBottom: 1,
-                                }}>
-                                {''}
-                            </View>
-                        ) as ReactElement<any>
-                    }
-                />
+                    </View>
+                )}
                 <MicrophoneButton
                     microphoneSize={60}
                     marginBottom={10}
                     marginTop={2}
                     marginLeft={'auto'}
                     marginRight={'auto'}
+                    onMicSend={send_message}
+                    setMicText={setChat}
                 />
             </KeyboardAvoidingView>
         </View>

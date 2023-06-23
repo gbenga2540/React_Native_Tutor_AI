@@ -12,6 +12,7 @@ import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { INTF_UserInfo } from '../../Interface/User_Info/User_Info';
+import { observer } from 'mobx-react';
 
 type MainStackParamList = {
     AuthStack: {};
@@ -28,17 +29,11 @@ type MainStackParamList = {
 
 const Main_Stack = createNativeStackNavigator<MainStackParamList>();
 
-const MainStack: FunctionComponent = () => {
+const MainStack: FunctionComponent = observer(() => {
     const [render, setRender] = useState<boolean>(false);
-    const [userID, setUserID] = useState<string>('');
-    const [userVerified, setUserVerified] = useState<boolean>(false);
-    const [userPWD, setUserPWD] = useState<string>('');
 
     useEffect(() => {
         setRender(false);
-        setUserID('');
-        setUserVerified(false);
-        setUserPWD('');
         const get_user_info = async () => {
             try {
                 await SInfo.getItem(SECURE_STORAGE_USER_INFO, {
@@ -46,33 +41,22 @@ const MainStack: FunctionComponent = () => {
                     keychainService: SECURE_STORAGE_NAME,
                 })
                     .catch(err => {
-                        if (err) {
-                            setUserID('');
-                            setUserVerified(false);
-                            setUserPWD('');
+                        err &&
                             UserInfoStore.set_user_info({
                                 user_info: {},
                             });
-                        }
+
                         setRender(true);
                     })
                     .then(async res => {
                         if (res) {
                             const json_res: { user_info: INTF_UserInfo } =
                                 JSON.parse(res);
-                            setUserID(json_res?.user_info?._id || '');
-                            setUserVerified(
-                                json_res?.user_info?.verified || false,
-                            );
-                            setUserPWD(json_res?.user_info?.password || '');
                             UserInfoStore.set_user_info({
                                 user_info: json_res?.user_info || {},
                             });
                             setRender(true);
                         } else {
-                            setUserID('');
-                            setUserVerified(false);
-                            setUserPWD('');
                             UserInfoStore.set_user_info({
                                 user_info: {},
                             });
@@ -80,9 +64,6 @@ const MainStack: FunctionComponent = () => {
                         }
                     });
             } catch (error) {
-                setUserID('');
-                setUserVerified(false);
-                setUserPWD('');
                 UserInfoStore.set_user_info({
                     user_info: {},
                 });
@@ -107,14 +88,20 @@ const MainStack: FunctionComponent = () => {
         };
         get_installed_apps();
     }, []);
+    console.log(UserInfoStore?.user_info?.level);
 
     if (render) {
         return (
             <Main_Stack.Navigator
                 initialRouteName={
-                    userID
-                        ? userVerified && userPWD
-                            ? 'HomeStack'
+                    UserInfoStore?.user_info?._id
+                        ? UserInfoStore?.user_info?.verified &&
+                          UserInfoStore?.user_info?.password
+                            ? UserInfoStore?.user_info?.level
+                                ? UserInfoStore?.user_info?.language
+                                    ? 'HomeStack'
+                                    : 'AuthStack'
+                                : 'AuthStack'
                             : 'AuthStack'
                         : 'AuthStack'
                 }
@@ -142,6 +129,6 @@ const MainStack: FunctionComponent = () => {
     } else {
         return null;
     }
-};
+});
 
 export default MainStack;

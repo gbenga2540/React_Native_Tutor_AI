@@ -12,25 +12,21 @@ const TextToSpeech = () => {
     };
 
     useEffect(() => {
-        TTS.addEventListener('tts-start', () => {
+        const ttsStartListener = () => {
             AvatarSpeakStore.set_avatar_speak({ should_avatar_speak: true });
-        });
-        TTS.addEventListener('tts-finish', () => {
+        };
+
+        const ttsFinishListener = () => {
             AvatarSpeakStore.set_avatar_speak({ should_avatar_speak: false });
             TextToSpeechStore.clear_speech();
-        });
+        };
+
+        TTS.addEventListener('tts-start', ttsStartListener);
+        TTS.addEventListener('tts-finish', ttsFinishListener);
+
         return () => {
-            TTS.removeEventListener('tts-start', () => {
-                AvatarSpeakStore.set_avatar_speak({
-                    should_avatar_speak: true,
-                });
-            });
-            TTS.removeEventListener('tts-finish', () => {
-                AvatarSpeakStore.set_avatar_speak({
-                    should_avatar_speak: false,
-                });
-                TextToSpeechStore.clear_speech();
-            });
+            TTS.removeEventListener('tts-start', ttsStartListener);
+            TTS.removeEventListener('tts-finish', ttsFinishListener);
         };
     }, []);
 

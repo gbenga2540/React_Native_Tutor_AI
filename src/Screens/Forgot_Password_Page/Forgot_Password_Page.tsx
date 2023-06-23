@@ -62,9 +62,9 @@ const ForgotPasswordPage: FunctionComponent = () => {
 
     const send_mail = no_double_clicks({
         execFunc: () => {
-            if (regex_email_checker({ email: email })) {
+            if (regex_email_checker({ email: email?.trim() })) {
                 forgot_password_mutate({
-                    email: email,
+                    email: email?.trim(),
                 });
             } else {
                 error_handler({

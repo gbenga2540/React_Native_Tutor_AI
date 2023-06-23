@@ -29,7 +29,10 @@ const SubscriptionPage: FunctionComponent = () => {
 
     return (
         <View style={styles.sub_main}>
-            <CustomStatusBar backgroundColor={Colors.Amber} />
+            <CustomStatusBar
+                //  backgroundColor={Colors.Amber}
+                backgroundColor={Colors.Background}
+            />
             <View
                 style={{
                     marginTop:
@@ -44,8 +47,8 @@ const SubscriptionPage: FunctionComponent = () => {
                     alignItems: 'center',
                 }}>
                 <BackButton
-                    backgroundColor={Colors.Amber}
-                    borderColor={Colors.DarkGrey}
+                // backgroundColor={Colors.Amber}
+                // borderColor={Colors.DarkGrey}
                 />
                 <BasicText
                     inputText="Subscription"
@@ -65,7 +68,7 @@ const SubscriptionPage: FunctionComponent = () => {
             <ScrollView style={{ flex: 1 }}>
                 <View
                     style={{
-                        backgroundColor: Colors.White,
+                        backgroundColor: Colors.Border,
                         marginHorizontal: 22,
                         marginTop: 40,
                         borderRadius: 15,
@@ -106,8 +109,8 @@ const SubscriptionPage: FunctionComponent = () => {
             <BasicButton
                 buttonText="Continue"
                 marginHorizontal={22}
-                backgroundColor={Colors.Black}
-                textColor={Colors.White}
+                // backgroundColor={Colors.Black}
+                // textColor={Colors.White}
                 marginTop={2}
                 marginBottom={
                     Platform.OS === 'ios'
@@ -117,7 +120,7 @@ const SubscriptionPage: FunctionComponent = () => {
                           })
                         : 20
                 }
-                execFunc={nav_to_select_payment_page}
+                execFunc={() => nav_to_select_payment_page({})}
             />
         </View>
     );
@@ -128,6 +131,6 @@ export default SubscriptionPage;
 const styles = StyleSheet.create({
     sub_main: {
         flex: 1,
-        backgroundColor: Colors.Amber,
+        backgroundColor: Colors.Background,
     },
 });

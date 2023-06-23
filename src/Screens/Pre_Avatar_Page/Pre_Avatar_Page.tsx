@@ -47,7 +47,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
         AvatarVoices?.Female[0]?.value as INTF_AvatarFemaleVoice,
     );
 
-    const nav_to_pre_test_page = no_double_clicks({
+    const nav_to_init_conv = no_double_clicks({
         execFunc: async () => {
             if (
                 maleVoice === ('Choose Voice' as INTF_AvatarMaleVoice) ||
@@ -77,7 +77,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                     navigation.push(
                         'AuthStack' as never,
                         {
-                            screen: 'PreTestPage',
+                            screen: 'InitConvPage',
                         } as never,
                     );
                 };
@@ -273,7 +273,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                           })
                         : 20
                 }
-                execFunc={nav_to_pre_test_page}
+                execFunc={() => nav_to_init_conv({})}
             />
         </View>
     );
