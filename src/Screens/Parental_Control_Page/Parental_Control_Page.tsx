@@ -1,12 +1,5 @@
 import React, { Fragment, FunctionComponent, useState } from 'react';
-import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
@@ -94,7 +87,7 @@ const ParentalControlPage: FunctionComponent = () => {
                                 textColor={Colors.Dark}
                             />
                             <BasicText
-                                inputText="PIN"
+                                inputText="PIN --> Enter a Random PIN for now!"
                                 textSize={15}
                                 textWeight={500}
                                 marginTop={20}
@@ -120,7 +113,7 @@ const ParentalControlPage: FunctionComponent = () => {
                         </Fragment>
                         <BasicButton
                             buttonText="Continue"
-                            execFunc={enable_block_apps}
+                            execFunc={() => enable_block_apps({})}
                         />
                     </View>
                 )}

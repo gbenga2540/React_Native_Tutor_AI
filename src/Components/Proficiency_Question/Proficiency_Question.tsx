@@ -20,6 +20,7 @@ interface ProficiencyQuestionProps {
     marginRight?: number | 'auto';
     answers: number[];
     setAnswers: Dispatch<SetStateAction<number[]>>;
+    answerUI: 'NoChange' | 'Correct' | 'Wrong';
 }
 const ProficiencyQuestion: FunctionComponent<ProficiencyQuestionProps> = ({
     question,
@@ -29,6 +30,7 @@ const ProficiencyQuestion: FunctionComponent<ProficiencyQuestionProps> = ({
     marginRight,
     answers,
     setAnswers,
+    answerUI,
 }) => {
     const select_answers = no_double_clicks({
         execFunc: ({ index }: { index: number }) => {
@@ -93,11 +95,19 @@ const ProficiencyQuestion: FunctionComponent<ProficiencyQuestionProps> = ({
                         marginBottom: 8,
                         padding: 5,
                         borderColor: answers?.includes(index)
-                            ? Colors.Primary
+                            ? answerUI === 'Wrong'
+                                ? Colors.TestRed
+                                : answerUI === 'Correct'
+                                ? Colors.Green3
+                                : Colors.Primary
                             : Colors.Grey,
                         borderRadius: 10,
                         backgroundColor: answers?.includes(index)
-                            ? Colors.Primary
+                            ? answerUI === 'Wrong'
+                                ? Colors.TestRed
+                                : answerUI === 'Correct'
+                                ? Colors.Green3
+                                : Colors.Primary
                             : undefined,
                         paddingVertical: 5,
                         minHeight: 51,

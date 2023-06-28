@@ -22,7 +22,14 @@ const SubscriptionPage: FunctionComponent = () => {
         execFunc: () => {
             navigation.push(
                 'HomeStack' as never,
-                { screen: 'SelectPaymentPage' } as never,
+                {
+                    screen: 'SelectPaymentPage',
+                    params: {
+                        paymentPlan: subscription_data.filter(
+                            item => item?.id === subPlan,
+                        )?.[0]?.plan,
+                    },
+                } as never,
             );
         },
     });

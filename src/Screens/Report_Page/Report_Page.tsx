@@ -183,16 +183,18 @@ const ReportPage: FunctionComponent = () => {
                         </View>
                     </View>
                     <TouchableOpacity
-                        onPress={no_double_clicks({
-                            execFunc: () => {
-                                navigation.push(
-                                    'HomeStack' as never,
-                                    {
-                                        screen: 'LessonArchivePage',
-                                    } as never,
-                                );
-                            },
-                        })}
+                        onPress={() =>
+                            no_double_clicks({
+                                execFunc: () => {
+                                    navigation.push(
+                                        'HomeStack' as never,
+                                        {
+                                            screen: 'LessonArchivePage',
+                                        } as never,
+                                    );
+                                },
+                            })({})
+                        }
                         activeOpacity={0.5}
                         style={{
                             width: 22,
@@ -264,16 +266,18 @@ const ReportPage: FunctionComponent = () => {
                         </View>
                     </View>
                     <TouchableOpacity
-                        onPress={no_double_clicks({
-                            execFunc: () => {
-                                navigation.push(
-                                    'HomeStack' as never,
-                                    {
-                                        screen: 'HomeWorkArchivePage',
-                                    } as never,
-                                );
-                            },
-                        })}
+                        onPress={() =>
+                            no_double_clicks({
+                                execFunc: () => {
+                                    navigation.push(
+                                        'HomeStack' as never,
+                                        {
+                                            screen: 'HomeWorkArchivePage',
+                                        } as never,
+                                    );
+                                },
+                            })({})
+                        }
                         activeOpacity={0.5}
                         style={{
                             width: 22,
@@ -330,13 +334,13 @@ const ReportPage: FunctionComponent = () => {
                                 marginRight: 5,
                             }}>
                             <BasicText
-                                inputText="10 Exams Done"
+                                inputText="2 Exams Done"
                                 textSize={14}
                                 textWeight={500}
                                 textColor={Colors.White}
                             />
                             <BasicText
-                                inputText="Success Rate: 90%"
+                                inputText="Success Rate: 70%"
                                 textSize={16}
                                 textWeight={700}
                                 marginTop={10}
@@ -345,16 +349,18 @@ const ReportPage: FunctionComponent = () => {
                         </View>
                     </View>
                     <TouchableOpacity
-                        onPress={no_double_clicks({
-                            execFunc: () => {
-                                navigation.push(
-                                    'HomeStack' as never,
-                                    {
-                                        screen: 'LessonArchivePage',
-                                    } as never,
-                                );
-                            },
-                        })}
+                        onPress={() =>
+                            no_double_clicks({
+                                execFunc: () => {
+                                    navigation.push(
+                                        'HomeStack' as never,
+                                        {
+                                            screen: 'ExamArchivePage',
+                                        } as never,
+                                    );
+                                },
+                            })({})
+                        }
                         activeOpacity={0.5}
                         style={{
                             width: 22,

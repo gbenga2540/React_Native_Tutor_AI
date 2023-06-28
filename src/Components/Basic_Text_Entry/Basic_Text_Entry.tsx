@@ -22,6 +22,8 @@ interface BasicTextEntryProps {
     editable?: boolean;
     textColor?: string;
     maxLength?: number;
+    height?: number;
+    textMarginHor?: number;
 }
 
 const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
@@ -38,6 +40,8 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
     editable,
     textColor,
     maxLength,
+    height,
+    textMarginHor,
 }) => {
     return (
         <KeyboardAvoidingView
@@ -47,10 +51,18 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                     marginTop: marginTop || 0,
                     marginBottom: marginBottom || 0,
                     marginHorizontal: marginHorizontal || 22,
+                    height: height || 56,
                 },
             ]}>
             <TextInput
-                style={[styles.s_t_e_m_ti, { color: textColor || Colors.Dark }]}
+                style={[
+                    styles.s_t_e_m_ti,
+                    {
+                        color: textColor || Colors.Dark,
+                        height: height || 56,
+                        marginHorizontal: textMarginHor || 18,
+                    },
+                ]}
                 placeholder={placeHolderText || ''}
                 placeholderTextColor={Colors.Grey}
                 onChangeText={(text: string) => {
@@ -76,7 +88,6 @@ const styles = StyleSheet.create({
     s_t_e_main: {
         alignItems: 'center',
         flexDirection: 'row',
-        height: 56,
         borderRadius: 8,
         borderColor: Colors.Border,
         borderWidth: 1,
@@ -86,8 +97,6 @@ const styles = StyleSheet.create({
         flex: 1,
         fontFamily: fonts.Urbanist_500,
         fontSize: 16,
-        height: 56,
-        marginHorizontal: 18,
         textAlignVertical: 'center',
         borderWidth: 0,
     },

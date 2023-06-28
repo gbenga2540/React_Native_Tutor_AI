@@ -40,13 +40,15 @@ import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import SInfo from 'react-native-sensitive-info';
 import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
+import Sound from 'react-native-sound';
 
 const PreTestPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const [timer, setTimer] = useState<number>(900);
+    const [timer, setTimer] = useState<number>(1200);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
+    const [hasNav, setHasNav] = useState<boolean>(false);
 
     const { mutate: update_level_mutate } = useMutation(update_level, {
         onMutate: () => {
@@ -74,6 +76,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                         },
                     });
 
+                    setHasNav(true);
                     navigation.push(
                         'AuthStack' as never,
                         {
@@ -119,6 +122,9 @@ const PreTestPage: FunctionComponent = observer(() => {
         useState<INTF_AssignedClass>('Beginner');
     const [stage, setStage] = useState<'Proficiency' | 'Listening' | 'Writing'>(
         'Proficiency',
+    );
+    const [answerUI, setAnswerUI] = useState<'NoChange' | 'Correct' | 'Wrong'>(
+        'NoChange',
     );
 
     // DATA
@@ -203,6 +209,18 @@ const PreTestPage: FunctionComponent = observer(() => {
                     item => item?.id === currentQuestionInfo.id,
                 );
 
+                const nextQuestion = () => {
+                    setPAnswers([]);
+                    setAnswerUI('NoChange');
+                    setCurrentQuestion(
+                        clamp_value({
+                            value: currentQuestion + 1,
+                            minValue: 0,
+                            maxValue: noOfQuestions,
+                        }),
+                    );
+                };
+
                 if (currentQuestionInfo.multiple_choice) {
                     if (pAnswers?.length !== 2) {
                         error_handler({
@@ -223,14 +241,53 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                             return old;
                         });
-                        setPAnswers([]);
-                        setCurrentQuestion(
-                            clamp_value({
-                                value: currentQuestion + 1,
-                                minValue: 0,
-                                maxValue: noOfQuestions,
-                            }),
-                        );
+                        // setPAnswers([]);
+                        if (
+                            compare_array_contents({
+                                arr1: answersToQuestion[0].answers,
+                                arr2: pAnswers,
+                            })
+                        ) {
+                            setAnswerUI('Correct');
+                            Sound.setCategory('Playback');
+                            const correct_sound = new Sound(
+                                'correct.mp3',
+                                Sound.MAIN_BUNDLE,
+                                error => {
+                                    if (error) {
+                                        nextQuestion();
+                                    } else {
+                                        correct_sound.play(success => {
+                                            if (success) {
+                                                nextQuestion();
+                                            } else {
+                                                nextQuestion();
+                                            }
+                                        });
+                                    }
+                                },
+                            );
+                        } else {
+                            setAnswerUI('Wrong');
+                            Sound.setCategory('Playback');
+                            const wrong_sound = new Sound(
+                                'wrong.mp3',
+                                Sound.MAIN_BUNDLE,
+                                error => {
+                                    if (error) {
+                                        nextQuestion();
+                                    } else {
+                                        wrong_sound.play(success => {
+                                            if (success) {
+                                                nextQuestion();
+                                            } else {
+                                                nextQuestion();
+                                            }
+                                        });
+                                    }
+                                },
+                            );
+                        }
                     }
                 } else {
                     if (pAnswers?.length !== 1) {
@@ -252,14 +309,54 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                             return old;
                         });
-                        setPAnswers([]);
-                        setCurrentQuestion(
-                            clamp_value({
-                                value: currentQuestion + 1,
-                                minValue: 0,
-                                maxValue: noOfQuestions,
-                            }),
-                        );
+                        // setPAnswers([]);
+
+                        if (
+                            compare_array_contents({
+                                arr1: answersToQuestion[0].answers,
+                                arr2: pAnswers,
+                            })
+                        ) {
+                            setAnswerUI('Correct');
+                            Sound.setCategory('Playback');
+                            const correct_sound = new Sound(
+                                'correct.mp3',
+                                Sound.MAIN_BUNDLE,
+                                error => {
+                                    if (error) {
+                                        nextQuestion();
+                                    } else {
+                                        correct_sound.play(success => {
+                                            if (success) {
+                                                nextQuestion();
+                                            } else {
+                                                nextQuestion();
+                                            }
+                                        });
+                                    }
+                                },
+                            );
+                        } else {
+                            setAnswerUI('Wrong');
+                            Sound.setCategory('Playback');
+                            const wrong_sound = new Sound(
+                                'wrong.mp3',
+                                Sound.MAIN_BUNDLE,
+                                error => {
+                                    if (error) {
+                                        nextQuestion();
+                                    } else {
+                                        wrong_sound.play(success => {
+                                            if (success) {
+                                                nextQuestion();
+                                            } else {
+                                                nextQuestion();
+                                            }
+                                        });
+                                    }
+                                },
+                            );
+                        }
                     }
                 }
             }
@@ -298,7 +395,19 @@ const PreTestPage: FunctionComponent = observer(() => {
                 });
             }
         } else if (stage === 'Writing') {
-            if (wAnswer?.length > wQuestions.question?.length - 20) {
+            if (
+                wAnswer?.length >
+                wQuestions.question?.length -
+                    (assignedLevel === 'Beginner'
+                        ? 20
+                        : assignedLevel === 'Pre-Intermediate'
+                        ? 50
+                        : assignedLevel === 'Intermediate'
+                        ? 120
+                        : assignedLevel === 'Upper-Intermediate'
+                        ? 280
+                        : 120)
+            ) {
                 update_level_mutate({
                     uid: UserInfoStore?.user_info?._id as string,
                     level: assignedLevel,
@@ -397,19 +506,19 @@ const PreTestPage: FunctionComponent = observer(() => {
 
     useEffect(() => {
         let intervalId: any;
-        if (timer > 0) {
+        if (!hasNav && timer > 0) {
             intervalId = setInterval(() => {
                 setTimer(prevTimer => prevTimer - 1);
             }, 1000);
         }
-        if (timer === 0) {
+        if (!hasNav && timer === 0) {
             update_level_mutate({
                 uid: UserInfoStore?.user_info?._id as string,
                 level: assignedLevel,
             });
         }
         return () => clearInterval(intervalId);
-    }, [timer, navigation, update_level_mutate, assignedLevel]);
+    }, [timer, navigation, update_level_mutate, assignedLevel, hasNav]);
 
     return (
         <View style={styles.pre_test_main}>
@@ -464,6 +573,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                                 question={pQuestions[currentQuestion]}
                                 answers={pAnswers}
                                 setAnswers={setPAnswers}
+                                answerUI={answerUI}
                             />
                             <View style={{ marginBottom: 50 }}>{''}</View>
                         </ScrollView>

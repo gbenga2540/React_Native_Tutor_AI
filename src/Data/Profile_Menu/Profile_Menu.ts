@@ -28,7 +28,7 @@ export const profile_menu_1: INTF_ProfileMenu[] = [
         stack: 'InfoPage',
         screen: '',
         params: {
-            success_mssg: 'Are you sure you want to delete your account?',
+            success_mssg: 'Are you sure you want to Delete your Account?',
             svr_success_mssg: '',
             proceed_type: 2,
             hide_back_btn: false,

@@ -1,42 +1,36 @@
-import React, {
-    FunctionComponent,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
-import { KeyboardAvoidingView, Platform, BackHandler } from 'react-native';
+import React, { FunctionComponent, useCallback, useRef } from 'react';
+import { Platform, BackHandler } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
-import BasicText from '../Basic_Text/Basic_Text';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import BasicTextEntry from '../Basic_Text_Entry/Basic_Text_Entry';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
-import { mongo_date_converter_4 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
-import TextButton from '../Text_Button/Text_Button';
-import DatePicker from 'react-native-date-picker';
-import { date_to_time } from '../../Utils/Date_To_Time/Date_To_Time';
-import BasicButton from '../Basic_Button/Basic_Button';
-import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
-import SInfo from 'react-native-sensitive-info';
-import { SECURE_STORAGE_NAME, SECURE_STORAGE_SCHEDULE_INFO } from '@env';
-import { INTF_SchedulesInfo } from '../../Interface/Schedules_Info/Schedules_Info';
-import { sort_schedule } from '../../Utils/Sort_Schedule/Sort_Schedule';
+// import BasicText from '../Basic_Text/Basic_Text';
+// import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
+// import BasicTextEntry from '../Basic_Text_Entry/Basic_Text_Entry';
+// import { mongo_date_converter_4 } from '../../Utils/Mongo_Date_Converter/Mongo_Date_Converter';
+// import TextButton from '../Text_Button/Text_Button';
+// import DatePicker from 'react-native-date-picker';
+// import { date_to_time } from '../../Utils/Date_To_Time/Date_To_Time';
+// import BasicButton from '../Basic_Button/Basic_Button';
+// import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
+// import SInfo from 'react-native-sensitive-info';
+// import { SECURE_STORAGE_NAME, SECURE_STORAGE_SCHEDULE_INFO } from '@env';
+// import { INTF_SchedulesInfo } from '../../Interface/Schedules_Info/Schedules_Info';
+// import { sort_schedule } from '../../Utils/Sort_Schedule/Sort_Schedule';
 
 const BottomOverlay: FunctionComponent = observer(() => {
     const BottomSheetRef = useRef<BottomSheetMethods | null>(null);
 
-    const [reminderTitle, setReminderTitle] = useState<string>('');
-    const [reminderDate, setReminderDate] = useState<Date>(
-        new Date(Date.now()),
-    );
-    const [dateTextColor, setDateTextColor] = useState<string>(Colors.Grey);
-    const [openDateModal, setOpenDateModal] = useState<boolean>(false);
-    const [showAddReminder, setShowAddReminder] = useState<boolean>(false);
+    // const [reminderTitle, setReminderTitle] = useState<string>('');
+    // const [reminderDate, setReminderDate] = useState<Date>(
+    //     new Date(Date.now()),
+    // );
+    // const [dateTextColor, setDateTextColor] = useState<string>(Colors.Grey);
+    // const [openDateModal, setOpenDateModal] = useState<boolean>(false);
+    // const [showAddReminder, setShowAddReminder] = useState<boolean>(false);
 
     if (BottomSheetRef?.current) {
         if (BottomSheetStore.is_bottom_sheet) {
@@ -48,122 +42,122 @@ const BottomOverlay: FunctionComponent = observer(() => {
         }
     }
 
-    const open_date_picker = no_double_clicks({
-        execFunc: () => {
-            setOpenDateModal(true);
-        },
-    });
+    // const open_date_picker = no_double_clicks({
+    //     execFunc: () => {
+    //         setOpenDateModal(true);
+    //     },
+    // });
 
-    const add_to_schedule = no_double_clicks({
-        execFunc: async () => {
-            if (reminderTitle && dateTextColor !== Colors.Grey) {
-                try {
-                    await SInfo.setItem(
-                        SECURE_STORAGE_SCHEDULE_INFO,
-                        JSON.stringify(
-                            sort_schedule({
-                                schedule: [
-                                    ...ScheduleInfoStore?.schedule_info,
-                                    {
-                                        title: reminderTitle,
-                                        time: new Date(reminderDate),
-                                    },
-                                ],
-                            }),
-                        ),
-                        {
-                            sharedPreferencesName: SECURE_STORAGE_NAME,
-                            keychainService: SECURE_STORAGE_NAME,
-                        },
-                    )?.then(() => {
-                        ScheduleInfoStore.add_to_schedule({
-                            schedule: {
-                                title: reminderTitle,
-                                time: new Date(reminderDate),
-                            },
-                        });
-                        setReminderTitle('');
-                        setDateTextColor(Colors.Grey);
-                        setReminderDate(new Date(Date.now()));
-                        BottomSheetStore.close_bottom_sheet();
-                    });
-                } catch (error) {}
-            }
-        },
-    });
+    // const add_to_schedule = no_double_clicks({
+    //     execFunc: async () => {
+    //         if (reminderTitle && dateTextColor !== Colors.Grey) {
+    //             try {
+    //                 await SInfo.setItem(
+    //                     SECURE_STORAGE_SCHEDULE_INFO,
+    //                     JSON.stringify(
+    //                         sort_schedule({
+    //                             schedule: [
+    //                                 ...ScheduleInfoStore?.schedule_info,
+    //                                 {
+    //                                     title: reminderTitle,
+    //                                     time: new Date(reminderDate),
+    //                                 },
+    //                             ],
+    //                         }),
+    //                     ),
+    //                     {
+    //                         sharedPreferencesName: SECURE_STORAGE_NAME,
+    //                         keychainService: SECURE_STORAGE_NAME,
+    //                     },
+    //                 )?.then(() => {
+    //                     ScheduleInfoStore.add_to_schedule({
+    //                         schedule: {
+    //                             title: reminderTitle,
+    //                             time: new Date(reminderDate),
+    //                         },
+    //                     });
+    //                     setReminderTitle('');
+    //                     setDateTextColor(Colors.Grey);
+    //                     setReminderDate(new Date(Date.now()));
+    //                     BottomSheetStore.close_bottom_sheet();
+    //                 });
+    //             } catch (error) {}
+    //         }
+    //     },
+    // });
 
-    const edit_schedule = no_double_clicks({
-        execFunc: async () => {
-            if (reminderTitle && dateTextColor !== Colors.Grey) {
-                const new_schedule: INTF_SchedulesInfo[] = sort_schedule({
-                    schedule: [
-                        ...ScheduleInfoStore.schedule_info.map(
-                            (item, index) => {
-                                if (ScheduleInfoStore.edit_index === index) {
-                                    return {
-                                        title: reminderTitle,
-                                        time: new Date(reminderDate),
-                                    };
-                                }
-                                return { ...item };
-                            },
-                        ),
-                    ],
-                });
+    // const edit_schedule = no_double_clicks({
+    //     execFunc: async () => {
+    //         if (reminderTitle && dateTextColor !== Colors.Grey) {
+    //             const new_schedule: INTF_SchedulesInfo[] = sort_schedule({
+    //                 schedule: [
+    //                     ...ScheduleInfoStore.schedule_info.map(
+    //                         (item, index) => {
+    //                             if (ScheduleInfoStore.edit_index === index) {
+    //                                 return {
+    //                                     title: reminderTitle,
+    //                                     time: new Date(reminderDate),
+    //                                 };
+    //                             }
+    //                             return { ...item };
+    //                         },
+    //                     ),
+    //                 ],
+    //             });
 
-                try {
-                    await SInfo.setItem(
-                        SECURE_STORAGE_SCHEDULE_INFO,
-                        JSON.stringify(new_schedule),
-                        {
-                            sharedPreferencesName: SECURE_STORAGE_NAME,
-                            keychainService: SECURE_STORAGE_NAME,
-                        },
-                    )?.then(() => {
-                        ScheduleInfoStore.edit_schedule({
-                            schedule: {
-                                title: reminderTitle,
-                                time: new Date(reminderDate),
-                            },
-                        });
-                        setReminderTitle('');
-                        setDateTextColor(Colors.Grey);
-                        setReminderDate(new Date(Date.now()));
-                        BottomSheetStore.close_bottom_sheet();
-                    });
-                } catch (error) {}
-            }
-        },
-    });
+    //             try {
+    //                 await SInfo.setItem(
+    //                     SECURE_STORAGE_SCHEDULE_INFO,
+    //                     JSON.stringify(new_schedule),
+    //                     {
+    //                         sharedPreferencesName: SECURE_STORAGE_NAME,
+    //                         keychainService: SECURE_STORAGE_NAME,
+    //                     },
+    //                 )?.then(() => {
+    //                     ScheduleInfoStore.edit_schedule({
+    //                         schedule: {
+    //                             title: reminderTitle,
+    //                             time: new Date(reminderDate),
+    //                         },
+    //                     });
+    //                     setReminderTitle('');
+    //                     setDateTextColor(Colors.Grey);
+    //                     setReminderDate(new Date(Date.now()));
+    //                     BottomSheetStore.close_bottom_sheet();
+    //                 });
+    //             } catch (error) {}
+    //         }
+    //     },
+    // });
 
-    const delete_schedule = no_double_clicks({
-        execFunc: async () => {
-            const new_schedule: INTF_SchedulesInfo[] = sort_schedule({
-                schedule: [
-                    ...ScheduleInfoStore.schedule_info.filter(
-                        (item, index) => ScheduleInfoStore.edit_index !== index,
-                    ),
-                ],
-            });
+    // const delete_schedule = no_double_clicks({
+    //     execFunc: async () => {
+    //         const new_schedule: INTF_SchedulesInfo[] = sort_schedule({
+    //             schedule: [
+    //                 ...ScheduleInfoStore.schedule_info.filter(
+    //                     (item, index) => ScheduleInfoStore.edit_index !== index,
+    //                 ),
+    //             ],
+    //         });
 
-            try {
-                await SInfo.setItem(
-                    SECURE_STORAGE_SCHEDULE_INFO,
-                    JSON.stringify(new_schedule),
-                    {
-                        sharedPreferencesName: SECURE_STORAGE_NAME,
-                        keychainService: SECURE_STORAGE_NAME,
-                    },
-                )?.then(() => {
-                    ScheduleInfoStore.delete_schedule();
-                    setReminderTitle('');
-                    setDateTextColor(Colors.Grey);
-                    setReminderDate(new Date(Date.now()));
-                    BottomSheetStore.close_bottom_sheet();
-                });
-            } catch (error) {}
-        },
-    });
+    //         try {
+    //             await SInfo.setItem(
+    //                 SECURE_STORAGE_SCHEDULE_INFO,
+    //                 JSON.stringify(new_schedule),
+    //                 {
+    //                     sharedPreferencesName: SECURE_STORAGE_NAME,
+    //                     keychainService: SECURE_STORAGE_NAME,
+    //                 },
+    //             )?.then(() => {
+    //                 ScheduleInfoStore.delete_schedule();
+    //                 setReminderTitle('');
+    //                 setDateTextColor(Colors.Grey);
+    //                 setReminderDate(new Date(Date.now()));
+    //                 BottomSheetStore.close_bottom_sheet();
+    //             });
+    //         } catch (error) {}
+    //     },
+    // });
 
     const BS_Snap_Points = () => {
         switch (BottomSheetStore.component_type) {
@@ -182,41 +176,41 @@ const BottomOverlay: FunctionComponent = observer(() => {
         }
     };
 
-    const current_component = BottomSheetStore.component_type;
-    useEffect(() => {
-        if (
-            BottomSheetStore.is_bottom_sheet &&
-            BottomSheetStore.component_type === 2
-        ) {
-            setReminderTitle('');
-            setReminderDate(new Date(Date.now()));
-            setDateTextColor(Colors.Grey);
-        }
-        if (
-            BottomSheetStore.is_bottom_sheet &&
-            BottomSheetStore.component_type === 3
-        ) {
-            setReminderTitle(
-                ScheduleInfoStore.schedule_info[ScheduleInfoStore.edit_index]
-                    ?.title,
-            );
-            setReminderDate(
-                new Date(
-                    ScheduleInfoStore.schedule_info[
-                        ScheduleInfoStore.edit_index
-                    ]?.time,
-                ),
-            );
-        }
-    }, [current_component]);
+    // const current_component = BottomSheetStore.component_type;
+    // useEffect(() => {
+    //     if (
+    //         BottomSheetStore.is_bottom_sheet &&
+    //         BottomSheetStore.component_type === 2
+    //     ) {
+    //         setReminderTitle('');
+    //         setReminderDate(new Date(Date.now()));
+    //         setDateTextColor(Colors.Grey);
+    //     }
+    //     if (
+    //         BottomSheetStore.is_bottom_sheet &&
+    //         BottomSheetStore.component_type === 3
+    //     ) {
+    //         setReminderTitle(
+    //             ScheduleInfoStore.schedule_info[ScheduleInfoStore.edit_index]
+    //                 ?.title,
+    //         );
+    //         setReminderDate(
+    //             new Date(
+    //                 ScheduleInfoStore.schedule_info[
+    //                     ScheduleInfoStore.edit_index
+    //                 ]?.time,
+    //             ),
+    //         );
+    //     }
+    // }, [current_component]);
 
-    useEffect(() => {
-        if (reminderTitle && dateTextColor !== Colors.Grey) {
-            setShowAddReminder(true);
-        } else {
-            setShowAddReminder(false);
-        }
-    }, [reminderTitle, dateTextColor]);
+    // useEffect(() => {
+    //     if (reminderTitle && dateTextColor !== Colors.Grey) {
+    //         setShowAddReminder(true);
+    //     } else {
+    //         setShowAddReminder(false);
+    //     }
+    // }, [reminderTitle, dateTextColor]);
 
     useFocusEffect(
         useCallback(() => {
@@ -268,7 +262,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                 BottomSheetStore.close_bottom_sheet();
                 BottomSheetRef?.current?.close();
             }}>
-            <KeyboardAvoidingView style={{ flex: 1 }}>
+            {/* <KeyboardAvoidingView style={{ flex: 1 }}>
                 {BottomSheetStore.component_type === 2 && (
                     <BottomSheetView style={{ marginHorizontal: 28 }}>
                         <BasicText
@@ -467,7 +461,7 @@ const BottomOverlay: FunctionComponent = observer(() => {
                 onCancel={() => {
                     setOpenDateModal(false);
                 }}
-            />
+            /> */}
         </BottomSheet>
     );
 });

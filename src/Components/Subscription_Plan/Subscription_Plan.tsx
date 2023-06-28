@@ -61,21 +61,21 @@ const SubscriptionPlan: FunctionComponent<SubscriptionPlanProps> = ({
                     marginRight: 'auto',
                 }}>
                 <BasicText
-                    inputText={`${subscription.months} ${
-                        subscription.months === 1 ? 'Month' : 'Months'
+                    inputText={`${subscription.no_of_lessons} ${
+                        subscription.no_of_lessons === 1 ? 'Lesson' : 'Lessons'
                     }`}
                     textWeight={700}
                     textSize={19}
                 />
                 <BasicText
-                    inputText={`${subscription.discount}% off`}
+                    inputText={`1 Lesson @ $${subscription.price}`}
                     textWeight={500}
                     textSize={14}
                     textColor={Colors.DarkGrey}
                 />
             </View>
             <BasicText
-                inputText={`$${subscription.price}.00`}
+                inputText={`$${subscription.total_price.toFixed(2)}`}
                 textWeight={700}
                 textSize={19}
                 textColor={Colors.Primary}

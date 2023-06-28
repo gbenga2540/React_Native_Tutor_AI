@@ -109,7 +109,7 @@ const LessonArchivePage: FunctionComponent = () => {
                     }}
                 />
                 <BasicButton
-                    execFunc={retake_lesson}
+                    execFunc={() => retake_lesson({})}
                     buttonText="Retake Lesson"
                     borderRadius={8}
                     marginHorizontal={20}

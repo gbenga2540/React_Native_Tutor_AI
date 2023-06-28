@@ -61,12 +61,24 @@ const SignInPage: FunctionComponent = observer(() => {
                             accessToken: data?.data?.accessToken,
                         },
                     });
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [{ name: 'HomeStack' }],
-                        }),
-                    );
+                    if (!data?.data.user?.level) {
+                        navigation.push(
+                            'AuthStack' as never,
+                            { screen: 'PreTestPage' } as never,
+                        );
+                    } else if (!data.data.user?.language) {
+                        navigation.push(
+                            'AuthStack' as never,
+                            { screen: 'OnboardingPage' } as never,
+                        );
+                    } else {
+                        navigation.dispatch(
+                            CommonActions.reset({
+                                index: 0,
+                                routes: [{ name: 'HomeStack' }],
+                            }),
+                        );
+                    }
                 };
                 try {
                     await SInfo.setItem(
@@ -185,7 +197,7 @@ const SignInPage: FunctionComponent = observer(() => {
                     buttonText={'Proceed'}
                     borderRadius={8}
                     marginHorizontal={22}
-                    execFunc={sign_in_user}
+                    execFunc={() => sign_in_user({})}
                     buttonHeight={56}
                     disabled={disableButton}
                     marginBottom={

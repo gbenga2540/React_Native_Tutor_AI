@@ -1,4 +1,4 @@
-import React, { Fragment, FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -246,7 +246,7 @@ const VocabularyPage: FunctionComponent = () => {
                 <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
             <BasicButton
-                execFunc={next_vocabulary}
+                execFunc={() => next_vocabulary({})}
                 buttonText="Next"
                 borderRadius={8}
                 marginHorizontal={22}

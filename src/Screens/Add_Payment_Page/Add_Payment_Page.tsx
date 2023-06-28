@@ -22,9 +22,13 @@ import { useMutation } from 'react-query';
 import { card_payment } from '../../Configs/Queries/Payment/Payment';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { card_number_checker } from '../../Utils/Card_Number_Checker/Card_Number_Checker';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_CREDIT_CARD_INFO, SECURE_STORAGE_NAME } from '@env';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { observer } from 'mobx-react';
 
-const AddPaymentPage: FunctionComponent = () => {
+const AddPaymentPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [cardName, setCardName] = useState<string>('');
@@ -84,26 +88,8 @@ const AddPaymentPage: FunctionComponent = () => {
         },
     });
 
-    useEffect(() => {
-        const fullCardNumber = cardNumber.replace(/\D/g, '');
-        const g_CardNumber = fullCardNumber.match(/.{1,4}/g);
-        const f_CardNumber = g_CardNumber ? g_CardNumber.join(' ') : '';
-        setCardNumberView(f_CardNumber);
-    }, [cardNumber]);
-
-    useEffect(() => {
-        const fullED = expiryDate.replace(/\D/g, '');
-        const month = fullED.slice(0, 1);
-        const year = fullED.slice(1, 4);
-        if (expiryDate?.length > 0) {
-            setExpiryDateView(`${month}/${year}`);
-        } else {
-            setCardNumberView('');
-        }
-    }, [expiryDate]);
-
-    const nav_to_payment_successful_page = no_double_clicks({
-        execFunc: () => {
+    const proceed_to_pay = no_double_clicks({
+        execFunc: async () => {
             // navigation.push(
             //     'AuthStack' as never,
             //     {
@@ -116,13 +102,80 @@ const AddPaymentPage: FunctionComponent = () => {
             //         },
             //     } as never,
             // );
-            card_payment_mutate({
-                userAuth: UserInfoStore?.user_info?.accessToken as string,
-                userPlan: 'Beginner',
-                paymentToken: '',
-            });
+            // card_payment_mutate({
+            //     userAuth: UserInfoStore?.user_info?.accessToken as string,
+            //     userPlan: 'Beginner',
+            //     paymentToken: '',
+            // });
+            if (cardName && cardNumber && expiryDate && cvv && cardPin) {
+                if (card_number_checker({ card_number: cardNumber })) {
+                    const proceed = () => {
+                        console.log('paid');
+                    };
+
+                    if (saveCard) {
+                        try {
+                            await SInfo.setItem(
+                                SECURE_STORAGE_CREDIT_CARD_INFO,
+                                JSON.stringify({
+                                    card_info: {
+                                        cardName: cardName,
+                                        cardNumber: cardNumber,
+                                        expiryDate: expiryDate,
+                                        cvv: cvv,
+                                    },
+                                }),
+                                {
+                                    sharedPreferencesName: SECURE_STORAGE_NAME,
+                                    keychainService: SECURE_STORAGE_NAME,
+                                },
+                            )
+                                .catch(error => {
+                                    error && proceed();
+                                })
+                                .then(() => {
+                                    proceed();
+                                });
+                        } catch (err) {
+                            proceed();
+                        }
+                    } else {
+                        proceed();
+                    }
+                } else {
+                    error_handler({
+                        navigation: navigation,
+                        error_mssg: 'Invalid Card Number!',
+                    });
+                }
+            } else {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'Some required fields are missing!',
+                });
+            }
         },
     });
+
+    useEffect(() => {
+        const fullCardNumber = cardNumber.replace(/\D/g, '');
+        const g_CardNumber = fullCardNumber.match(/.{1,4}/g);
+        const f_CardNumber = g_CardNumber ? g_CardNumber.join(' ') : '';
+        setCardNumberView(f_CardNumber);
+    }, [cardNumber]);
+
+    console.log(expiryDate);
+
+    useEffect(() => {
+        const fullED = expiryDate.replace(/\D/g, '');
+        const month = fullED.slice(0, 1);
+        const year = fullED.slice(1, 4);
+        if (expiryDate?.length > 0) {
+            setExpiryDateView(`${month}/${year}`);
+        } else {
+            setExpiryDateView('');
+        }
+    }, [expiryDate]);
 
     return (
         <View style={styles.add_p_main}>
@@ -208,8 +261,8 @@ const AddPaymentPage: FunctionComponent = () => {
                             marginTop={10}
                             inputValue={expiryDateView}
                             setInputValue={setExpiryDate}
-                            placeHolderText="4/24"
-                            maxLength={4}
+                            placeHolderText="04/24"
+                            maxLength={5}
                         />
                     </View>
                     <View
@@ -285,12 +338,12 @@ const AddPaymentPage: FunctionComponent = () => {
                               })
                             : 20
                     }
-                    execFunc={() => nav_to_payment_successful_page({})}
+                    execFunc={() => proceed_to_pay({})}
                 />
             </KeyboardAvoidingView>
         </View>
     );
-};
+});
 
 export default AddPaymentPage;
 

@@ -133,7 +133,7 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     buttonText="Send Mail"
                     borderRadius={8}
                     marginHorizontal={22}
-                    execFunc={send_mail}
+                    execFunc={() => send_mail()}
                     buttonHeight={56}
                     disabled={disableButton}
                     marginBottom={

@@ -17,6 +17,7 @@ import LessonArchivePage from '../../Screens/Lesson_Archive_Page/Lesson_Archive_
 import HomeWorkArchivePage from '../../Screens/Home_Work_Archive_Page/Home_Work_Archive_Page';
 import LessonConvPage from '../../Screens/Lesson_Conv_Page/Lesson_Conv_Page';
 import ScheduleClassPage from '../../Screens/Schedule_Class_Page/Schedule_Class_Page';
+import ExamArchivePage from '../../Screens/Exam_Archive_Page/Exam_Archive_Page';
 
 type HomeStackParamList = {
     HomeTab: {};
@@ -36,6 +37,7 @@ type HomeStackParamList = {
     HomeWorkArchivePage: {};
     LessonConvPage: {};
     ScheduleClassPage: {};
+    ExamArchivePage: {};
 };
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -102,6 +104,10 @@ const HomeStack: FunctionComponent = () => {
             <Home_Stack.Screen
                 name="ScheduleClassPage"
                 component={ScheduleClassPage}
+            />
+            <Home_Stack.Screen
+                name="ExamArchivePage"
+                component={ExamArchivePage}
             />
         </Home_Stack.Navigator>
     );

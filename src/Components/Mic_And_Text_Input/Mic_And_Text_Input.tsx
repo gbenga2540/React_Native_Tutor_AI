@@ -142,6 +142,7 @@ const MicAndTextInput: FunctionComponent<MicAndTextInputProps> = ({
                                     onSend !== undefined && onSend(),
                             })}
                             setMicText={setInputValue}
+                            isRecording={isRecording}
                             setIsRecording={setIsRecording}
                         />
                     )}

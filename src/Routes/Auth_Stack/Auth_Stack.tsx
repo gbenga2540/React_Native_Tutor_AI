@@ -7,7 +7,6 @@ import SignInPage from '../../Screens/Sign_In_Page/Sign_In_Page';
 import SignUpPage from '../../Screens/Sign_Up_Page/Sign_Up_Page';
 import ForgotPasswordPage from '../../Screens/Forgot_Password_Page/Forgot_Password_Page';
 import ChangePasswordPage from '../../Screens/Change_Password_Page/Change_Password_Page';
-import VerifyOTPPage from '../../Screens/Verify_OTP_Page/Verify_OTP_Page';
 import AuthSelectPage from '../../Screens/Auth_Select_Page/Auth_Select_Page';
 import CongratulationsPage from '../../Screens/Congratulations_Page/Congratulations_Page';
 import TCPage from '../../Screens/T_C_Page/T_C_Page';
@@ -22,7 +21,6 @@ type AuthStackParamList = {
     SignUpPage: {};
     ForgotPasswordPage: {};
     ChangePasswordPage: {};
-    VerifyOTPPage: {};
     CongratulationsPage: {};
     TCPage: {};
     OnboardingPage: {};
@@ -66,7 +64,6 @@ const AuthStack: FunctionComponent = observer(() => {
                 name="ChangePasswordPage"
                 component={ChangePasswordPage}
             />
-            <Auth_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
             <Auth_Stack.Screen
                 name="CongratulationsPage"
                 component={CongratulationsPage}

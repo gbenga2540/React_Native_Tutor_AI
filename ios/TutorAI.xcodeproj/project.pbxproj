@@ -13,6 +13,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		19B1E02F3855431C9774973C /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 648F9845EA364DA9B4504E55 /* Urbanist-Medium.ttf */; };
+		3D3B902B2A4A860D00EF99B9 /* congrats.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B90282A4A860B00EF99B9 /* congrats.mp3 */; };
+		3D3B902C2A4A860D00EF99B9 /* correct.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B90292A4A860C00EF99B9 /* correct.mp3 */; };
+		3D3B902D2A4A860D00EF99B9 /* wrong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B902A2A4A860C00EF99B9 /* wrong.mp3 */; };
 		3D8407282A25B0D400289027 /* MyAppInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8407272A25B0D400289027 /* MyAppInfoModule.m */; };
 		3DA438052A267B1A00CD90DB /* MyAppHideModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA438042A267B1A00CD90DB /* MyAppHideModule.m */; };
 		5DE7E44E167047AA87BD2429 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87C393BD1E8A4EF1A825C74A /* OpenSans-Bold.ttf */; };
@@ -48,6 +51,9 @@
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-TutorAI-TutorAITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TutorAI-TutorAITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-TutorAI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutorAI.debug.xcconfig"; path = "Target Support Files/Pods-TutorAI/Pods-TutorAI.debug.xcconfig"; sourceTree = "<group>"; };
 		3BD29EE9F1A949F7ADB36684 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../src/Fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		3D3B90282A4A860B00EF99B9 /* congrats.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = congrats.mp3; sourceTree = "<group>"; };
+		3D3B90292A4A860C00EF99B9 /* correct.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = correct.mp3; sourceTree = "<group>"; };
+		3D3B902A2A4A860C00EF99B9 /* wrong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = wrong.mp3; sourceTree = "<group>"; };
 		3D8407272A25B0D400289027 /* MyAppInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAppInfoModule.m; sourceTree = "<group>"; };
 		3D97AAFD2A0ABA230015A060 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		3D97AAFE2A0ABA230015A060 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
@@ -192,6 +198,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				3D3B90282A4A860B00EF99B9 /* congrats.mp3 */,
+				3D3B90292A4A860C00EF99B9 /* correct.mp3 */,
+				3D3B902A2A4A860C00EF99B9 /* wrong.mp3 */,
 				13B07FAE1A68108700A75B9A /* TutorAI */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* TutorAITests */,
@@ -322,11 +331,14 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5DE7E44E167047AA87BD2429 /* OpenSans-Bold.ttf in Resources */,
+				3D3B902B2A4A860D00EF99B9 /* congrats.mp3 in Resources */,
+				3D3B902D2A4A860D00EF99B9 /* wrong.mp3 in Resources */,
 				9DD41191C67F4FBE9D163366 /* OpenSans-Light.ttf in Resources */,
 				E788AAEF34974971B1C774F0 /* OpenSans-Medium.ttf in Resources */,
 				DEA9C974007A4E66BBBDB856 /* OpenSans-Regular.ttf in Resources */,
 				FC44C2F3D556477CAA4C640E /* Urbanist-Bold.ttf in Resources */,
 				19B1E02F3855431C9774973C /* Urbanist-Medium.ttf in Resources */,
+				3D3B902C2A4A860D00EF99B9 /* correct.mp3 in Resources */,
 				B80171A906E44F74B0522DBC /* Urbanist-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

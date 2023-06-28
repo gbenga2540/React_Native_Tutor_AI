@@ -36,6 +36,7 @@ const Colors = {
     Amber: '#EFA83C',
     Green: '#13CB5C',
     Green2: '#49FF5B',
+    Green3: '#299946',
     LightGreen: '#DDFFEB',
     ChatBG: '#E9E5E5',
     LightGrey: '#D9D9D9',

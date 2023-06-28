@@ -3,26 +3,23 @@ import { INTF_Subscription } from '../../Interface/Subscription/Subscription';
 export const subscription_data: INTF_Subscription[] = [
     {
         id: 1,
-        months: 1,
-        price: 10,
-        discount: 5,
+        no_of_lessons: 8,
+        price: 2,
+        total_price: 16,
+        plan: 'plan_1',
     },
     {
         id: 2,
-        months: 3,
-        price: 30,
-        discount: 15,
+        no_of_lessons: 24,
+        price: 1.7,
+        total_price: 40.8,
+        plan: 'plan_2',
     },
     {
         id: 3,
-        months: 6,
-        price: 50,
-        discount: 20,
-    },
-    {
-        id: 4,
-        months: 12,
-        price: 100,
-        discount: 30,
+        no_of_lessons: 48,
+        price: 1.5,
+        total_price: 72,
+        plan: 'plan_3',
     },
 ];

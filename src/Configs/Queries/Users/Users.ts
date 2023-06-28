@@ -261,3 +261,87 @@ export const update_dp = async ({
             }
         });
 };
+
+export const increase_lessons = async ({
+    userAuth,
+    noOfLessons,
+}: {
+    noOfLessons: number;
+    userAuth: string;
+}) => {
+    const headersConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: userAuth,
+        },
+    };
+    return await api_base_url
+        .patch(
+            'user/increase',
+            {
+                no_of_lessons: noOfLessons,
+            },
+            headersConfig,
+        )
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const delete_account = async ({ userAuth }: { userAuth: string }) => {
+    return await api_base_url
+        .delete('user/delete', {
+            headers: {
+                authorization: userAuth,
+            },
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};

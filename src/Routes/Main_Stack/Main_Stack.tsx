@@ -88,7 +88,6 @@ const MainStack: FunctionComponent = observer(() => {
         };
         get_installed_apps();
     }, []);
-    console.log(UserInfoStore?.user_info?.level);
 
     if (render) {
         return (

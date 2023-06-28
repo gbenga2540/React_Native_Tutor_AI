@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import {
     Image,
     Platform,
@@ -22,6 +22,7 @@ import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import Sound from 'react-native-sound';
 
 const CongratulationsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -62,6 +63,19 @@ const CongratulationsPage: FunctionComponent = () => {
                         { screen: 'OnboardingPage' } as never,
                     );
                     break;
+                case 5:
+                    // ?: Add Logic to Increase User Payment. Added here to avoid Errors of having to repay
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                {
+                                    name: 'HomeStack',
+                                },
+                            ],
+                        }),
+                    );
+                    break;
                 default:
                     navigation.push(
                         'AuthStack' as never,
@@ -74,9 +88,36 @@ const CongratulationsPage: FunctionComponent = () => {
         },
     });
 
+    useEffect(() => {
+        Sound.setCategory('Playback');
+        const congrats_sound = new Sound(
+            'congrats.mp3',
+            Sound.MAIN_BUNDLE,
+            error => {
+                if (error) {
+                    return;
+                } else {
+                    congrats_sound.play(success => {
+                        if (success) {
+                            return;
+                        } else {
+                            return;
+                        }
+                    });
+                }
+            },
+        );
+        return () => {
+            congrats_sound.release();
+        };
+    }, []);
+
     return (
         <View style={{ flex: 1 }}>
-            <CustomStatusBar backgroundColor={Colors.Background} />
+            <CustomStatusBar
+                backgroundColor={Colors.Background}
+                lightContent={false}
+            />
             <ScrollView
                 style={{
                     flex: 1,

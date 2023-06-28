@@ -36,7 +36,8 @@ interface MicrophoneButtonProps {
     disabled?: boolean;
     animationSpeed?: number;
     setMicText: Dispatch<SetStateAction<string>>;
-    setIsRecording?: Dispatch<SetStateAction<boolean>>;
+    isRecording: boolean;
+    setIsRecording: Dispatch<SetStateAction<boolean>>;
     onMicSend?: DebouncedFuncLeading<() => void>;
 }
 
@@ -51,6 +52,7 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
     disabled,
     animationSpeed,
     setMicText,
+    isRecording,
     setIsRecording,
     onMicSend,
 }) => {
@@ -64,10 +66,12 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
     const cbPosition = useSharedValue(0);
 
     Voice.onSpeechResults = result => {
-        console.log(result);
         setMicText(result.value?.[0] || '');
     };
-    Voice.onSpeechError = error => console.log(error);
+
+    Voice.onSpeechError = error => {
+        console.log(error);
+    };
 
     const start_recording = async () => {
         try {
@@ -112,37 +116,41 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         };
     });
 
-    const handlePressIn = () => {
-        opacityValue.value = withTiming(1, {
-            duration: animationSpeed || anim_speed,
-        });
-        micColor.value = withTiming(1, {
-            duration: animationSpeed || anim_speed,
-        });
-        if (microphoneSize) {
-            micSize.value = withTiming(microphoneSize, {
+    // const handlePressIn = () => {};
+
+    // const handlePressOut = () => {};
+
+    const handlePress = () => {
+        if (isRecording) {
+            stop_recording();
+            opacityValue.value = withTiming(0, {
+                duration: animationSpeed || anim_speed,
+            });
+            micColor.value = withTiming(0, {
+                duration: animationSpeed || anim_speed,
+            });
+            micSize.value = withTiming(0, {
                 duration: animationSpeed || anim_speed,
             });
         } else {
-            micSize.value = withTiming(mic_size, {
+            opacityValue.value = withTiming(1, {
                 duration: animationSpeed || anim_speed,
             });
+            micColor.value = withTiming(1, {
+                duration: animationSpeed || anim_speed,
+            });
+            if (microphoneSize) {
+                micSize.value = withTiming(microphoneSize, {
+                    duration: animationSpeed || anim_speed,
+                });
+            } else {
+                micSize.value = withTiming(mic_size, {
+                    duration: animationSpeed || anim_speed,
+                });
+            }
+            start_recording();
+            setIsRecording(true);
         }
-        start_recording();
-        setIsRecording !== undefined && setIsRecording(true);
-    };
-
-    const handlePressOut = () => {
-        stop_recording();
-        opacityValue.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
-        micColor.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
-        micSize.value = withTiming(0, {
-            duration: animationSpeed || anim_speed,
-        });
     };
 
     const open_options = () => {
@@ -167,7 +175,7 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         });
         setMicText('');
         setIsOptionsShown(false);
-        setIsRecording !== undefined && setIsRecording(false);
+        setIsRecording(false);
     };
 
     const exec_mic_send = no_double_clicks({
@@ -236,8 +244,9 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
                 </TouchableOpacity>
             ) : (
                 <Pressable
-                    onPressIn={handlePressIn}
-                    onPressOut={handlePressOut}
+                    onPress={handlePress}
+                    // onPressIn={handlePressIn}
+                    // onPressOut={handlePressOut}
                     disabled={disabled || false}
                     style={[
                         styles.pressable,

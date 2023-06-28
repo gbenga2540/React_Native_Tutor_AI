@@ -7,17 +7,11 @@ import { mongo_date_converter_1 } from '../../Utils/Mongo_Date_Converter/Mongo_D
 import { INTF_SchedulesInfo } from '../../Interface/Schedules_Info/Schedules_Info';
 import { date_to_time } from '../../Utils/Date_To_Time/Date_To_Time';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
-import { BottomSheetStore } from '../../MobX/Bottom_Sheet/Bottom_Sheet';
 
 interface ScheduleItemProps {
     schedule: INTF_SchedulesInfo;
-    index: number;
 }
-const ScheduleItem: FunctionComponent<ScheduleItemProps> = ({
-    schedule,
-    index,
-}) => {
+const ScheduleItem: FunctionComponent<ScheduleItemProps> = ({ schedule }) => {
     const [timedOut, setTimedOut] = useState<boolean>(false);
 
     useEffect(() => {
@@ -32,10 +26,10 @@ const ScheduleItem: FunctionComponent<ScheduleItemProps> = ({
         <TouchableOpacity
             onPress={no_double_clicks({
                 execFunc: () => {
-                    ScheduleInfoStore.set_edit_index({ index: index });
-                    BottomSheetStore.open_bottom_sheet({
-                        component_type: timedOut ? 4 : 3,
-                    });
+                    // ScheduleInfoStore.set_edit_index({ index: index });
+                    // BottomSheetStore.open_bottom_sheet({
+                    //     component_type: timedOut ? 4 : 3,
+                    // });
                 },
             })}
             activeOpacity={0.55}

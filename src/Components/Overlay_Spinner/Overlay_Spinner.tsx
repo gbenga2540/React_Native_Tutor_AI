@@ -31,7 +31,7 @@ const OverlaySpinner: FunctionComponent<ShowSpinnerProps> = ({
                     style={{
                         position: 'absolute',
                         left: 23,
-                        top: 58,
+                        top: Platform.OS === 'ios' ? 58 : 28,
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>

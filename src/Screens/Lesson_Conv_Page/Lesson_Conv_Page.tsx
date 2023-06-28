@@ -27,12 +27,41 @@ import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
+import { socketIO } from '../../Configs/Socket_IO/Socket_IO';
 
 const LessonConvPage: FunctionComponent = observer(() => {
     const route = useRoute<RouteProp<any>>();
     const [chats, setChats] = useState<INTF_Conversation[]>([]);
     const [micText, setMicText] = useState<string>('');
+    const [timer, setTimer] = useState<number>(1800);
     const flatListRef = useRef<FlatList<any> | null>(null);
+
+    const send_message = no_double_clicks({
+        execFunc: () => {
+            if (micText) {
+                socketIO.emit('lesson', micText);
+                setChats(prev_chats => [
+                    ...prev_chats,
+                    { isAI: false, chat: micText },
+                ]);
+            }
+            Keyboard.isVisible() && Keyboard.dismiss();
+            setMicText('');
+        },
+    });
+
+    useEffect(() => {
+        socketIO.on('lesson', reply => {
+            setChats(prevChat => [...prevChat, { isAI: true, chat: reply }]);
+            TextToSpeechStore.play_speech({
+                speech: reply,
+            });
+        });
+        return () => {
+            socketIO.disconnect();
+        };
+    }, [micText]);
 
     useEffect(() => {
         const first_timer = setTimeout(() => {
@@ -44,21 +73,15 @@ const LessonConvPage: FunctionComponent = observer(() => {
         return () => clearTimeout(first_timer);
     }, [chats]);
 
-    const send_message = no_double_clicks({
-        execFunc: () => {
-            if (micText) {
-                TextToSpeechStore.play_speech({
-                    speech: micText,
-                });
-                setChats(prev_chats => [
-                    ...prev_chats,
-                    { isAI: false, chat: micText },
-                ]);
-            }
-            Keyboard.isVisible() && Keyboard.dismiss();
-            setMicText('');
-        },
-    });
+    useEffect(() => {
+        let intervalId: any;
+        if (timer > 0) {
+            intervalId = setInterval(() => {
+                setTimer(prevTimer => prevTimer - 1);
+            }, 1000);
+        }
+        return () => clearInterval(intervalId);
+    }, [timer]);
 
     return (
         <View style={styles.conversation_main}>
@@ -87,6 +110,14 @@ const LessonConvPage: FunctionComponent = observer(() => {
                     textWeight={700}
                     textSize={20}
                     marginLeft={15}
+                />
+                <BasicText
+                    inputText={seconds_to_minutes({
+                        time: timer,
+                    })}
+                    marginLeft={'auto'}
+                    textWeight={600}
+                    textColor={Colors.Primary}
                 />
             </View>
             <MiniAvatar
@@ -149,7 +180,7 @@ const LessonConvPage: FunctionComponent = observer(() => {
                             alignItems: 'center',
                         }}>
                         <BasicText
-                            inputText="Press the Microphone Button down to start a Conversation."
+                            inputText="Press the Microphone Button to start a Conversation."
                             textSize={16}
                             width={250}
                             textAlign="center"
