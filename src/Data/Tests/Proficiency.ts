@@ -62,7 +62,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 3,
         englishLevel: 'A2',
         question: {
-            word: 'It is ________ today. There is no sun.',
+            word: 'It is ____ today. There is no sun.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -90,7 +90,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         question: {
             word:
                 'What did Helen do yesterday?\n' +
-                'She went to the shopping mall, but she ______ any clothes.',
+                'She went to the shopping mall, but she ____ any clothes.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -116,7 +116,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 5,
         englishLevel: 'A2',
         question: {
-            word: 'They ________ ________ with Jackson in the conference room.',
+            word: 'They ____ with Jackson in the conference room.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -142,7 +142,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 6,
         englishLevel: 'A2',
         question: {
-            word: 'Living in the countryside is ______ than living in the city.',
+            word: 'Living in the countryside is ____ than living in the city.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -167,7 +167,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 7,
         englishLevel: 'A2',
         question: {
-            word: 'Describing people \nAdam is ______ many sports and is a ______-known athlete.',
+            word: 'Describing people \nAdam is ____ many sports and is a ____ -known athlete.',
             highlight: ['Describing', 'people'],
         },
         instruction: {
@@ -193,7 +193,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 8,
         englishLevel: 'A2',
         question: {
-            word: 'Describing past experiences \n' + 'He has ______.',
+            word: 'Describing past experiences \n' + 'He has ____.',
             highlight: ['Describing', 'past', 'experiences'],
         },
         instruction: {
@@ -219,7 +219,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 9,
         englishLevel: 'A2',
         question: {
-            word: 'They ______ when the phone rang.',
+            word: 'They ____ when the phone rang.',
         },
         instruction: {
             word: 'Choose one correct answers.',
@@ -274,7 +274,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 11,
         englishLevel: 'B1',
         question: {
-            word: 'We ______ to work, but now we take the train.',
+            word: 'We ____ to work, but now we take the train.',
         },
         instruction: {
             word: 'Choose one correct answers.',
@@ -324,7 +324,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 13,
         englishLevel: 'B1',
         question: {
-            word: 'I love to travel, but ______ to Australia since 2010.',
+            word: 'I love to travel, but ____ to Australia since 2010.',
         },
         instruction: {
             word: 'Choose one correct answers.',
@@ -376,7 +376,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 15,
         englishLevel: 'B1',
         question: {
-            word: 'On the phone \nCustomer: "I’d like to speak to the manager please." \nReceptionist: "I’m sorry I can’t ______ now because she’s in a meeting. Please give me your number and I’ll ask her to ______.',
+            word: 'On the phone \nCustomer: "I’d like to speak to the manager please." \nReceptionist: "I’m sorry I can’t ____ now because she’s in a meeting. Please give me your number and I’ll ask her to ____.',
             highlight: ['\nCustomer:', '\nReceptionist:'],
         },
         instruction: {
@@ -402,7 +402,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 16,
         englishLevel: 'B1',
         question: {
-            word: 'His wife ______ their weekend, before they spoke about it.',
+            word: 'His wife ____ their weekend, before they spoke about it.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -427,7 +427,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 17,
         englishLevel: 'B1',
         question: {
-            word: 'Giving opinions \nJack: "Wow! That was an awesome concert." \nKaren: "Yeah it was incredible. However, their first album is my favourite." \n\nKaren agrees that the concert was amazing, __________ their earlier music is still the best.',
+            word: 'Giving opinions \nJack: "Wow! That was an awesome concert." \nKaren: "Yeah it was incredible. However, their first album is my favourite." \n\nKaren agrees that the concert was amazing, ____ their earlier music is still the best.',
             highlight: ['Giving', 'opinions', '\nJack:', '\nKaren:'],
         },
         instruction: {
@@ -454,7 +454,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 18,
         englishLevel: 'B1',
         question: {
-            word: 'Her phone isn’t in her purse; it…',
+            word: 'Her phone isn’t in her purse; it ____',
         },
         instruction: {
             word: 'Complete the sentence.',
@@ -478,7 +478,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 19,
         englishLevel: 'B1',
         question: {
-            word: 'You were late for an important meeting. You ______ home earlier.',
+            word: 'You were late for an important meeting. You ____ home earlier.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -537,7 +537,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 21,
         englishLevel: 'B2',
         question: {
-            word: 'Job opportunities \n\nBrother: "Why didn’t ____you accept that amazing job offer in New York last year?" \nSister: "Because my home is in London."',
+            word: 'Job opportunities \n\nBrother: "Why didn’t ____ you accept that amazing job offer in New York last year?" \nSister: "Because my home is in London."',
             highlight: ['Job', 'opportunities', '\n\nBrother:', '\nSister:'],
         },
         instruction: {
@@ -567,7 +567,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 22,
         englishLevel: 'B2',
         question: {
-            word: 'They ________ to go to the beach every winter when they lived in Canada.',
+            word: 'They ____ to go to the beach every winter when they lived in Canada.',
         },
         instruction: {
             word: 'Choose one correct answer',
@@ -592,7 +592,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 23,
         englishLevel: 'B2',
         question: {
-            word: 'I don’t mind if you upgrade the software, ______ you back up the hard drive first.',
+            word: 'I don’t mind if you upgrade the software, ____ you back up the hard drive first.',
         },
         instruction: {
             word: 'Choose two correct answers.',
@@ -618,7 +618,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 24,
         englishLevel: 'B2',
         question: {
-            word: 'I ______ for the last few months, because I moved to Madrid and had to study Spanish.',
+            word: 'I ____ for the last few months, because I moved to Madrid and had to study Spanish.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -643,7 +643,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 25,
         englishLevel: 'B2',
         question: {
-            word: 'I’m sure that ______ her first autobiography by the end of the year.',
+            word: 'I’m sure that ____ her first autobiography by the end of the year.',
         },
         instruction: {
             word: 'Choose two correct answers which have a similar meaning.',
@@ -669,7 +669,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 26,
         englishLevel: 'B2',
         question: {
-            word: "The plane left ten minutes ago, but I couldn't fly because I didn't take my passport.If I ______ my passport, I ______ on the plane right now.",
+            word: "The plane left ten minutes ago, but I couldn't fly because I didn't take my passport.If I ____ my passport, I ____ on the plane right now.",
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -744,7 +744,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 29,
         englishLevel: 'C1',
         question: {
-            word: 'The Education Secretary negotiated with protesting teachers yesterday, and they have now insisted that she schedules a second meeting.\n\nThe politician ______ an agreement with the teachers yesterday.',
+            word: 'The Education Secretary negotiated with protesting teachers yesterday, and they have now insisted that she schedules a second meeting.\n\nThe politician ____ an agreement with the teachers yesterday.',
         },
         instruction: {
             word: 'Choose one correct answer that reflects the outcome of the negotiation.',
@@ -769,7 +769,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 30,
         englishLevel: 'C1',
         question: {
-            word: 'The Chinese economy is rapidly growing and continues to _________ year after year.',
+            word: 'The Chinese economy is rapidly growing and continues to ____ year after year.',
         },
         instruction: {
             word: 'Choose one correct answer.',
@@ -797,7 +797,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 31,
         englishLevel: 'C1',
         question: {
-            word: 'It is ______ difficult to ensure the protection of endangered species.',
+            word: 'It is ____ difficult to ensure the protection of endangered species.',
         },
         instruction: {
             word: 'Choose two correct answers.',
@@ -823,7 +823,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 32,
         englishLevel: 'C1',
         question: {
-            word: 'They had no idea about their sister’s medical problems, because she hadn’t explained what was happening. She hasn’t ______ about her poor health.',
+            word: 'They had no idea about their sister’s medical problems, because she hadn’t explained what was happening. She hasn’t ____ about her poor health.',
         },
         instruction: {
             word: 'Choose one correct answer which has a similar meaning.',
@@ -850,7 +850,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         question: {
             word:
                 'After being accepted for a scholarship at university, I was unsure whether it was a good idea to live on campus.\n\n' +
-                'I was ______ about living on campus.',
+                'I was ____ about living on campus.',
         },
         instruction: {
             word: 'Choose one correct answer which has a similar meaning.',
@@ -925,7 +925,7 @@ export const proficiency_test: INTF_ProficiencyTest[] = [
         id: 36,
         englishLevel: 'C1',
         question: {
-            word: 'Below is an extract from the text: \n"Regrettably, a large number ..."',
+            word: 'Below is an extract from the text: \n"Regrettably, a large number ____"',
             highlight: ['\n"Regrettably,'],
         },
         instruction: {

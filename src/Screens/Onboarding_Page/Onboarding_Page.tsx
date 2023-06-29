@@ -3,6 +3,7 @@ import React, {
     useState,
     useCallback,
     Suspense,
+    useEffect,
 } from 'react';
 import {
     BackHandler,
@@ -38,6 +39,7 @@ import { observer } from 'mobx-react';
 import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import SInfo from 'react-native-sensitive-info';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const TOTAL_PAGES = 3;
 
@@ -156,18 +158,21 @@ const OnboardingPage: FunctionComponent = observer(() => {
     });
 
     const prev_question = no_double_clicks({
-        execFunc: () =>
+        execFunc: () => {
+            TextToSpeechStore.clear_speech();
             setQuestion(
                 clamp_value({
                     value: question - 1,
                     minValue: 1,
                     maxValue: TOTAL_PAGES,
                 }),
-            ),
+            );
+        },
     });
 
     const next_question = no_double_clicks({
         execFunc: async () => {
+            TextToSpeechStore.clear_speech();
             if (question === 1) {
                 if (nativeLang === null) {
                     error_handler({
@@ -218,6 +223,42 @@ const OnboardingPage: FunctionComponent = observer(() => {
         }
     };
 
+    const speak_question = no_double_clicks({
+        execFunc: () => {
+            TextToSpeechStore.clear_speech();
+            if (question === 1) {
+                TextToSpeechStore.play_speech({
+                    speech: 'Select your Native Language.',
+                });
+            } else if (question === 2) {
+                TextToSpeechStore.play_speech({
+                    speech: 'Select the number of minutes you wish to study per day.',
+                });
+            } else {
+                TextToSpeechStore.play_speech({
+                    speech: 'Select the topics you find interesting.',
+                });
+            }
+        },
+    });
+
+    useEffect(() => {
+        TextToSpeechStore.clear_speech();
+        if (question === 1) {
+            TextToSpeechStore.play_speech({
+                speech: 'Select your Native Language.',
+            });
+        } else if (question === 2) {
+            TextToSpeechStore.play_speech({
+                speech: 'Select the number of minutes you wish to study per day.',
+            });
+        } else {
+            TextToSpeechStore.play_speech({
+                speech: 'Select the topics you find interesting.',
+            });
+        }
+    }, [question]);
+
     useFocusEffect(
         useCallback(() => {
             const handleBackPress = () => {
@@ -258,7 +299,11 @@ const OnboardingPage: FunctionComponent = observer(() => {
                 <ProgressBar progress={(question / TOTAL_PAGES) * 100} />
             </View>
 
-            <MiniAvatar marginBottom={20} marginHorizontal={22} />
+            <MiniAvatar
+                marginBottom={20}
+                marginHorizontal={22}
+                onPressVoice={speak_question}
+            />
 
             {question === 1 && (
                 <View style={{ flex: 1 }}>

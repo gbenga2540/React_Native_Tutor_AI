@@ -118,12 +118,13 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     textColor={Colors.Grey}
                 />
                 <BasicTextEntry
-                    placeHolderText="Enter your email"
+                    placeHolderText="johndoe@gmail.com"
                     inputValue={email}
                     setInputValue={setEmail}
                     marginTop={20}
-                    marginBottom={18}
                     inputMode="email"
+                    marginBottom={18}
+                    autoComplete="off"
                 />
             </ScrollView>
             <KeyboardAvoidingView
@@ -133,7 +134,7 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     buttonText="Send Mail"
                     borderRadius={8}
                     marginHorizontal={22}
-                    execFunc={() => send_mail()}
+                    execFunc={() => send_mail({})}
                     buttonHeight={56}
                     disabled={disableButton}
                     marginBottom={

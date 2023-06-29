@@ -549,11 +549,12 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                     setInputValue={setEmail}
                     marginTop={10}
                     marginBottom={30}
-                    inputMode="text"
+                    inputMode="email"
                     onFocus={() =>
                         scrollViewRef.current !== null &&
                         scrollViewRef.current?.scrollToEnd()
                     }
+                    autoComplete="off"
                 />
                 <BasicText
                     inputText="Full Name"

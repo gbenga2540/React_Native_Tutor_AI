@@ -14,7 +14,6 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import DisplayAvatar from '../../Components/Display_Avatar/Display_Avatar';
 import Feather from 'react-native-vector-icons/Feather';
 import VoiceOverIcon from '../../Images/SVGs/Voice_Over_Icon.svg';
 import { Avatars } from '../../Data/Voices/Voices';
@@ -32,12 +31,26 @@ import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const CustomizeVoicePage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const isMaleTutor = AvatarVoiceStore?.is_avatar_male || false;
+
+    const speak_name = no_double_clicks({
+        execFunc: () => {
+            TextToSpeechStore.play_speech({
+                speech: `Hi there, My Name is ${
+                    isMaleTutor
+                        ? AvatarVoiceStore.avatar_male_voice
+                        : AvatarVoiceStore.avatar_female_voice
+                }`,
+            });
+        },
+    });
 
     const proceed_to_home_page = no_double_clicks({
         execFunc: () => {
@@ -83,10 +96,11 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                 />
             </View>
             <ScrollView style={{ flex: 1 }}>
-                <DisplayAvatar
+                <MiniAvatar
                     marginBottom={20}
                     marginTop={30}
                     marginHorizontal={22}
+                    hideIcons
                 />
                 <View
                     style={{
@@ -94,6 +108,7 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                         flexDirection: 'row',
                     }}>
                     <TouchableOpacity
+                        onPress={() => speak_name({})}
                         activeOpacity={0.65}
                         style={{
                             borderWidth: 1,
@@ -350,7 +365,7 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                           })
                         : 5
                 }
-                execFunc={proceed_to_home_page}
+                execFunc={() => proceed_to_home_page({})}
             />
         </View>
     );

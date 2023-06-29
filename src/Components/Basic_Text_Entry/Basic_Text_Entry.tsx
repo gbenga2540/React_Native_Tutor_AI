@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import Colors from '../../Configs/Colors/Colors';
+import { INTF_AutoComplete } from '../../Interface/Auto_Complete/Auto_Complete';
 
 interface BasicTextEntryProps {
     inputValue: string;
@@ -24,6 +25,7 @@ interface BasicTextEntryProps {
     maxLength?: number;
     height?: number;
     textMarginHor?: number;
+    autoComplete?: INTF_AutoComplete;
 }
 
 const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
@@ -42,6 +44,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
     maxLength,
     height,
     textMarginHor,
+    autoComplete,
 }) => {
     return (
         <KeyboardAvoidingView
@@ -77,6 +80,7 @@ const BasicTextEntry: FunctionComponent<BasicTextEntryProps> = ({
                 autoFocus={autoFocus || false}
                 editable={editable === false ? false : true}
                 maxLength={maxLength}
+                autoComplete={autoComplete || undefined}
             />
         </KeyboardAvoidingView>
     );

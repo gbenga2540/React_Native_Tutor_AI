@@ -632,8 +632,9 @@ const SignUpPage: FunctionComponent = observer(() => {
                             inputValue={name}
                             setInputValue={setName}
                             marginTop={15}
-                            marginBottom={12}
                             inputMode="text"
+                            marginBottom={12}
+                            autoFocus={false}
                         />
                         <BasicText
                             inputText="Your Date of Birth?"
@@ -703,8 +704,9 @@ const SignUpPage: FunctionComponent = observer(() => {
                                 inputValue={email}
                                 setInputValue={setEmail}
                                 marginTop={15}
+                                inputMode="email"
                                 marginBottom={12}
-                                inputMode="text"
+                                autoComplete="off"
                             />
                         </Fragment>
                     </Fragment>

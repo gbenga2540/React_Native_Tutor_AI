@@ -173,8 +173,9 @@ const SignInPage: FunctionComponent = observer(() => {
                     inputValue={email}
                     setInputValue={setEmail}
                     marginTop={32}
+                    inputMode="email"
                     marginBottom={12}
-                    inputMode="text"
+                    autoComplete="off"
                 />
                 <SecureTextEntry
                     inputValue={password}

@@ -15,7 +15,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import DisplayAvatar from '../../Components/Display_Avatar/Display_Avatar';
 import BasicButton2 from '../../Components/Basic_Button_2/Basic_Button_2';
 import { avatars_data } from '../../Data/Avatars/Avatars';
 import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
@@ -26,6 +25,7 @@ import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 
 const AvatarCustomizationPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -123,7 +123,7 @@ const AvatarCustomizationPage: FunctionComponent = observer(() => {
                 }
             },
         });
-        update_data();
+        update_data({});
     };
 
     return (
@@ -159,10 +159,11 @@ const AvatarCustomizationPage: FunctionComponent = observer(() => {
                 />
             </View>
             <ScrollView style={{ flex: 1 }}>
-                <DisplayAvatar
+                <MiniAvatar
                     marginBottom={20}
                     marginTop={30}
                     marginHorizontal={22}
+                    hideIcons
                 />
                 <BasicButton2
                     buttonText="Customize"
@@ -253,7 +254,7 @@ const AvatarCustomizationPage: FunctionComponent = observer(() => {
                           })
                         : 5
                 }
-                execFunc={proceed_to_home_page}
+                execFunc={() => proceed_to_home_page({})}
             />
         </View>
     );

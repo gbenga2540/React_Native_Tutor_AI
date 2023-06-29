@@ -44,6 +44,7 @@ import Sound from 'react-native-sound';
 
 const PreTestPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    Sound.setCategory('Playback');
 
     const [timer, setTimer] = useState<number>(1200);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
@@ -185,7 +186,16 @@ const PreTestPage: FunctionComponent = observer(() => {
 
     const speak_question = no_double_clicks({
         execFunc: () => {
-            if (stage === 'Listening') {
+            TextToSpeechStore.clear_speech();
+            if (stage === 'Proficiency') {
+                if (currentQuestion < noOfQuestions) {
+                    TextToSpeechStore.play_speech({
+                        speech: pQuestions[
+                            currentQuestion
+                        ]?.question?.word?.replace(/____/g, 'dash'),
+                    });
+                }
+            } else if (stage === 'Listening') {
                 TextToSpeechStore.play_speech({
                     speech:
                         'Listen to the following and select the appropraite answer.\n' +
@@ -203,6 +213,7 @@ const PreTestPage: FunctionComponent = observer(() => {
 
     const on_press_next = () => {
         if (stage === 'Proficiency') {
+            TextToSpeechStore.clear_speech();
             if (currentQuestion < noOfQuestions) {
                 const currentQuestionInfo = pQuestions[currentQuestion];
                 const answersToQuestion = proficiency_answers.filter(
@@ -241,7 +252,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                             return old;
                         });
-                        // setPAnswers([]);
                         if (
                             compare_array_contents({
                                 arr1: answersToQuestion[0].answers,
@@ -249,7 +259,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                             })
                         ) {
                             setAnswerUI('Correct');
-                            Sound.setCategory('Playback');
                             const correct_sound = new Sound(
                                 'correct.mp3',
                                 Sound.MAIN_BUNDLE,
@@ -269,9 +278,8 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                         } else {
                             setAnswerUI('Wrong');
-                            Sound.setCategory('Playback');
                             const wrong_sound = new Sound(
-                                'wrong.mp3',
+                                'incorrect.mp3',
                                 Sound.MAIN_BUNDLE,
                                 error => {
                                     if (error) {
@@ -309,8 +317,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                             return old;
                         });
-                        // setPAnswers([]);
-
                         if (
                             compare_array_contents({
                                 arr1: answersToQuestion[0].answers,
@@ -318,7 +324,6 @@ const PreTestPage: FunctionComponent = observer(() => {
                             })
                         ) {
                             setAnswerUI('Correct');
-                            Sound.setCategory('Playback');
                             const correct_sound = new Sound(
                                 'correct.mp3',
                                 Sound.MAIN_BUNDLE,
@@ -338,9 +343,8 @@ const PreTestPage: FunctionComponent = observer(() => {
                             );
                         } else {
                             setAnswerUI('Wrong');
-                            Sound.setCategory('Playback');
                             const wrong_sound = new Sound(
-                                'wrong.mp3',
+                                'incorrect.mp3',
                                 Sound.MAIN_BUNDLE,
                                 error => {
                                     if (error) {
@@ -384,9 +388,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                 }
                 setStage('Writing');
                 TextToSpeechStore.play_speech({
-                    speech:
-                        'Listen to the following and type out what you hear.\nYou can also press the button at the bottom-left of the avatar to listen again.\n' +
-                        wQuestions.question,
+                    speech: 'To begin your Writing Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                 });
             } else {
                 error_handler({
@@ -399,14 +401,14 @@ const PreTestPage: FunctionComponent = observer(() => {
                 wAnswer?.length >
                 wQuestions.question?.length -
                     (assignedLevel === 'Beginner'
-                        ? 20
+                        ? 25
                         : assignedLevel === 'Pre-Intermediate'
-                        ? 50
+                        ? 60
                         : assignedLevel === 'Intermediate'
-                        ? 120
+                        ? 100
                         : assignedLevel === 'Upper-Intermediate'
-                        ? 280
-                        : 120)
+                        ? 250
+                        : 100)
             ) {
                 update_level_mutate({
                     uid: UserInfoStore?.user_info?._id as string,
@@ -453,9 +455,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                     setLQuestions(l_confident[0]);
                     setStage('Listening');
                     TextToSpeechStore.play_speech({
-                        speech:
-                            'Listen to the following and select the appropraite answer.\nYou can also press the button at the bottom-left of the avatar to listen again.\n' +
-                            lQuestions.question,
+                        speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                     });
                 } else {
                     switch (assignedLevel) {
@@ -480,9 +480,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                     }
                     setStage('Listening');
                     TextToSpeechStore.play_speech({
-                        speech:
-                            'Listen to the following and select the appropraite answer.\nYou can also press the button at the bottom-left of the avatar to listen again.\n' +
-                            lQuestions.question,
+                        speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                     });
                 }
             }
@@ -503,6 +501,18 @@ const PreTestPage: FunctionComponent = observer(() => {
         l_confident,
         lQuestions.question,
     ]);
+
+    useEffect(() => {
+        if (stage === 'Proficiency') {
+            if (currentQuestion < noOfQuestions) {
+                TextToSpeechStore.play_speech({
+                    speech: pQuestions[
+                        currentQuestion
+                    ]?.question?.word?.replace(/____/g, 'dash'),
+                });
+            }
+        }
+    }, [currentQuestion, noOfQuestions, stage, pQuestions]);
 
     useEffect(() => {
         let intervalId: any;
