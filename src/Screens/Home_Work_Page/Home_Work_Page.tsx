@@ -29,6 +29,13 @@ const HomeWorkPage: FunctionComponent = () => {
                     textWeight={700}
                 />
             </View>
+            <BasicText
+                inputText="Work In Progress"
+                marginLeft={'auto'}
+                marginRight={'auto'}
+                marginTop={30}
+                textSize={18}
+            />
             {!startedHW && (
                 <TouchableOpacity
                     onPress={no_double_clicks({
@@ -55,6 +62,7 @@ const HomeWorkPage: FunctionComponent = () => {
                     />
                 </TouchableOpacity>
             )}
+
             {startedHW && (
                 <View
                     style={{

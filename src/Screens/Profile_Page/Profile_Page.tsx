@@ -166,7 +166,7 @@ const ProfilePage: FunctionComponent = () => {
                                 get_age({
                                     input_date: UserInfoStore?.user_info
                                         ?.dateOfBirth as string,
-                                }) > 14
+                                }) < 15
                                     ? profile_menu_3
                                     : profile_menu_3.filter(
                                           item => item?.id === 2,

@@ -268,13 +268,11 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
         },
     });
 
-    const clear_image = no_double_clicks({
-        execFunc: () => {
-            setShowSpinner(false);
-            setDisplayPicture('');
-            ImagePicker.clean();
-        },
-    });
+    const clear_image = () => {
+        setShowSpinner(false);
+        setDisplayPicture('');
+        ImagePicker.clean();
+    };
 
     const select_image_from_gallery = no_double_clicks({
         execFunc: () => {
@@ -592,7 +590,7 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                     buttonText="Edit Details"
                     borderRadius={8}
                     marginHorizontal={22}
-                    execFunc={edit_personal_details}
+                    execFunc={() => edit_personal_details({})}
                     buttonHeight={56}
                     disabled={disableButton}
                     marginTop={20}

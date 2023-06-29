@@ -1,19 +1,68 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, Suspense, useEffect, useState } from 'react';
 import { FlatList, Image, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
-import { test_lessons } from '../../../test/Data/Lessons';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
+import {
+    Beginner,
+    Confident,
+    Intermediate,
+    PreIntermediate,
+    UpperIntermediate,
+} from '../../Data/Lessons/Lessons';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { observer } from 'mobx-react';
 
-const LessonArchivePage: FunctionComponent = () => {
-    const retake_lesson = no_double_clicks({
-        execFunc: () => {},
-    });
+const LessonArchivePage: FunctionComponent = observer(() => {
+    const L_Beginner = Beginner;
+    const L_PreIntermediate = PreIntermediate;
+    const L_Intermediate = Intermediate;
+    const L_UpperIntermediate = UpperIntermediate;
+    const L_Confident = Confident;
+
+    const UserLevel = UserInfoStore.user_info?.level || 'Beginner';
+    const [lessons, setLessons] = useState<INTF_Lesson[]>(L_Beginner);
+
+    useEffect(() => {
+        const set_lessons_data = () => {
+            switch (UserLevel) {
+                case 'Beginner':
+                    setLessons(L_Beginner);
+                    break;
+                case 'Pre-Intermediate':
+                    setLessons(L_PreIntermediate);
+                    break;
+                case 'Intermediate':
+                    setLessons(L_Intermediate);
+                    break;
+                case 'Upper-Intermediate':
+                    setLessons(L_UpperIntermediate);
+                    break;
+                case 'Confident':
+                    setLessons(L_Confident);
+                    break;
+                default:
+                    setLessons(L_Beginner);
+                    break;
+            }
+        };
+        set_lessons_data();
+    }, [
+        UserLevel,
+        L_Beginner,
+        L_PreIntermediate,
+        L_Intermediate,
+        L_UpperIntermediate,
+        L_Confident,
+    ]);
+
+    // const retake_lesson = no_double_clicks({
+    //     execFunc: () => {},
+    // });
 
     return (
         <View style={styles.lesson_main}>
@@ -76,7 +125,7 @@ const LessonArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="300mins" />
+                        <BasicText inputText={`${lessons?.length * 30}mins`} />
                     </View>
                     <View
                         style={{
@@ -86,40 +135,44 @@ const LessonArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="100 Lessons" />
+                        <BasicText inputText={`${lessons?.length} Lessons`} />
                     </View>
                 </View>
-                <FlatList
-                    data={test_lessons}
-                    keyExtractor={item => item.lesson_id as any}
-                    renderItem={({ item, index }) => (
-                        <LessonCard
-                            lesson={item}
-                            index={index}
-                            last_index={
-                                test_lessons?.length <= 1
-                                    ? 0
-                                    : test_lessons?.length - 1
-                            }
+                <Suspense fallback={null}>
+                    {lessons.length > 0 && (
+                        <FlatList
+                            data={lessons}
+                            keyExtractor={item => item.lesson_id as any}
+                            renderItem={({ item, index }) => (
+                                <LessonCard
+                                    lesson={item}
+                                    index={index}
+                                    last_index={
+                                        lessons?.length <= 1
+                                            ? 0
+                                            : lessons?.length - 1
+                                    }
+                                />
+                            )}
+                            style={{
+                                paddingHorizontal: 18,
+                                paddingTop: 14,
+                            }}
                         />
                     )}
-                    style={{
-                        paddingHorizontal: 18,
-                        paddingTop: 14,
-                    }}
-                />
-                <BasicButton
+                </Suspense>
+                {/* <BasicButton
                     execFunc={() => retake_lesson({})}
                     buttonText="Retake Lesson"
                     borderRadius={8}
                     marginHorizontal={20}
                     buttonHeight={56}
                     marginTop={5}
-                />
+                /> */}
             </View>
         </View>
     );
-};
+});
 
 export default LessonArchivePage;
 

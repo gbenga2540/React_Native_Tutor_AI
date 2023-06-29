@@ -202,3 +202,40 @@ export const login = async ({
             }
         });
 };
+
+export const resend_pin = async ({ userAuth }: { userAuth: string }) => {
+    const headersConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: userAuth,
+        },
+    };
+    return await api_base_url
+        .post('auth/token/control-pin', {}, headersConfig)
+        .catch(err => {
+            return {
+                error: true,
+                data: err?.message,
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};

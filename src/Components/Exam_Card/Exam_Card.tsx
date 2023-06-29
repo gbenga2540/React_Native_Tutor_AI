@@ -8,42 +8,40 @@ import {
     Platform,
 } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
 import ArcInnerIcon from '../../Images/SVGs/Arc_Inner_Icon.svg';
 import ArcOuterIcon from '../../Images/SVGs/Arc_Outer_Icon.svg';
 import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BasicText from '../Basic_Text/Basic_Text';
+import { INTF_Exam } from '../../Interface/Exams/Exams';
 
 interface ExamCardProps {
-    lesson: INTF_Lesson;
+    exam: INTF_Exam;
     index: number;
     last_index: number;
     disabled?: boolean;
 }
 const ExamCard: FunctionComponent<ExamCardProps> = ({
-    lesson,
+    exam,
     index,
     last_index,
     disabled,
 }) => {
-    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    // const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     return (
         <TouchableOpacity
             onPress={no_double_clicks({
                 execFunc: () => {
-                    navigation.push(
-                        'HomeStack' as never,
-                        {
-                            screen: 'LessonConvPage',
-                            params: {
-                                topic: lesson?.title,
-                            },
-                        } as never,
-                    );
+                    // navigation.push(
+                    //     'HomeStack' as never,
+                    //     {
+                    //         screen: 'LessonConvPage',
+                    //         params: {
+                    //             topic: exam?.exam_level,
+                    //         },
+                    //     } as never,
+                    // );
                 },
             })}
             disabled={disabled || false}
@@ -52,7 +50,7 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
                 styles.lesson_main,
                 {
                     backgroundColor:
-                        lesson?.progress === 100
+                        exam?.score === 100
                             ? Colors.Primary
                             : Colors.LightPurple3,
                     marginBottom:
@@ -66,29 +64,24 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
             <ArcInnerIcon
                 style={{ position: 'absolute', right: 0 }}
                 color={
-                    lesson?.progress === 100
-                        ? Colors.ArcInner_A
-                        : Colors.ArcInner_I
+                    exam?.score === 100 ? Colors.ArcInner_A : Colors.ArcInner_I
                 }
             />
             <ArcOuterIcon
                 style={{ position: 'absolute', right: 0 }}
                 color={
-                    lesson?.progress === 100
-                        ? Colors.ArcOuter_A
-                        : Colors.ArcOuter_I
+                    exam?.score === 100 ? Colors.ArcOuter_A : Colors.ArcOuter_I
                 }
             />
             <Text
                 style={{
-                    color:
-                        lesson?.progress === 100 ? Colors.White : Colors.Black,
+                    color: exam?.score === 100 ? Colors.White : Colors.Black,
                     fontFamily: fonts.Urbanist_600,
                     fontSize: 15,
                     position: 'absolute',
                     right: 10,
                     top: 10,
-                }}>{`${lesson?.progress}%`}</Text>
+                }}>{`${exam?.score}%`}</Text>
             <View style={{ flexDirection: 'row' }}>
                 <View
                     style={{
@@ -100,18 +93,14 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
                         borderRadius: 100,
                         borderWidth: 2,
                         borderColor:
-                            lesson?.progress === 100
+                            exam?.score === 100
                                 ? Colors.ArcInner_A
                                 : Colors.ArcInner_I,
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>
                     <Image
-                        source={{
-                            uri: lesson?.imageURL,
-                            width: 88,
-                            height: 88,
-                        }}
+                        source={require('../../Images/Logos/Tutor_AI_Logo.png')}
                         style={{
                             borderRadius: 90,
                             width: 90,
@@ -127,23 +116,19 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
                         paddingBottom: 12,
                     }}>
                     <BasicText
-                        inputText={`Exam ${lesson?.lesson_id}`}
+                        inputText={`Exam ${exam?.exam_id}`}
                         textWeight={500}
                         textSize={15}
                         textColor={
-                            lesson?.progress === 100
-                                ? Colors.White
-                                : Colors.Black
+                            exam?.score === 100 ? Colors.White : Colors.Black
                         }
                     />
                     <BasicText
-                        inputText={lesson?.title as string}
+                        inputText={exam?.exam_level as string}
                         textWeight={600}
                         textSize={18}
                         textColor={
-                            lesson?.progress === 100
-                                ? Colors.White
-                                : Colors.Black
+                            exam?.score === 100 ? Colors.White : Colors.Black
                         }
                     />
                 </View>

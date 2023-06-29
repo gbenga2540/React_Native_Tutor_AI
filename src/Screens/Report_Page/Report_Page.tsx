@@ -251,7 +251,7 @@ const ReportPage: FunctionComponent = () => {
                                 marginRight: 5,
                             }}>
                             <BasicText
-                                inputText="100 Homework Done"
+                                inputText="50 Homeworks Done"
                                 textSize={14}
                                 textWeight={500}
                                 textColor={Colors.White}

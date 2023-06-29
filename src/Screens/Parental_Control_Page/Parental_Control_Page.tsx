@@ -15,12 +15,43 @@ import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
 import { Observer } from 'mobx-react';
+import TextButton from '../../Components/Text_Button/Text_Button';
+import { useMutation } from 'react-query';
+import { resend_pin } from '../../Configs/Queries/Auth/Auth';
+import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const ParentalControlPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [pcPIN, setPCPIN] = useState<string>('');
     const [showBlockApps, setShowBlockApps] = useState<boolean>(false);
+
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [disableButton, setDisableButton] = useState<boolean>(false);
+    const [pinText, setPinText] = useState<string>(
+        "A PIN was assigned to your Account when you registered your Account. Please check your Email for the PIN or click the 'Resend PIN' to generate a new PIN.",
+    );
+
+    const { mutate: resend_pin_mutate } = useMutation(resend_pin, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg: 'An error occured while trying to resend PIN!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                setPinText('A New PIN has been sent your Email Address!');
+            }
+        },
+    });
 
     const nav_to_block_apps = no_double_clicks({
         execFunc: () => {
@@ -30,6 +61,14 @@ const ParentalControlPage: FunctionComponent = () => {
                     screen: 'BlockAppsPage',
                 } as never,
             );
+        },
+    });
+
+    const resend__pin = no_double_clicks({
+        execFunc: () => {
+            resend_pin_mutate({
+                userAuth: UserInfoStore?.user_info?.accessToken as string,
+            });
         },
     });
 
@@ -49,6 +88,10 @@ const ParentalControlPage: FunctionComponent = () => {
     return (
         <View style={styles.sub_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
+            <OverlaySpinner
+                showSpinner={showSpinner}
+                setShowSpinner={setShowSpinner}
+            />
             <View
                 style={{
                     marginTop:
@@ -87,26 +130,46 @@ const ParentalControlPage: FunctionComponent = () => {
                                 textColor={Colors.Dark}
                             />
                             <BasicText
-                                inputText="PIN --> Enter a Random PIN for now!"
+                                inputText="PIN --> Use 1234 for now"
                                 textSize={15}
                                 textWeight={500}
                                 marginTop={20}
                                 textColor={Colors.Dark}
                             />
+                            <SecureTextEntry
+                                marginHorizontal={0.01}
+                                marginTop={10}
+                                inputValue={pcPIN}
+                                setInputValue={setPCPIN}
+                                placeHolderText="Enter your PIN"
+                                inputMode="numeric"
+                            />
+                            <TextButton
+                                buttonText="Resend PIN"
+                                isFontLight
+                                marginLeft={'auto'}
+                                marginTop={8}
+                                textColor={Colors.LightPink}
+                                execFunc={resend__pin}
+                                disabled={disableButton}
+                            />
                             <Observer>
                                 {() => (
-                                    <SecureTextEntry
-                                        marginHorizontal={0.01}
-                                        marginTop={10}
-                                        inputValue={pcPIN}
-                                        setInputValue={setPCPIN}
-                                        placeHolderText="Enter your PIN"
-                                        inputMode="numeric"
+                                    <BasicText
+                                        inputText={pinText}
                                         marginBottom={
                                             KeyboardStore.keyboard_active
                                                 ? 20
                                                 : 'auto'
                                         }
+                                        textSize={15}
+                                        textWeight={500}
+                                        marginTop={20}
+                                        textColor={Colors.Dark}
+                                        width={280}
+                                        textAlign="center"
+                                        marginLeft={'auto'}
+                                        marginRight={'auto'}
                                     />
                                 )}
                             </Observer>

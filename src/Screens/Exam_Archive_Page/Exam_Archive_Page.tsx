@@ -1,20 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { FlatList, Image, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
-import { test_lessons } from '../../../test/Data/Lessons';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import ExamCard from '../../Components/Exam_Card/Exam_Card';
+import { exams } from '../../../test/Data/Exams';
 
 const ExamArchivePage: FunctionComponent = () => {
-    const retake_lesson = no_double_clicks({
-        execFunc: () => {},
-    });
-
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -48,9 +42,9 @@ const ExamArchivePage: FunctionComponent = () => {
                         Platform.OS === 'ios'
                             ? screen_height_less_than({
                                   if_true: 10,
-                                  if_false: 35,
+                                  if_false: 25,
                               })
-                            : 20,
+                            : 10,
                 }}>
                 <Image
                     source={require('../../Images/Lessons/Lessons.png')}
@@ -76,7 +70,7 @@ const ExamArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="300mins" />
+                        <BasicText inputText="5 Exams" />
                     </View>
                     <View
                         style={{
@@ -86,20 +80,18 @@ const ExamArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="100 Lessons" />
+                        <BasicText inputText="70%" />
                     </View>
                 </View>
                 <FlatList
-                    data={test_lessons}
-                    keyExtractor={item => item.lesson_id as any}
+                    data={exams}
+                    keyExtractor={item => item.exam_id as any}
                     renderItem={({ item, index }) => (
                         <ExamCard
-                            lesson={item}
+                            exam={item}
                             index={index}
                             last_index={
-                                test_lessons?.length <= 1
-                                    ? 0
-                                    : test_lessons?.length - 1
+                                exams?.length <= 1 ? 0 : exams?.length - 1
                             }
                         />
                     )}
@@ -107,14 +99,6 @@ const ExamArchivePage: FunctionComponent = () => {
                         paddingHorizontal: 18,
                         paddingTop: 14,
                     }}
-                />
-                <BasicButton
-                    execFunc={() => retake_lesson({})}
-                    buttonText="Retake Lesson"
-                    borderRadius={8}
-                    marginHorizontal={20}
-                    buttonHeight={56}
-                    marginTop={5}
                 />
             </View>
         </View>

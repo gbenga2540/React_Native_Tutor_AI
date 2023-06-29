@@ -1,6 +1,5 @@
 export interface INTF_Lesson {
     lesson_id: number;
-    title?: string;
-    imageURL?: string;
-    progress?: number;
+    lesson_topic: string;
+    lesson_sub_topic: string[];
 }

@@ -46,8 +46,7 @@ export const scheduleShowNotification = ({
             fireDate: time,
             repeats: repeat,
             repeatsComponent: {
-                // dayOfWeek: true,
-                second: true,
+                dayOfWeek: true,
             },
         });
     } else {

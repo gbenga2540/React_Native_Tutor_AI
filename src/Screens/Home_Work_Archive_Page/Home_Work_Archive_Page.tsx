@@ -5,15 +5,9 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import HomeWorkStash from '../../Components/Home_Work_Stash/Home_Work_Stash';
-import BasicButton from '../../Components/Basic_Button/Basic_Button';
-import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 
 const HomeWorkArchivePage: FunctionComponent = () => {
-    const restart_homework = no_double_clicks({
-        execFunc: () => {},
-    });
-
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -79,6 +73,13 @@ const HomeWorkArchivePage: FunctionComponent = () => {
                 style={{
                     flex: 1,
                     paddingTop: 14,
+                    marginBottom:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 10,
+                                  if_false: 25,
+                              })
+                            : 10,
                 }}>
                 <HomeWorkStash />
                 <HomeWorkStash />
@@ -89,22 +90,6 @@ const HomeWorkArchivePage: FunctionComponent = () => {
                     {''}
                 </View>
             </ScrollView>
-            <BasicButton
-                execFunc={restart_homework}
-                buttonText="Retake Lesson"
-                borderRadius={8}
-                marginHorizontal={20}
-                buttonHeight={56}
-                marginTop={5}
-                marginBottom={
-                    Platform.OS === 'ios'
-                        ? screen_height_less_than({
-                              if_true: 10,
-                              if_false: 35,
-                          })
-                        : 20
-                }
-            />
         </View>
     );
 };

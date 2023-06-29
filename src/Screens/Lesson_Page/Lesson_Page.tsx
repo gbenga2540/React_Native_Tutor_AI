@@ -1,18 +1,73 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, {
+    FunctionComponent,
+    ReactElement,
+    Suspense,
+    useEffect,
+    useState,
+} from 'react';
 import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
-import { test_lessons } from '../../../test/Data/Lessons';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import {
     screen_height_less_than,
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import {
+    Beginner,
+    Confident,
+    Intermediate,
+    PreIntermediate,
+    UpperIntermediate,
+} from '../../Data/Lessons/Lessons';
+import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
 
-const LessonPage: FunctionComponent = () => {
+const LessonPage: FunctionComponent = observer(() => {
+    const L_Beginner = Beginner;
+    const L_PreIntermediate = PreIntermediate;
+    const L_Intermediate = Intermediate;
+    const L_UpperIntermediate = UpperIntermediate;
+    const L_Confident = Confident;
+
+    const UserLevel = UserInfoStore.user_info?.level || 'Beginner';
+    const [lessons, setLessons] = useState<INTF_Lesson[]>(L_Beginner);
+
+    useEffect(() => {
+        const set_lessons_data = () => {
+            switch (UserLevel) {
+                case 'Beginner':
+                    setLessons(L_Beginner);
+                    break;
+                case 'Pre-Intermediate':
+                    setLessons(L_PreIntermediate);
+                    break;
+                case 'Intermediate':
+                    setLessons(L_Intermediate);
+                    break;
+                case 'Upper-Intermediate':
+                    setLessons(L_UpperIntermediate);
+                    break;
+                case 'Confident':
+                    setLessons(L_Confident);
+                    break;
+                default:
+                    setLessons(L_Beginner);
+                    break;
+            }
+        };
+        set_lessons_data();
+    }, [
+        UserLevel,
+        L_Beginner,
+        L_PreIntermediate,
+        L_Intermediate,
+        L_UpperIntermediate,
+        L_Confident,
+    ]);
+
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -57,20 +112,16 @@ const LessonPage: FunctionComponent = () => {
                             paddingLeft: 10,
                             paddingRight: 4,
                         }}>
-                        <Observer>
-                            {() => (
-                                <BasicText
-                                    inputText={
-                                        (UserInfoStore?.user_info
-                                            ?.level as string) || 'Beginner'
-                                    }
-                                    textColor={Colors.White}
-                                    textSize={18}
-                                    marginRight={3}
-                                    textWeight={600}
-                                />
-                            )}
-                        </Observer>
+                        <BasicText
+                            inputText={
+                                (UserInfoStore?.user_info?.level as string) ||
+                                'Beginner'
+                            }
+                            textColor={Colors.White}
+                            textSize={18}
+                            marginRight={3}
+                            textWeight={600}
+                        />
                     </View>
                     <View
                         style={{
@@ -95,38 +146,44 @@ const LessonPage: FunctionComponent = () => {
                         />
                     </View>
                 </View>
-                <FlatList
-                    ListHeaderComponent={() =>
-                        (
-                            <View style={{ marginTop: 20 }}>{''}</View>
-                        ) as ReactElement<any>
-                    }
-                    data={test_lessons}
-                    keyExtractor={item => item.lesson_id as any}
-                    renderItem={({ item, index }) => (
-                        <LessonCard
-                            lesson={item}
-                            index={index}
-                            last_index={
-                                test_lessons?.length <= 1
-                                    ? 0
-                                    : test_lessons?.length - 1
+                {lessons?.length > 0 && (
+                    <Suspense fallback={null}>
+                        <FlatList
+                            ListHeaderComponent={() =>
+                                (
+                                    <View style={{ marginTop: 20 }}>{''}</View>
+                                ) as ReactElement<any>
+                            }
+                            data={lessons}
+                            keyExtractor={item => item.lesson_id as any}
+                            renderItem={({ item, index }) => (
+                                <LessonCard
+                                    lesson={item}
+                                    index={index}
+                                    last_index={
+                                        lessons?.length <= 1
+                                            ? 0
+                                            : lessons?.length - 1
+                                    }
+                                />
+                            )}
+                            style={{
+                                paddingHorizontal: 18,
+                            }}
+                            ListFooterComponent={() =>
+                                (
+                                    <View style={{ marginBottom: 130 }}>
+                                        {''}
+                                    </View>
+                                ) as ReactElement<any>
                             }
                         />
-                    )}
-                    style={{
-                        paddingHorizontal: 18,
-                    }}
-                    ListFooterComponent={() =>
-                        (
-                            <View style={{ marginBottom: 130 }}>{''}</View>
-                        ) as ReactElement<any>
-                    }
-                />
+                    </Suspense>
+                )}
             </View>
         </View>
     );
-};
+});
 
 export default LessonPage;
 

@@ -31,6 +31,9 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
 }) => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
+    const is_completed = false;
+    const lesson_progress = 0;
+
     return (
         <TouchableOpacity
             onPress={no_double_clicks({
@@ -40,7 +43,7 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                         {
                             screen: 'LessonConvPage',
                             params: {
-                                topic: lesson?.title,
+                                topic: lesson?.lesson_topic,
                             },
                         } as never,
                     );
@@ -51,10 +54,9 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
             style={[
                 styles.lesson_main,
                 {
-                    backgroundColor:
-                        lesson?.progress === 100
-                            ? Colors.Primary
-                            : Colors.LightPurple3,
+                    backgroundColor: is_completed
+                        ? Colors.Primary
+                        : Colors.LightPurple3,
                     marginBottom:
                         index === last_index
                             ? Platform.OS === 'ios'
@@ -65,30 +67,21 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
             ]}>
             <ArcInnerIcon
                 style={{ position: 'absolute', right: 0 }}
-                color={
-                    lesson?.progress === 100
-                        ? Colors.ArcInner_A
-                        : Colors.ArcInner_I
-                }
+                color={is_completed ? Colors.ArcInner_A : Colors.ArcInner_I}
             />
             <ArcOuterIcon
                 style={{ position: 'absolute', right: 0 }}
-                color={
-                    lesson?.progress === 100
-                        ? Colors.ArcOuter_A
-                        : Colors.ArcOuter_I
-                }
+                color={is_completed ? Colors.ArcOuter_A : Colors.ArcOuter_I}
             />
             <Text
                 style={{
-                    color:
-                        lesson?.progress === 100 ? Colors.White : Colors.Black,
+                    color: is_completed ? Colors.White : Colors.Black,
                     fontFamily: fonts.Urbanist_600,
                     fontSize: 15,
                     position: 'absolute',
                     right: 10,
                     top: 10,
-                }}>{`${lesson?.progress}%`}</Text>
+                }}>{`${lesson_progress}%`}</Text>
             <View style={{ flexDirection: 'row' }}>
                 <View
                     style={{
@@ -99,19 +92,14 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                         height: 100,
                         borderRadius: 100,
                         borderWidth: 2,
-                        borderColor:
-                            lesson?.progress === 100
-                                ? Colors.ArcInner_A
-                                : Colors.ArcInner_I,
+                        borderColor: is_completed
+                            ? Colors.ArcInner_A
+                            : Colors.ArcInner_I,
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>
                     <Image
-                        source={{
-                            uri: lesson?.imageURL,
-                            width: 88,
-                            height: 88,
-                        }}
+                        source={require('../../Images/Logos/Tutor_AI_Logo.png')}
                         style={{
                             borderRadius: 90,
                             width: 90,
@@ -130,21 +118,13 @@ const LessonCard: FunctionComponent<LessonCardProps> = ({
                         inputText={`Lesson ${lesson?.lesson_id}`}
                         textWeight={500}
                         textSize={15}
-                        textColor={
-                            lesson?.progress === 100
-                                ? Colors.White
-                                : Colors.Black
-                        }
+                        textColor={is_completed ? Colors.White : Colors.Black}
                     />
                     <BasicText
-                        inputText={lesson?.title as string}
+                        inputText={lesson?.lesson_topic as string}
                         textWeight={600}
                         textSize={18}
-                        textColor={
-                            lesson?.progress === 100
-                                ? Colors.White
-                                : Colors.Black
-                        }
+                        textColor={is_completed ? Colors.White : Colors.Black}
                     />
                 </View>
             </View>

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
     Image,
     Platform,
@@ -23,10 +23,48 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import Sound from 'react-native-sound';
+import { useMutation } from 'react-query';
+import { increase_lessons } from '../../Configs/Queries/Users/Users';
+import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const CongratulationsPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
+
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [disableButton, setDisableButton] = useState<boolean>(false);
+
+    const { mutate: increase_lessons_mutate } = useMutation(increase_lessons, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'Something went wrong! Please go back and press Continue again.',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [
+                            {
+                                name: 'HomeStack',
+                            },
+                        ],
+                    }),
+                );
+            }
+        },
+    });
 
     const proceed = no_double_clicks({
         execFunc: () => {
@@ -64,17 +102,10 @@ const CongratulationsPage: FunctionComponent = () => {
                     );
                     break;
                 case 5:
-                    // ?: Add Logic to Increase User Payment. Added here to avoid Errors of having to repay
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [
-                                {
-                                    name: 'HomeStack',
-                                },
-                            ],
-                        }),
-                    );
+                    increase_lessons_mutate({
+                        userAuth: UserInfoStore.user_info.accessToken as string,
+                        noOfLessons: route.params?.noOfLessons,
+                    });
                     break;
                 default:
                     navigation.push(
@@ -117,6 +148,10 @@ const CongratulationsPage: FunctionComponent = () => {
             <CustomStatusBar
                 backgroundColor={Colors.Background}
                 lightContent={false}
+            />
+            <OverlaySpinner
+                showSpinner={showSpinner}
+                setShowSpinner={setShowSpinner}
             />
             <ScrollView
                 style={{
@@ -193,6 +228,7 @@ const CongratulationsPage: FunctionComponent = () => {
                 </View>
             </ScrollView>
             <BasicButton
+                disabled={disableButton}
                 buttonText="Continue"
                 marginHorizontal={22}
                 execFunc={() => proceed({})}

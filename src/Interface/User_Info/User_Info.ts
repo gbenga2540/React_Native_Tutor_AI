@@ -9,6 +9,7 @@ export interface INTF_UserInfo {
     fullname?: string;
     interests?: string[];
     level?: INTF_AssignedClass;
+    initialLevel?: INTF_AssignedClass;
     mobile?: string;
     paymentStatus?: boolean;
     updatedAt?: string;

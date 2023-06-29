@@ -15,16 +15,11 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 PushNotification.configure({
-    onRegister: token => {
-        // console.log('TOKEN:', token);
-    },
+    onRegister: token => {},
     onNotification: notification => {
-        // console.log('NOTIFICATION:', notification);
         notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
-    onRegistrationError: _err => {
-        // console.error(err.message, err);
-    },
+    onRegistrationError: _err => {},
     permissions: {
         alert: true,
         badge: true,

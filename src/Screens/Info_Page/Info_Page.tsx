@@ -22,12 +22,14 @@ import {
     SECURE_STORAGE_VOICE_INFO,
 } from '@env';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { MutationCache, QueryCache } from 'react-query';
+import { MutationCache, QueryCache, useMutation } from 'react-query';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { ScheduleInfoStore } from '../../MobX/Schedules_Info/Schedules_Info';
 import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { delete_account } from '../../Configs/Queries/Users/Users';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 
 const InfoPage: FunctionComponent = () => {
     const queryCache = new QueryCache();
@@ -42,8 +44,31 @@ const InfoPage: FunctionComponent = () => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
-    const delete_account = () => {
-        sign_out();
+    const { mutate: delete_account_mutate } = useMutation(delete_account, {
+        onMutate: () => {
+            setDisableButton(true);
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            setShowSpinner(false);
+            setDisableButton(false);
+            if (data?.error) {
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'Something went wrong! Unable to delete Account.',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                sign_out();
+            }
+        },
+    });
+
+    const delete__account = () => {
+        delete_account_mutate({
+            userAuth: UserInfoStore.user_info.accessToken as string,
+        });
     };
 
     const sign_out = async () => {
@@ -120,7 +145,7 @@ const InfoPage: FunctionComponent = () => {
                     );
                     break;
                 case 5:
-                    delete_account();
+                    delete__account();
                     break;
                 default:
                     navigation.dispatch(
@@ -238,7 +263,7 @@ const InfoPage: FunctionComponent = () => {
                         buttonHeight={52}
                         marginTop={0}
                         marginBottom={0}
-                        execFunc={proceed}
+                        execFunc={() => proceed({})}
                         disabled={disableButton}
                     />
                 </View>

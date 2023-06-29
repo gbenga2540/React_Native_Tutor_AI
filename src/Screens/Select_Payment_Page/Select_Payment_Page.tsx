@@ -105,6 +105,9 @@ const SelectPaymentPage: FunctionComponent = () => {
                         )?.[0]?.no_of_lessons
                     } Lessons!`,
                     nextPage: 5,
+                    noOfLessons: subscription_data.filter(
+                        item => item?.plan === route.params?.paymentPlan,
+                    )?.[0]?.no_of_lessons,
                 },
             } as never,
         );

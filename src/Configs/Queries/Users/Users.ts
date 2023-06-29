@@ -276,7 +276,7 @@ export const increase_lessons = async ({
         },
     };
     return await api_base_url
-        .patch(
+        .put(
             'user/increase',
             {
                 no_of_lessons: noOfLessons,
