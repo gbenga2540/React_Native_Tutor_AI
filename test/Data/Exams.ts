@@ -2,28 +2,28 @@ import { INTF_Exam } from '../../src/Interface/Exams/Exams';
 
 export const exams: INTF_Exam[] = [
     {
-        exam_id: 1,
-        exam_level: 'Beginner',
+        _id: '1',
+        level: 'Beginner',
         score: 100,
     },
     {
-        exam_id: 2,
-        exam_level: 'Pre-Intermediate',
+        _id: '2',
+        level: 'Pre-Intermediate',
         score: 80,
     },
     {
-        exam_id: 3,
-        exam_level: 'Intermediate',
+        _id: '3',
+        level: 'Intermediate',
         score: 80,
     },
     {
-        exam_id: 4,
-        exam_level: 'Upper-Intermediate',
+        _id: '4',
+        level: 'Upper-Intermediate',
         score: 95,
     },
     {
-        exam_id: 5,
-        exam_level: 'Confident',
+        _id: '5',
+        level: 'Confident',
         score: 100,
     },
 ];

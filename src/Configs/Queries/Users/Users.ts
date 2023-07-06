@@ -14,7 +14,7 @@ export const forgot_password = async ({ email }: { email: string }) => {
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -56,7 +56,7 @@ export const change_password = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -107,7 +107,7 @@ export const update_user_info = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -147,7 +147,7 @@ export const update_level = async ({
             .catch(err => {
                 return {
                     error: true,
-                    data: err?.message,
+                    data: JSON.stringify(err?.response?.data || err?.message),
                 };
             })
             .then((res: any) => {
@@ -198,7 +198,7 @@ export const update_misc = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -237,7 +237,7 @@ export const update_dp = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -286,7 +286,7 @@ export const increase_lessons = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -321,7 +321,7 @@ export const delete_account = async ({ userAuth }: { userAuth: string }) => {
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {

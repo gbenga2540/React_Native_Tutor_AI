@@ -1,17 +1,58 @@
 import Axios from 'axios';
 import { base_url } from '../Base/Base_URL';
-import { INTF_PaymentPlan } from '../../../Interface/Subscription/Subscription';
 
 const api_base_url = Axios.create({
     baseURL: base_url,
 });
 
-export const stripe_intent = async ({
-    userPlan,
-    userAuth,
+export const activate_lesson = async ({
+    userId,
+    lessonId,
 }: {
-    userPlan: INTF_PaymentPlan;
+    userId: string;
+    lessonId: number;
+}) => {
+    return await api_base_url
+        .patch('lesson/activate', {
+            user_id: userId,
+            lesson_id: lessonId,
+        })
+        .catch(err => {
+            return {
+                error: true,
+                data: JSON.stringify(err?.response?.data || err?.message),
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const set_homework_score = async ({
+    userAuth,
+    lessonId,
+    lessonScore,
+}: {
     userAuth: string;
+    lessonId: number;
+    lessonScore: number;
 }) => {
     const headersConfig = {
         headers: {
@@ -20,10 +61,11 @@ export const stripe_intent = async ({
         },
     };
     return await api_base_url
-        .post(
-            'payment/stripe-intent',
+        .patch(
+            'lesson/hw-score',
             {
-                userPlan: userPlan,
+                lesson_id: lessonId,
+                lesson_score: lessonScore,
             },
             headersConfig,
         )
@@ -55,12 +97,14 @@ export const stripe_intent = async ({
         });
 };
 
-export const paypal_intent = async ({
-    userPlan,
+export const set_exam_score = async ({
     userAuth,
+    examLevel,
+    examScore,
 }: {
-    userPlan: INTF_PaymentPlan;
     userAuth: string;
+    examLevel: number;
+    examScore: number;
 }) => {
     const headersConfig = {
         headers: {
@@ -69,10 +113,11 @@ export const paypal_intent = async ({
         },
     };
     return await api_base_url
-        .post(
-            'payment/paypal-intent',
+        .patch(
+            'lesson/exam-score',
             {
-                userPlan: userPlan,
+                exam_lvl: examLevel,
+                exam_score: examScore,
             },
             headersConfig,
         )

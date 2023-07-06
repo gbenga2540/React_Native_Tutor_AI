@@ -13,7 +13,7 @@ export const gpt_request = async ({ message }: { message: string }) => {
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {

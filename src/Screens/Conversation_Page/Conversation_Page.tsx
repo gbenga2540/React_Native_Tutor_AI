@@ -47,6 +47,15 @@ const ConversationPage: FunctionComponent = observer(() => {
         },
     });
 
+    const speak_info = no_double_clicks({
+        execFunc: () => {
+            TextToSpeechStore.clear_speech();
+            TextToSpeechStore.play_speech({
+                speech: 'Press the Microphone Button to start or continue a conversation.',
+            });
+        },
+    });
+
     useEffect(() => {
         socketIO.on('conversation', reply => {
             setChats(prevChat => [...prevChat, { isAI: true, chat: reply }]);
@@ -107,6 +116,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                 marginBottom={4}
                 marginHorizontal={22}
                 isSubtitleIcon
+                onPressVoice={speak_info}
             />
             <KeyboardAvoidingView
                 style={{

@@ -29,7 +29,7 @@ export const register = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -60,7 +60,7 @@ export const resend_otp = async ({ uid }: { uid: string }) => {
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -99,7 +99,7 @@ export const verify_otp = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -138,7 +138,7 @@ export const set_password = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -178,7 +178,7 @@ export const login = async ({
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {
@@ -215,7 +215,7 @@ export const resend_pin = async ({ userAuth }: { userAuth: string }) => {
         .catch(err => {
             return {
                 error: true,
-                data: err?.message,
+                data: JSON.stringify(err?.response?.data || err?.message),
             };
         })
         .then((res: any) => {

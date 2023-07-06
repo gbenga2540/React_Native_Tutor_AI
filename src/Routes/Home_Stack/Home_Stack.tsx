@@ -18,6 +18,10 @@ import HomeWorkArchivePage from '../../Screens/Home_Work_Archive_Page/Home_Work_
 import LessonConvPage from '../../Screens/Lesson_Conv_Page/Lesson_Conv_Page';
 import ScheduleClassPage from '../../Screens/Schedule_Class_Page/Schedule_Class_Page';
 import ExamArchivePage from '../../Screens/Exam_Archive_Page/Exam_Archive_Page';
+import VerifyOTPPage from '../../Screens/Verify_OTP_Page/Verify_OTP_Page';
+import HomeWorkQPage from '../../Screens/Home_Work_Q_Page/Home_Work_Q_Page';
+import CongratulationsPage from '../../Screens/Congratulations_Page/Congratulations_Page';
+import ExamQPage from '../../Screens/Exam_Q_Page/Exam_Q_Page';
 
 type HomeStackParamList = {
     HomeTab: {};
@@ -38,6 +42,10 @@ type HomeStackParamList = {
     LessonConvPage: {};
     ScheduleClassPage: {};
     ExamArchivePage: {};
+    VerifyOTPPage: {};
+    HomeWorkQPage: {};
+    CongratulationsPage: {};
+    ExamQPage: {};
 };
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -109,6 +117,13 @@ const HomeStack: FunctionComponent = () => {
                 name="ExamArchivePage"
                 component={ExamArchivePage}
             />
+            <Home_Stack.Screen name="VerifyOTPPage" component={VerifyOTPPage} />
+            <Home_Stack.Screen name="HomeWorkQPage" component={HomeWorkQPage} />
+            <Home_Stack.Screen
+                name="CongratulationsPage"
+                component={CongratulationsPage}
+            />
+            <Home_Stack.Screen name="ExamQPage" component={ExamQPage} />
         </Home_Stack.Navigator>
     );
 };

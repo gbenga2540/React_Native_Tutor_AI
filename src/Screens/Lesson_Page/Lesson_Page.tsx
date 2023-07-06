@@ -22,55 +22,64 @@ import {
     Intermediate,
     PreIntermediate,
     UpperIntermediate,
-} from '../../Data/Lessons/Lessons';
-import { INTF_Lesson } from '../../Interface/Lesson/Lesson';
+} from '../../Data/Lessons_Topics/Lessons_Topics';
+import { INTF_LessonTopics } from '../../Interface/Lesson/Lesson';
+import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 
 const LessonPage: FunctionComponent = observer(() => {
-    const L_Beginner = Beginner;
-    const L_PreIntermediate = PreIntermediate;
-    const L_Intermediate = Intermediate;
-    const L_UpperIntermediate = UpperIntermediate;
-    const L_Confident = Confident;
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
     const UserLevel = UserInfoStore.user_info?.level || 'Beginner';
-    const [lessons, setLessons] = useState<INTF_Lesson[]>(L_Beginner);
+    const [lessons, setLessons] = useState<INTF_LessonTopics[]>(Beginner || []);
+    const UserLessonScore = UserInfoStore.user_info?.lessons || [];
+
+    const is_lesson_available = ({ lesson_id }: { lesson_id: number }) => {
+        const currentLesson = UserLessonScore?.filter(
+            l_score => l_score?.id === lesson_id,
+        );
+        return (
+            currentLesson?.length > 0 ||
+            currentLesson?.[0]?.id === 101 ||
+            currentLesson?.[0]?.id === 201 ||
+            currentLesson?.[0]?.id === 301 ||
+            currentLesson?.[0]?.id === 401 ||
+            currentLesson?.[0]?.id === 501
+        );
+    };
 
     useEffect(() => {
         const set_lessons_data = () => {
             switch (UserLevel) {
                 case 'Beginner':
-                    setLessons(L_Beginner);
+                    setLessons(Beginner || []);
                     break;
                 case 'Pre-Intermediate':
-                    setLessons(L_PreIntermediate);
+                    setLessons(PreIntermediate || []);
                     break;
                 case 'Intermediate':
-                    setLessons(L_Intermediate);
+                    setLessons(Intermediate || []);
                     break;
                 case 'Upper-Intermediate':
-                    setLessons(L_UpperIntermediate);
+                    setLessons(UpperIntermediate || []);
                     break;
                 case 'Confident':
-                    setLessons(L_Confident);
+                    setLessons(Confident || []);
                     break;
                 default:
-                    setLessons(L_Beginner);
+                    setLessons(Beginner || []);
                     break;
             }
         };
         set_lessons_data();
-    }, [
-        UserLevel,
-        L_Beginner,
-        L_PreIntermediate,
-        L_Intermediate,
-        L_UpperIntermediate,
-        L_Confident,
-    ]);
+    }, [UserLevel]);
 
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
+            <OverlaySpinner
+                showSpinner={showSpinner}
+                setShowSpinner={setShowSpinner}
+            />
             <View style={styles.l_header_cont}>
                 <BasicText
                     inputText="Lessons"
@@ -155,7 +164,7 @@ const LessonPage: FunctionComponent = observer(() => {
                                 ) as ReactElement<any>
                             }
                             data={lessons}
-                            keyExtractor={item => item.lesson_id as any}
+                            keyExtractor={item => item.lesson_index as any}
                             renderItem={({ item, index }) => (
                                 <LessonCard
                                     lesson={item}
@@ -165,6 +174,11 @@ const LessonPage: FunctionComponent = observer(() => {
                                             ? 0
                                             : lessons?.length - 1
                                     }
+                                    is_available={is_lesson_available({
+                                        lesson_id: item?.lesson_id,
+                                    })}
+                                    setShowSpinner={setShowSpinner}
+                                    key={index}
                                 />
                             )}
                             style={{

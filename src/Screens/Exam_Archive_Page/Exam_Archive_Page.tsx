@@ -6,9 +6,29 @@ import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import ExamCard from '../../Components/Exam_Card/Exam_Card';
-import { exams } from '../../../test/Data/Exams';
+import { observer } from 'mobx-react';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
-const ExamArchivePage: FunctionComponent = () => {
+const ExamArchivePage: FunctionComponent = observer(() => {
+    const UserInfo = UserInfoStore?.user_info;
+
+    const ExamsDone =
+        UserInfo?.exams?.filter(
+            item => item?.score !== null && item?.score !== undefined,
+        ) || [];
+
+    const calculate_average = ({ scores_data }: { scores_data: any[] }) => {
+        if ((scores_data || []).length === 0) {
+            return 0;
+        }
+        const sum = (scores_data || []).reduce(
+            (total, score) => total + (score.score || 0),
+            0,
+        );
+        const average = sum / (scores_data || []).length;
+        return Math.floor(average);
+    };
+
     return (
         <View style={styles.lesson_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -70,7 +90,11 @@ const ExamArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="5 Exams" />
+                        <BasicText
+                            inputText={`${ExamsDone?.length} Exam${
+                                ExamsDone?.length === 1 ? '' : 's'
+                            }`}
+                        />
                     </View>
                     <View
                         style={{
@@ -80,18 +104,24 @@ const ExamArchivePage: FunctionComponent = () => {
                             backgroundColor: Colors.LightPurple2,
                             borderRadius: 10,
                         }}>
-                        <BasicText inputText="70%" />
+                        <BasicText
+                            inputText={`${calculate_average({
+                                scores_data: ExamsDone,
+                            })}%`}
+                        />
                     </View>
                 </View>
                 <FlatList
-                    data={exams}
-                    keyExtractor={item => item.exam_id as any}
+                    data={ExamsDone}
+                    keyExtractor={item => item.level as any}
                     renderItem={({ item, index }) => (
                         <ExamCard
                             exam={item}
                             index={index}
                             last_index={
-                                exams?.length <= 1 ? 0 : exams?.length - 1
+                                ExamsDone?.length <= 1
+                                    ? 0
+                                    : ExamsDone?.length - 1
                             }
                         />
                     )}
@@ -103,7 +133,7 @@ const ExamArchivePage: FunctionComponent = () => {
             </View>
         </View>
     );
-};
+});
 
 export default ExamArchivePage;
 

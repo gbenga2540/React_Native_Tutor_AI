@@ -69,25 +69,19 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         setMicText(result.value?.[0] || '');
     };
 
-    Voice.onSpeechError = error => {
-        console.log(error);
-    };
+    Voice.onSpeechError = _error => {};
 
     const start_recording = async () => {
         try {
             await Voice.start('en-US');
-        } catch (error) {
-            console.log('START:', error);
-        }
+        } catch (error) {}
     };
     const stop_recording = async () => {
         try {
             await Voice.stop();
             setIsOptionsShown(true);
             open_options();
-        } catch (error) {
-            console.log('STOP:', error);
-        }
+        } catch (error) {}
     };
 
     const pressableStyle = useAnimatedStyle(() => {

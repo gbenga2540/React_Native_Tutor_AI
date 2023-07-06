@@ -50,6 +50,7 @@ const PreTestPage: FunctionComponent = observer(() => {
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
     const [disableButton, setDisableButton] = useState<boolean>(false);
     const [hasNav, setHasNav] = useState<boolean>(false);
+    const [canAnswer, setCanAnswer] = useState<boolean>(true);
 
     const { mutate: update_level_mutate } = useMutation(update_level, {
         onMutate: () => {
@@ -128,59 +129,21 @@ const PreTestPage: FunctionComponent = observer(() => {
         'NoChange',
     );
 
-    // DATA
-    const p_beginner = proficiency_test.filter(
-        item => item.englishLevel === 'A2',
+    const [pQuestions, setPQuestions] = useState<INTF_ProficiencyTest[]>(
+        proficiency_test.filter(item => item.englishLevel === 'A2'),
     );
-    const p_pre_intermediate = proficiency_test.filter(
-        item => item.englishLevel === 'B1',
-    );
-    const p_intermediate = proficiency_test.filter(
-        item => item.englishLevel === 'B2',
-    );
-    const p_upper_intermediate = proficiency_test.filter(
-        item => item.englishLevel === 'C1',
-    );
-    const [pQuestions, setPQuestions] =
-        useState<INTF_ProficiencyTest[]>(p_beginner);
     const noOfQuestions = pQuestions?.length;
     const [currentQuestion, setCurrentQuestion] = useState<number>(0);
     const [pAnswers, setPAnswers] = useState<number[]>([]);
     const [allAnswers, setAllAnswers] = useState<number[]>([]);
 
-    const l_beginner = listening_test.filter(
-        item => item.englishLevel === 'A2',
-    );
-    const l_pre_intermediate = listening_test.filter(
-        item => item.englishLevel === 'B1',
-    );
-    const l_intermediate = listening_test.filter(
-        item => item.englishLevel === 'B2',
-    );
-    const l_upper_intermediate = listening_test.filter(
-        item => item.englishLevel === 'C1',
-    );
-    const l_confident = listening_test.filter(
-        item => item.englishLevel === 'C2',
-    );
     const [lQuestions, setLQuestions] = useState<INTF_ListeningTest>(
-        l_beginner[0],
+        listening_test.filter(item => item.englishLevel === 'A2')[0],
     );
     const [lAnswer, setLAnswer] = useState<number | null>(null);
 
-    const w_beginner = writing_test.filter(item => item.englishLevel === 'A2');
-    const w_pre_intermediate = writing_test.filter(
-        item => item.englishLevel === 'B1',
-    );
-    const w_intermediate = writing_test.filter(
-        item => item.englishLevel === 'B2',
-    );
-    const w_upper_intermediate = writing_test.filter(
-        item => item.englishLevel === 'C1',
-    );
-    const w_confident = writing_test.filter(item => item.englishLevel === 'C2');
     const [wQuestions, setWQuestions] = useState<INTF_WritingTest>(
-        w_beginner[0],
+        writing_test.filter(item => item.englishLevel === 'A2')[0],
     );
     const [wAnswer, setWAnswer] = useState<string>('');
 
@@ -230,136 +193,141 @@ const PreTestPage: FunctionComponent = observer(() => {
                             maxValue: noOfQuestions,
                         }),
                     );
+                    setCanAnswer(true);
                 };
 
-                if (currentQuestionInfo.multiple_choice) {
-                    if (pAnswers?.length !== 2) {
-                        error_handler({
-                            navigation: navigation,
-                            error_mssg:
-                                'Two Answers are required for this Question!',
-                        });
-                    } else {
-                        setAllAnswers(prev => {
-                            const old = prev;
-                            old.push(
+                if (canAnswer) {
+                    if (currentQuestionInfo.multiple_choice) {
+                        if (pAnswers?.length !== 2) {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg:
+                                    'Two Answers are required for this Question!',
+                            });
+                        } else {
+                            setAllAnswers(prev => {
+                                const old = prev;
+                                old.push(
+                                    compare_array_contents({
+                                        arr1: answersToQuestion[0].answers,
+                                        arr2: pAnswers,
+                                    })
+                                        ? 1
+                                        : 0,
+                                );
+                                return old;
+                            });
+                            setCanAnswer(false);
+                            if (
                                 compare_array_contents({
                                     arr1: answersToQuestion[0].answers,
                                     arr2: pAnswers,
                                 })
-                                    ? 1
-                                    : 0,
-                            );
-                            return old;
-                        });
-                        if (
-                            compare_array_contents({
-                                arr1: answersToQuestion[0].answers,
-                                arr2: pAnswers,
-                            })
-                        ) {
-                            setAnswerUI('Correct');
-                            const correct_sound = new Sound(
-                                'correct.mp3',
-                                Sound.MAIN_BUNDLE,
-                                error => {
-                                    if (error) {
-                                        nextQuestion();
-                                    } else {
-                                        correct_sound.play(success => {
-                                            if (success) {
-                                                nextQuestion();
-                                            } else {
-                                                nextQuestion();
-                                            }
-                                        });
-                                    }
-                                },
-                            );
-                        } else {
-                            setAnswerUI('Wrong');
-                            const wrong_sound = new Sound(
-                                'incorrect.mp3',
-                                Sound.MAIN_BUNDLE,
-                                error => {
-                                    if (error) {
-                                        nextQuestion();
-                                    } else {
-                                        wrong_sound.play(success => {
-                                            if (success) {
-                                                nextQuestion();
-                                            } else {
-                                                nextQuestion();
-                                            }
-                                        });
-                                    }
-                                },
-                            );
+                            ) {
+                                setAnswerUI('Correct');
+                                const correct_sound = new Sound(
+                                    'correct.mp3',
+                                    Sound.MAIN_BUNDLE,
+                                    error => {
+                                        if (error) {
+                                            nextQuestion();
+                                        } else {
+                                            correct_sound.play(success => {
+                                                if (success) {
+                                                    nextQuestion();
+                                                } else {
+                                                    nextQuestion();
+                                                }
+                                            });
+                                        }
+                                    },
+                                );
+                            } else {
+                                setAnswerUI('Wrong');
+                                const wrong_sound = new Sound(
+                                    'incorrect.mp3',
+                                    Sound.MAIN_BUNDLE,
+                                    error => {
+                                        if (error) {
+                                            nextQuestion();
+                                        } else {
+                                            wrong_sound.play(success => {
+                                                if (success) {
+                                                    nextQuestion();
+                                                } else {
+                                                    nextQuestion();
+                                                }
+                                            });
+                                        }
+                                    },
+                                );
+                            }
                         }
-                    }
-                } else {
-                    if (pAnswers?.length !== 1) {
-                        error_handler({
-                            navigation: navigation,
-                            error_mssg:
-                                'One Answer is required for this Question!',
-                        });
                     } else {
-                        setAllAnswers(prev => {
-                            const old = prev;
-                            old.push(
+                        if (pAnswers?.length !== 1) {
+                            error_handler({
+                                navigation: navigation,
+                                error_mssg:
+                                    'One Answer is required for this Question!',
+                            });
+                        } else {
+                            setAllAnswers(prev => {
+                                const old = prev;
+                                old.push(
+                                    compare_array_contents({
+                                        arr1: answersToQuestion[0].answers,
+                                        arr2: pAnswers,
+                                    })
+                                        ? 1
+                                        : 0,
+                                );
+                                return old;
+                            });
+                            setCanAnswer(false);
+                            if (
                                 compare_array_contents({
                                     arr1: answersToQuestion[0].answers,
                                     arr2: pAnswers,
                                 })
-                                    ? 1
-                                    : 0,
-                            );
-                            return old;
-                        });
-                        if (
-                            compare_array_contents({
-                                arr1: answersToQuestion[0].answers,
-                                arr2: pAnswers,
-                            })
-                        ) {
-                            setAnswerUI('Correct');
-                            const correct_sound = new Sound(
-                                'correct.mp3',
-                                Sound.MAIN_BUNDLE,
-                                error => {
-                                    if (error) {
-                                        nextQuestion();
-                                    } else {
-                                        correct_sound.play(success => {
-                                            if (success) {
-                                                nextQuestion();
-                                            } else {
-                                                nextQuestion();
-                                            }
-                                        });
-                                    }
-                                },
-                            );
-                        } else {
-                            setAnswerUI('Wrong');
-                            const wrong_sound = new Sound(
-                                'incorrect.mp3',
-                                Sound.MAIN_BUNDLE,
-                                error => {
-                                    if (error) {
-                                        nextQuestion();
-                                    } else {
-                                        wrong_sound.play(success => {
-                                            if (success) {
-                                                nextQuestion();
-                                            } else {
-                                                nextQuestion();
-                                            }
-                                        });
-                                    }
-                                },
-                            );
+                            ) {
+                                setAnswerUI('Correct');
+                                const correct_sound = new Sound(
+                                    'correct.mp3',
+                                    Sound.MAIN_BUNDLE,
+                                    error => {
+                                        if (error) {
+                                            nextQuestion();
+                                        } else {
+                                            correct_sound.play(success => {
+                                                if (success) {
+                                                    nextQuestion();
+                                                } else {
+                                                    nextQuestion();
+                                                }
+                                            });
+                                        }
+                                    },
+                                );
+                            } else {
+                                setAnswerUI('Wrong');
+                                const wrong_sound = new Sound(
+                                    'incorrect.mp3',
+                                    Sound.MAIN_BUNDLE,
+                                    error => {
+                                        if (error) {
+                                            nextQuestion();
+                                        } else {
+                                            wrong_sound.play(success => {
+                                                if (success) {
+                                                    nextQuestion();
+                                                } else {
+                                                    nextQuestion();
+                                                }
+                                            });
+                                        }
+                                    },
+                                );
+                            }
                         }
                     }
                 }
@@ -368,22 +336,46 @@ const PreTestPage: FunctionComponent = observer(() => {
             if (lAnswer !== null) {
                 switch (assignedLevel) {
                     case 'Beginner':
-                        setWQuestions(w_beginner[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'A2',
+                            )[0],
+                        );
                         break;
                     case 'Pre-Intermediate':
-                        setWQuestions(w_pre_intermediate[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'B1',
+                            )[0],
+                        );
                         break;
                     case 'Intermediate':
-                        setWQuestions(w_intermediate[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'B2',
+                            )[0],
+                        );
                         break;
                     case 'Upper-Intermediate':
-                        setWQuestions(w_upper_intermediate[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'C1',
+                            )[0],
+                        );
                         break;
                     case 'Confident':
-                        setWQuestions(w_confident[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'C2',
+                            )[0],
+                        );
                         break;
                     default:
-                        setWQuestions(w_beginner[0]);
+                        setWQuestions(
+                            writing_test.filter(
+                                item => item.englishLevel === 'A2',
+                            )[0],
+                        );
                         break;
                 }
                 setStage('Writing');
@@ -401,14 +393,14 @@ const PreTestPage: FunctionComponent = observer(() => {
                 wAnswer?.length >
                 wQuestions.question?.length -
                     (assignedLevel === 'Beginner'
-                        ? 25
+                        ? 35
                         : assignedLevel === 'Pre-Intermediate'
-                        ? 60
+                        ? 70
                         : assignedLevel === 'Intermediate'
-                        ? 100
+                        ? 140
                         : assignedLevel === 'Upper-Intermediate'
-                        ? 250
-                        : 100)
+                        ? 280
+                        : 150)
             ) {
                 update_level_mutate({
                     uid: UserInfoStore?.user_info?._id as string,
@@ -430,19 +422,31 @@ const PreTestPage: FunctionComponent = observer(() => {
                 const score = allAnswers?.filter(item => item === 1)?.length;
 
                 if (assignedLevel === 'Beginner' && score >= 7) {
-                    setPQuestions(p_pre_intermediate);
+                    setPQuestions(
+                        proficiency_test.filter(
+                            item => item.englishLevel === 'B1',
+                        ),
+                    );
                     setAllAnswers([]);
                     setPAnswers([]);
                     setCurrentQuestion(0);
                     setAssignedLevel('Pre-Intermediate');
                 } else if (assignedLevel === 'Pre-Intermediate' && score >= 7) {
-                    setPQuestions(p_intermediate);
+                    setPQuestions(
+                        proficiency_test.filter(
+                            item => item.englishLevel === 'B2',
+                        ),
+                    );
                     setAllAnswers([]);
                     setPAnswers([]);
                     setCurrentQuestion(0);
                     setAssignedLevel('Intermediate');
                 } else if (assignedLevel === 'Intermediate' && score >= 6) {
-                    setPQuestions(p_upper_intermediate);
+                    setPQuestions(
+                        proficiency_test.filter(
+                            item => item.englishLevel === 'C1',
+                        ),
+                    );
                     setAllAnswers([]);
                     setPAnswers([]);
                     setCurrentQuestion(0);
@@ -452,7 +456,11 @@ const PreTestPage: FunctionComponent = observer(() => {
                     score >= 6
                 ) {
                     setAssignedLevel('Confident');
-                    setLQuestions(l_confident[0]);
+                    setLQuestions(
+                        listening_test.filter(
+                            item => item.englishLevel === 'C2',
+                        )[0],
+                    );
                     setStage('Listening');
                     TextToSpeechStore.play_speech({
                         speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
@@ -460,22 +468,46 @@ const PreTestPage: FunctionComponent = observer(() => {
                 } else {
                     switch (assignedLevel) {
                         case 'Beginner':
-                            setLQuestions(l_beginner[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'A2',
+                                )[0],
+                            );
                             break;
                         case 'Pre-Intermediate':
-                            setLQuestions(l_pre_intermediate[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'B1',
+                                )[0],
+                            );
                             break;
                         case 'Intermediate':
-                            setLQuestions(l_intermediate[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'B2',
+                                )[0],
+                            );
                             break;
                         case 'Upper-Intermediate':
-                            setLQuestions(l_upper_intermediate[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'C1',
+                                )[0],
+                            );
                             break;
                         case 'Confident':
-                            setLQuestions(l_confident[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'C2',
+                                )[0],
+                            );
                             break;
                         default:
-                            setLQuestions(l_beginner[0]);
+                            setLQuestions(
+                                listening_test.filter(
+                                    item => item.englishLevel === 'A2',
+                                )[0],
+                            );
                             break;
                     }
                     setStage('Listening');
@@ -491,14 +523,6 @@ const PreTestPage: FunctionComponent = observer(() => {
         allAnswers,
         stage,
         assignedLevel,
-        p_pre_intermediate,
-        p_intermediate,
-        p_upper_intermediate,
-        l_beginner,
-        l_pre_intermediate,
-        l_intermediate,
-        l_upper_intermediate,
-        l_confident,
         lQuestions.question,
     ]);
 

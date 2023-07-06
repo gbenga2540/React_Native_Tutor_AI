@@ -17,9 +17,103 @@ import {
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { get_day_from_date } from '../../Utils/Get_Day_From_Date/Get_Day_From_Date';
+import { observer } from 'mobx-react';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { INTF_AssignedClass } from '../../Interface/Assigned_Class/Assigned_Class';
 
-const ReportPage: FunctionComponent = () => {
+const ReportPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
+    const UserInfo = UserInfoStore?.user_info;
+
+    const ExamsDone =
+        UserInfo?.exams?.filter(
+            item => item?.score !== null && item?.score !== undefined,
+        ) || [];
+
+    const HwrkDone = UserInfo?.lessons?.filter(
+        item => item?.score !== null && item?.score !== undefined,
+    );
+
+    const get_level_lessons = ({
+        level,
+    }: {
+        level: INTF_AssignedClass;
+    }): {
+        _id?: string | undefined;
+        id?: number | undefined;
+        score?: number | null | undefined;
+    }[] => {
+        if ((UserInfo?.lessons?.length || 0) >= 1) {
+            return (
+                UserInfo?.lessons?.filter(
+                    item =>
+                        item?.id?.toString()?.[0] ===
+                        (level === 'Confident'
+                            ? '5'
+                            : level === 'Upper-Intermediate'
+                            ? '4'
+                            : level === 'Intermediate'
+                            ? '3'
+                            : level === 'Pre-Intermediate'
+                            ? '2'
+                            : '1'),
+                ) || []
+            );
+        } else {
+            return [];
+        }
+    };
+    const B_LessonsDone = get_level_lessons({ level: 'Beginner' });
+    const P_LessonsDone = get_level_lessons({ level: 'Pre-Intermediate' });
+    const I_LessonsDone = get_level_lessons({ level: 'Intermediate' });
+    const U_LessonsDone = get_level_lessons({ level: 'Upper-Intermediate' });
+    const C_LessonsDone = get_level_lessons({ level: 'Confident' });
+
+    const calculate_average = ({ scores_data }: { scores_data: any[] }) => {
+        if ((scores_data || []).length === 0) {
+            return 0;
+        }
+        const sum = (scores_data || []).reduce(
+            (total, score) => total + (score.score || 0),
+            0,
+        );
+        const average = sum / (scores_data || []).length;
+        return Math.floor(average);
+    };
+
+    const get_lessons_done = () => {
+        switch (UserInfo?.level) {
+            case 'Beginner':
+                return [...B_LessonsDone];
+            case 'Pre-Intermediate':
+                return [...B_LessonsDone, ...P_LessonsDone];
+            case 'Intermediate':
+                return [...B_LessonsDone, ...P_LessonsDone, ...I_LessonsDone];
+            case 'Upper-Intermediate':
+                return [
+                    ...B_LessonsDone,
+                    ...P_LessonsDone,
+                    ...I_LessonsDone,
+                    ...U_LessonsDone,
+                ];
+            case 'Confident':
+                return [
+                    ...B_LessonsDone,
+                    ...P_LessonsDone,
+                    ...I_LessonsDone,
+                    ...U_LessonsDone,
+                    ...C_LessonsDone,
+                ];
+            default:
+                return [...B_LessonsDone];
+        }
+    };
+    const lessons: {
+        _id?: string | undefined;
+        id?: number | undefined;
+        score?: number | null | undefined;
+    }[] = get_lessons_done();
 
     return (
         <View style={styles.report_main}>
@@ -170,12 +264,14 @@ const ReportPage: FunctionComponent = () => {
                                 marginRight: 5,
                             }}>
                             <BasicText
-                                inputText="100 Lessons Done"
+                                inputText={`${lessons?.length} Lesson${
+                                    lessons?.length === 1 ? '' : 's'
+                                } Done`}
                                 textSize={14}
                                 textWeight={500}
                             />
                             <BasicText
-                                inputText="Total: 300mins"
+                                inputText={`Total: ${lessons?.length * 30}mins`}
                                 textSize={16}
                                 textWeight={700}
                                 marginTop={10}
@@ -251,13 +347,17 @@ const ReportPage: FunctionComponent = () => {
                                 marginRight: 5,
                             }}>
                             <BasicText
-                                inputText="50 Homeworks Done"
+                                inputText={`${HwrkDone?.length} Homework${
+                                    HwrkDone?.length === 1 ? '' : 's'
+                                } Done`}
                                 textSize={14}
                                 textWeight={500}
                                 textColor={Colors.White}
                             />
                             <BasicText
-                                inputText="Success Rate: 80%"
+                                inputText={`Success Rate: ${calculate_average({
+                                    scores_data: HwrkDone || [],
+                                })}%`}
                                 textSize={16}
                                 textWeight={700}
                                 marginTop={10}
@@ -334,13 +434,17 @@ const ReportPage: FunctionComponent = () => {
                                 marginRight: 5,
                             }}>
                             <BasicText
-                                inputText="2 Exams Done"
+                                inputText={`${ExamsDone?.length} Exam${
+                                    ExamsDone?.length === 1 ? '' : 's'
+                                } Done`}
                                 textSize={14}
                                 textWeight={500}
                                 textColor={Colors.White}
                             />
                             <BasicText
-                                inputText="Success Rate: 70%"
+                                inputText={`Success Rate: ${calculate_average({
+                                    scores_data: ExamsDone || [],
+                                })}%`}
                                 textSize={16}
                                 textWeight={700}
                                 marginTop={10}
@@ -384,7 +488,7 @@ const ReportPage: FunctionComponent = () => {
             </ScrollView>
         </View>
     );
-};
+});
 
 export default ReportPage;
 

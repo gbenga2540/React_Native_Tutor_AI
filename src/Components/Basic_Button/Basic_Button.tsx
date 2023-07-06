@@ -34,30 +34,30 @@ const BasicButton: FunctionComponent<BasicButtonProps> = ({
     textSize,
     disableDebounce,
 }) => {
-    const exec_func = disableDebounce
-        ? () => {
-              if (Keyboard.isVisible()) {
-                  Keyboard.dismiss();
-              }
-              if (execFunc !== undefined) {
-                  execFunc();
-              }
-          }
-        : no_double_clicks({
-              execFunc: () => {
-                  if (Keyboard.isVisible()) {
-                      Keyboard.dismiss();
-                  }
-                  if (execFunc !== undefined) {
-                      execFunc();
-                  }
-              },
-          });
+    const norm_exec = () => {
+        if (Keyboard.isVisible()) {
+            Keyboard.dismiss();
+        }
+        if (execFunc !== undefined) {
+            execFunc();
+        }
+    };
+
+    const deb_exec = no_double_clicks({
+        execFunc: () => {
+            if (Keyboard.isVisible()) {
+                Keyboard.dismiss();
+            }
+            if (execFunc !== undefined) {
+                execFunc();
+            }
+        },
+    });
 
     return (
         <TouchableOpacity
             disabled={disabled || false}
-            onPress={exec_func}
+            onPress={disableDebounce ? norm_exec : deb_exec}
             style={[
                 styles.b_b_main,
                 {

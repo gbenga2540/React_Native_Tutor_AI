@@ -167,7 +167,7 @@ class ScheduleInfoClass {
         const temp_schedule: INTF_SchedulesInfo[] = [...schedule];
 
         this.schedule_info = [...temp_schedule];
-        save_schedule({ schedule: [...temp_schedule] }); // ?: Could be Disabled
+        // ?: save_schedule({ schedule: [...temp_schedule] });
     };
 
     clear_schedule_info = () => {

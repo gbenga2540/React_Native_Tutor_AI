@@ -14,6 +14,8 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import BasicText from '../Basic_Text/Basic_Text';
 import { INTF_Exam } from '../../Interface/Exams/Exams';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface ExamCardProps {
     exam: INTF_Exam;
@@ -27,23 +29,23 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
     last_index,
     disabled,
 }) => {
-    // const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
+    const take_exam = no_double_clicks({
+        execFunc: () => {
+            navigation.push(
+                'HomeStack' as never,
+                {
+                    screen: 'ExamQPage',
+                    params: { CurrentLevel: exam?.level, retake: true },
+                } as never,
+            );
+        },
+    });
 
     return (
         <TouchableOpacity
-            onPress={no_double_clicks({
-                execFunc: () => {
-                    // navigation.push(
-                    //     'HomeStack' as never,
-                    //     {
-                    //         screen: 'LessonConvPage',
-                    //         params: {
-                    //             topic: exam?.exam_level,
-                    //         },
-                    //     } as never,
-                    // );
-                },
-            })}
+            onPress={take_exam}
             disabled={disabled || false}
             activeOpacity={0.5}
             style={[
@@ -116,7 +118,7 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
                         paddingBottom: 12,
                     }}>
                     <BasicText
-                        inputText={`Exam ${exam?.exam_id}`}
+                        inputText={`Exam ${index + 1}`}
                         textWeight={500}
                         textSize={15}
                         textColor={
@@ -124,7 +126,7 @@ const ExamCard: FunctionComponent<ExamCardProps> = ({
                         }
                     />
                     <BasicText
-                        inputText={exam?.exam_level as string}
+                        inputText={exam?.level as string}
                         textWeight={600}
                         textSize={18}
                         textColor={

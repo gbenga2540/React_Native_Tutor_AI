@@ -18,6 +18,7 @@ interface MiniAvatarProps {
     marginBottom?: number | 'auto';
     isSubtitleIcon?: boolean;
     hideIcons?: boolean;
+    isHomeWork?: boolean;
 }
 const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
     ({
@@ -27,8 +28,11 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
         marginBottom,
         isSubtitleIcon,
         hideIcons,
+        isHomeWork,
     }) => {
-        const isMale = AvatarVoiceStore?.is_avatar_male || false;
+        const isMale = isHomeWork
+            ? !AvatarVoiceStore?.is_avatar_male || false
+            : AvatarVoiceStore?.is_avatar_male || false;
         const isSpeaking = AvatarSpeakStore.should_avatar_speak;
 
         const MaleIdle = require('../../Videos/Male_Idle.gif');
@@ -58,15 +62,6 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                 }}>
                 {isMale && (
                     <View style={styles.avatar_bg}>
-                        {/* <Image
-                            source={avatars_data[6]?.image}
-                            style={{
-                                width: width,
-                                height: height,
-                                borderRadius: 20,
-                                resizeMode: 'contain',
-                            }}
-                        /> */}
                         <FastImage
                             source={imageSource}
                             style={{
@@ -110,15 +105,6 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                                 backgroundColor: Colors.LightPink,
                             },
                         ]}>
-                        {/* <Image
-                            source={avatars_data[0]?.image}
-                            style={{
-                                width: width,
-                                height: height,
-                                borderRadius: 20,
-                                resizeMode: 'contain',
-                            }}
-                        /> */}
                         <FastImage
                             source={imageSource}
                             style={{

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -21,58 +21,223 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
 import { get_day_from_date } from '../../Utils/Get_Day_From_Date/Get_Day_From_Date';
+import {
+    BeginnerL,
+    ConfidentL,
+    IntermediateL,
+    PreIntermediateL,
+    UpperIntermediateL,
+} from '../../Data/Lessons_Topics/Lessons_Topics';
+import { INTF_AssignedClass } from '../../Interface/Assigned_Class/Assigned_Class';
+import BasicButton from '../../Components/Basic_Button/Basic_Button';
 
-const HomePage: FunctionComponent = () => {
+const HomePage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const UserLevel = UserInfoStore?.user_info?.level || 'Beginner';
+
+    const [examTShow, setExamTShow] = useState<INTF_AssignedClass>(null);
+
+    const noOfLessons =
+        UserLevel === 'Confident'
+            ? ConfidentL
+            : UserLevel === 'Upper-Intermediate'
+            ? UpperIntermediateL
+            : UserLevel === 'Intermediate'
+            ? IntermediateL
+            : UserLevel === 'Pre-Intermediate'
+            ? PreIntermediateL
+            : BeginnerL;
+
+    const noOfHWDone = UserInfoStore?.user_info?.lessons?.filter(
+        obj =>
+            obj?.score !== null &&
+            obj?.score !== undefined &&
+            obj?.id?.toString()?.[0] ===
+                (UserLevel === 'Confident'
+                    ? '5'
+                    : UserLevel === 'Upper-Intermediate'
+                    ? '4'
+                    : UserLevel === 'Intermediate'
+                    ? '3'
+                    : UserLevel === 'Pre-Intermediate'
+                    ? '2'
+                    : '1'),
+    );
+
+    const take_exam = no_double_clicks({
+        execFunc: () => {
+            navigation.push(
+                'HomeStack' as never,
+                {
+                    screen: 'ExamQPage',
+                    params: { CurrentLevel: examTShow },
+                } as never,
+            );
+        },
+    });
+
+    const get_level_number = () => {
+        switch (UserInfoStore?.user_info?.level) {
+            case 'Beginner':
+                return '1';
+            case 'Pre-Intermediate':
+                return '2';
+            case 'Intermediate':
+                return '3';
+            case 'Upper-Intermediate':
+                return '4';
+            case 'Confident':
+                return '5';
+            default:
+                return '1';
+        }
+    };
+
+    useEffect(() => {
+        const calculate_hw_avg = () => {
+            if (
+                noOfHWDone !== undefined &&
+                noOfHWDone?.length === noOfLessons
+            ) {
+                const calculateAverage = ({
+                    scores,
+                }: {
+                    scores: { _id: string; id: number; score: number }[];
+                }) => {
+                    if (scores.length === 0) {
+                        return 0;
+                    }
+                    const sum = scores.reduce(
+                        (total, score) => total + (score.score || 0),
+                        0,
+                    );
+                    const average = sum / scores.length;
+                    return Math.floor(average);
+                };
+                return calculateAverage({
+                    scores: noOfHWDone as {
+                        _id: string;
+                        id: number;
+                        score: number;
+                    }[],
+                });
+            }
+        };
+
+        if (
+            (UserInfoStore?.user_info?.lessons?.filter(
+                obj => obj?.score !== null && obj?.score !== undefined,
+            )?.length || 0) === noOfLessons &&
+            (calculate_hw_avg() || 0) >= 70
+        ) {
+            if (
+                UserInfoStore?.user_info?.level ===
+                UserInfoStore?.user_info?.initialLevel
+            ) {
+                if (
+                    UserInfoStore?.user_info?.level === 'Confident' &&
+                    (UserInfoStore?.user_info?.exams?.filter(
+                        item => item?.level === 'Confident',
+                    )?.[0]?.score || 0) >= 70
+                ) {
+                    setExamTShow(null);
+                } else {
+                    setExamTShow(
+                        UserInfoStore.user_info?.level as INTF_AssignedClass,
+                    );
+                }
+            } else {
+                const return_prev_level = (): INTF_AssignedClass => {
+                    switch (UserInfoStore?.user_info?.level) {
+                        case 'Pre-Intermediate':
+                            return 'Beginner';
+                        case 'Intermediate':
+                            return 'Pre-Intermediate';
+                        case 'Upper-Intermediate':
+                            return 'Intermediate';
+                        case 'Confident':
+                            return 'Upper-Intermediate';
+                        default:
+                            return 'Beginner';
+                    }
+                };
+
+                if (
+                    UserInfoStore?.user_info?.level === 'Confident' &&
+                    (UserInfoStore?.user_info?.exams?.filter(
+                        item => item?.level === 'Confident',
+                    )?.[0]?.score || 0) >= 70
+                ) {
+                    setExamTShow(null);
+                } else {
+                    if (
+                        (UserInfoStore?.user_info?.exams?.filter(
+                            item => item?.level === return_prev_level(),
+                        )?.[0]?.score || 0) >= 70
+                    ) {
+                        setExamTShow(UserInfoStore.user_info?.level || null);
+                    }
+                }
+            }
+        } else {
+            setExamTShow(null);
+        }
+    }, [examTShow, noOfHWDone, noOfLessons]);
 
     return (
         <View style={styles.home_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
             <View style={styles.h_header_cont}>
                 <View style={styles.h_header_txt_c}>
-                    <Observer>
-                        {() => (
-                            <BasicText
-                                inputText={`Hello, ${
-                                    UserInfoStore?.user_info?.fullname?.split(
-                                        ' ',
-                                    )?.[0]
-                                }`}
-                                textSize={22}
-                                textWeight={700}
-                            />
-                        )}
-                    </Observer>
                     <BasicText
-                        inputText="No Pending Homework"
+                        inputText={`Hello, ${
+                            UserInfoStore?.user_info?.fullname?.split(' ')?.[0]
+                        }`}
+                        textSize={22}
+                        textWeight={700}
+                    />
+                    <BasicText
+                        inputText={`${
+                            noOfHWDone?.length !==
+                            UserInfoStore?.user_info?.lessons?.filter(
+                                item =>
+                                    item?.id?.toString()?.[0] ===
+                                    (UserLevel === 'Confident'
+                                        ? '5'
+                                        : UserLevel === 'Upper-Intermediate'
+                                        ? '4'
+                                        : UserLevel === 'Intermediate'
+                                        ? '3'
+                                        : UserLevel === 'Pre-Intermediate'
+                                        ? '2'
+                                        : '1'),
+                            )?.length
+                                ? '1'
+                                : 'No'
+                        } Pending Homework`}
                         textSize={14}
                         textFamily={fonts.OpenSans_400}
                     />
                 </View>
-                <Observer>
-                    {() => (
-                        <Image
-                            source={
-                                UserInfoStore?.user_info?.dp?.url
-                                    ? {
-                                          uri: http_link_fix({
-                                              http_link: UserInfoStore
-                                                  ?.user_info?.dp
-                                                  ?.url as string,
-                                          }),
-                                      }
-                                    : require('../../Images/Extra/default_user_dp_light.jpg')
-                            }
-                            style={styles.h_header_img}
-                        />
-                    )}
-                </Observer>
+                <Image
+                    source={
+                        UserInfoStore?.user_info?.dp?.url
+                            ? {
+                                  uri: http_link_fix({
+                                      http_link: UserInfoStore?.user_info?.dp
+                                          ?.url as string,
+                                  }),
+                              }
+                            : require('../../Images/Extra/default_user_dp_light.jpg')
+                    }
+                    style={styles.h_header_img}
+                />
             </View>
             <ScrollView
                 style={{
@@ -113,20 +278,13 @@ const HomePage: FunctionComponent = () => {
                                 paddingLeft: 10,
                                 paddingRight: 4,
                             }}>
-                            <Observer>
-                                {() => (
-                                    <BasicText
-                                        inputText={
-                                            (UserInfoStore?.user_info
-                                                ?.level as string) || 'Beginner'
-                                        }
-                                        textColor={Colors.White}
-                                        textWeight={600}
-                                        textSize={17}
-                                        marginRight={3}
-                                    />
-                                )}
-                            </Observer>
+                            <BasicText
+                                inputText={UserLevel}
+                                textColor={Colors.White}
+                                textWeight={600}
+                                textSize={17}
+                                marginRight={3}
+                            />
                         </View>
                     </View>
                     <Image
@@ -141,8 +299,24 @@ const HomePage: FunctionComponent = () => {
                         }}
                     />
                 </View>
+                {examTShow !== null && (
+                    <>
+                        <BasicText
+                            inputText={`${examTShow} Exam`}
+                            textColor={Colors.Black}
+                            textWeight={700}
+                            textSize={20}
+                            marginTop={24}
+                            marginBottom={10}
+                        />
+                        <BasicButton
+                            buttonText="Take Exam"
+                            execFunc={() => take_exam({})}
+                        />
+                    </>
+                )}
                 <BasicText
-                    inputText=" Access Classroom"
+                    inputText="Access Classroom"
                     textColor={Colors.Black}
                     textWeight={700}
                     textSize={20}
@@ -186,14 +360,30 @@ const HomePage: FunctionComponent = () => {
                             />
                             <ProgressBar
                                 marginTop={15}
-                                progress={(1 / 20) * 100}
+                                progress={
+                                    ((UserInfoStore?.user_info?.lessons?.filter(
+                                        obj =>
+                                            obj?.id
+                                                ?.toString()
+                                                .startsWith(get_level_number()),
+                                    )?.length || 0) /
+                                        noOfLessons) *
+                                    100
+                                }
                                 height={4}
                                 backgroundColor={Colors.White}
                                 progressBackgroundColor={Colors.DeepBlue}
                                 marginHorizontal={17}
                             />
                             <BasicText
-                                inputText="1/20"
+                                inputText={`${
+                                    UserInfoStore?.user_info?.lessons?.filter(
+                                        obj =>
+                                            obj?.id
+                                                ?.toString()
+                                                .startsWith(get_level_number()),
+                                    )?.length
+                                }/${noOfLessons}`}
                                 textWeight={700}
                                 textColor={Colors.White}
                                 marginTop={5}
@@ -250,14 +440,23 @@ const HomePage: FunctionComponent = () => {
                             />
                             <ProgressBar
                                 marginTop={15}
-                                progress={(70 / 100) * 100}
+                                progress={Math.floor(
+                                    ((noOfHWDone?.length || 0) / noOfLessons) *
+                                        100,
+                                )}
                                 height={4}
                                 backgroundColor={Colors.White}
                                 progressBackgroundColor={Colors.DeepBlue}
                                 marginHorizontal={17}
                             />
                             <BasicText
-                                inputText="70%"
+                                inputText={
+                                    Math.floor(
+                                        ((noOfHWDone?.length || 0) /
+                                            noOfLessons) *
+                                            100,
+                                    )?.toString() + '%'
+                                }
                                 textColor={Colors.Primary}
                                 marginTop={5}
                                 marginLeft={17}
@@ -467,7 +666,7 @@ const HomePage: FunctionComponent = () => {
             </ScrollView>
         </View>
     );
-};
+});
 
 export default HomePage;
 
