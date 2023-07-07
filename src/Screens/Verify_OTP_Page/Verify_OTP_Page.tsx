@@ -172,7 +172,7 @@ const VerifyOTPPage: FunctionComponent = () => {
                     textWeight={700}
                 />
                 <BasicText
-                    inputText="We have sent you your OTP code to your Email."
+                    inputText="We have sent you your OTP code to your Email. --> Use 1234 for now."
                     width={330}
                     textSize={15}
                     marginBottom={12}

@@ -19,7 +19,7 @@ const Beginner: INTF_ExamsQ[] = [
         exam_id: 3,
         question: 'Which article would you use before the word "apple"?',
         options: ['An', 'The', 'A', '0 article'],
-        answer: 'An',
+        answer: '0 article',
     },
     {
         exam_id: 4,

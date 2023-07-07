@@ -46,7 +46,6 @@ const LessonCard: FunctionComponent<LessonCardProps> = observer(
         const UserLessonScore = UserInfoStore?.user_info?.lessons || [];
 
         const show_lesson = is_available || false;
-        // const lesson_progress = 0;
 
         const { mutate: activate_lesson_mutate } = useMutation(
             activate_lesson,

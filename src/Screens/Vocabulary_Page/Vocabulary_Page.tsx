@@ -22,13 +22,79 @@ import { fonts } from '../../Configs/Fonts/Fonts';
 import TextDivider from '../../Components/Text_Divider/Text_Divider';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import Feather from 'react-native-vector-icons/Feather';
+import { useMutation } from 'react-query';
+import { gpt_request } from '../../Configs/Queries/Chat/Chat';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
+import { INTF_Glossary } from '../../Interface/Glossary/Glossary';
+import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 
 const VocabularyPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [showTranslated, setShowTranslated] = useState<boolean>(false);
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    const [vocabulary, setVocabulary] = useState<INTF_Glossary[]>([]);
+    const [vocIndex, setVocIndex] = useState<number>(0);
+
+    // const res = JSON.parse(
+    //     '[{"word":"abandon","meaning":"to leave or give up completely","translation":"ይቅር"},{"word": "harmony","meaning":"agreement or concord", "translation": "ምርጫ" }]',
+    // );
+    // console.log(res);
+
+    const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
+        onMutate: () => {
+            setShowSpinner(true);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setShowSpinner(false);
+                error_handler({
+                    navigation: navigation,
+                    error_mssg:
+                        'An error occured while trying get Vocabulary Data!',
+                    svr_error_mssg: data?.data,
+                });
+            } else {
+                setShowSpinner(false);
+                const gpt_res: string = data?.data?.chat_res;
+                const startIndex = gpt_res.indexOf('[');
+                const endIndex = gpt_res.indexOf(']');
+
+                if (startIndex !== -1 && endIndex !== -1) {
+                    const trimmedString: string = gpt_res.substring(
+                        startIndex,
+                        endIndex + 1,
+                    );
+
+                    // console.log(JSON.stringify(gpt_res));
+                }
+            }
+        },
+    });
+
+    const prev_vocabulary = no_double_clicks({
+        execFunc: () => {
+            setVocIndex(
+                clamp_value({
+                    value: vocIndex - 1,
+                    minValue: 0,
+                    maxValue: vocabulary?.length - 1,
+                }),
+            );
+        },
+    });
 
     const next_vocabulary = no_double_clicks({
-        execFunc: () => {},
+        execFunc: () => {
+            setVocIndex(
+                clamp_value({
+                    value: vocIndex + 1,
+                    minValue: 0,
+                    maxValue: vocabulary?.length - 1,
+                }),
+            );
+        },
     });
 
     const translate_text = no_double_clicks({
@@ -41,9 +107,34 @@ const VocabularyPage: FunctionComponent = () => {
         execFunc: () => {},
     });
 
+    const generate_voc = no_double_clicks({
+        execFunc: () => {
+            gpt_req_mutate({
+                messages: [
+                    {
+                        role: 'user',
+                        content: `To enhance the learning experience for students studying English Language through your Tutor Application, you want to generate 10 random words from the English dictionary. Each word should be accompanied by its meaning and translation of the word only in ${
+                            UserInfoStore?.user_info?.language || 'English - en'
+                        } for example if we have 'abandon' as a word and 'to leave or give up completely' as the meaning of the word, the translation to be added will now be the translation of only the word 'abandon' .The desired format for each word in the Javascript array is as follows: { word: string; meaning: string; translation: string; }. Additionally, you mentioned that you would like to select the words randomly using Math.random and generate an ID for each word, you then use this ID to select the word from the English Dictionary.
+
+                To achieve this, You will utilize the English Dictionary to randomly select 10 words. I will then assign a unique ID to each word using the ID to select the word from the English Dictionary. The final result will be returned in a JavaScript array format, adhering strictly to your requirements. No additional text or code will be included, only the array of words is expected.
+                
+                Please note that the translation from English to ${
+                    UserInfoStore?.user_info?.language || 'English - en'
+                } may not be available for all words in the dictionary, but I will include it whenever possible. Lastly, this is the most important rule. All 10 words must be generated fully by you and assign the array to a constant called vocabularies and there is no need to add the id to each objects of the array.`,
+                    },
+                ],
+            });
+        },
+    });
+
     return (
         <View style={styles.report_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
+            <OverlaySpinner
+                showSpinner={showSpinner}
+                setShowSpinner={setShowSpinner}
+            />
             <View
                 style={{
                     marginTop:
@@ -139,7 +230,16 @@ const VocabularyPage: FunctionComponent = () => {
                                 borderWidth: 3,
                                 borderColor: Colors.DarkBorder,
                             }}>
-                            <BasicText inputText="4 of 10" textWeight={600} />
+                            <BasicText
+                                inputText={
+                                    vocabulary?.length === 0
+                                        ? '0'
+                                        : `${vocIndex + 1} of ${
+                                              vocabulary?.length
+                                          }`
+                                }
+                                textWeight={600}
+                            />
                         </View>
                         <TouchableOpacity
                             activeOpacity={0.5}
@@ -149,6 +249,7 @@ const VocabularyPage: FunctionComponent = () => {
                     </View>
                     <View style={{ flexDirection: 'row', flex: 1 }}>
                         <TouchableOpacity
+                            onPress={prev_vocabulary}
                             activeOpacity={0.55}
                             style={{
                                 alignItems: 'center',
@@ -161,74 +262,79 @@ const VocabularyPage: FunctionComponent = () => {
                                 color={Colors.White}
                             />
                         </TouchableOpacity>
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                            }}>
-                            <BasicText
-                                inputText="Accord"
-                                textSize={18}
-                                marginTop={showTranslated ? 20 : 0.1}
-                                textColor={Colors.White}
-                                textWeight={700}
-                                textAlign="center"
-                            />
-                            {showTranslated && (
-                                <View>
-                                    <Text
-                                        style={{
-                                            fontFamily: fonts.Urbanist_600,
-                                            fontSize: 15,
-                                            color: Colors.White,
-                                            textAlign: 'center',
-                                            marginTop: 20,
-                                            marginBottom: 10,
-                                            marginHorizontal: 20,
-                                        }}>
-                                        {'Meaning: '}
-                                        <BasicText
-                                            inputText="concurrence of opinion"
-                                            textColor={Colors.White}
-                                            textSize={14}
-                                            textWeight={500}
-                                        />
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontFamily: fonts.Urbanist_600,
-                                            fontSize: 15,
-                                            color: Colors.White,
-                                            textAlign: 'center',
-                                            marginHorizontal: 20,
-                                        }}>
-                                        {'Example: '}
-                                        <BasicText
-                                            inputText="The committee worked in accord on the bill, and it
+                        {vocabulary?.length > 0 ? (
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                }}>
+                                <BasicText
+                                    inputText="Accord"
+                                    textSize={18}
+                                    marginTop={showTranslated ? 20 : 0.1}
+                                    textColor={Colors.White}
+                                    textWeight={700}
+                                    textAlign="center"
+                                />
+                                {showTranslated && (
+                                    <View>
+                                        <Text
+                                            style={{
+                                                fontFamily: fonts.Urbanist_600,
+                                                fontSize: 15,
+                                                color: Colors.White,
+                                                textAlign: 'center',
+                                                marginTop: 20,
+                                                marginBottom: 10,
+                                                marginHorizontal: 20,
+                                            }}>
+                                            {'Meaning: '}
+                                            <BasicText
+                                                inputText="concurrence of opinion"
+                                                textColor={Colors.White}
+                                                textSize={14}
+                                                textWeight={500}
+                                            />
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontFamily: fonts.Urbanist_600,
+                                                fontSize: 15,
+                                                color: Colors.White,
+                                                textAlign: 'center',
+                                                marginHorizontal: 20,
+                                            }}>
+                                            {'Example: '}
+                                            <BasicText
+                                                inputText="The committee worked in accord on the bill, and it
                             eventually passed."
-                                            textColor={Colors.White}
-                                            textSize={14}
-                                            textWeight={500}
+                                                textColor={Colors.White}
+                                                textSize={14}
+                                                textWeight={500}
+                                            />
+                                        </Text>
+                                        <TextDivider
+                                            singleLine
+                                            marginTop={20}
+                                            marginBottom={20}
+                                            marginHorizontal={10}
                                         />
-                                    </Text>
-                                    <TextDivider
-                                        singleLine
-                                        marginTop={20}
-                                        marginBottom={20}
-                                        marginHorizontal={10}
-                                    />
-                                    <BasicText
-                                        inputText="Translated Version of (Accord)"
-                                        textSize={18}
-                                        textColor={Colors.White}
-                                        textWeight={700}
-                                        textAlign="center"
-                                        marginBottom={20}
-                                    />
-                                </View>
-                            )}
-                        </View>
+                                        <BasicText
+                                            inputText="Translated Version of (Accord)"
+                                            textSize={18}
+                                            textColor={Colors.White}
+                                            textWeight={700}
+                                            textAlign="center"
+                                            marginBottom={20}
+                                        />
+                                    </View>
+                                )}
+                            </View>
+                        ) : (
+                            <View style={{ flex: 1 }}>{''}</View>
+                        )}
                         <TouchableOpacity
+                            onPress={next_vocabulary}
                             activeOpacity={0.55}
                             style={{
                                 alignItems: 'center',
@@ -246,8 +352,8 @@ const VocabularyPage: FunctionComponent = () => {
                 <View style={{ marginBottom: 50 }}>{''}</View>
             </ScrollView>
             <BasicButton
-                execFunc={() => next_vocabulary({})}
-                buttonText="Next"
+                execFunc={() => generate_voc({})}
+                buttonText="Generate"
                 borderRadius={8}
                 marginHorizontal={22}
                 buttonHeight={56}

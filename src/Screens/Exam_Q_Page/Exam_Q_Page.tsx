@@ -30,6 +30,7 @@ import {
     Confident,
 } from '../../Data/Exams_Q/Exams_Q';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
 
 const ExamQPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -46,6 +47,8 @@ const ExamQPage: FunctionComponent = observer(() => {
     const [answerUI, setAnswerUI] = useState<'NoChange' | 'Correct' | 'Wrong'>(
         'NoChange',
     );
+    const [timer, setTimer] = useState<number>(450);
+    const [hasSkipped, setHasSkipped] = useState<boolean>(false);
 
     const select_answers = no_double_clicks({
         execFunc: ({ selected }: { selected: string }) => {
@@ -140,6 +143,7 @@ const ExamQPage: FunctionComponent = observer(() => {
                 }
             } else {
                 if (noOfQuestions > 1) {
+                    setHasSkipped(true);
                     if (route.params?.retake) {
                         if (
                             Math.floor((userScore / noOfQuestions) * 100) >
@@ -218,6 +222,7 @@ const ExamQPage: FunctionComponent = observer(() => {
             });
         } else {
             if (noOfQuestions > 1) {
+                setHasSkipped(true);
                 if (route.params?.retake) {
                     if (
                         Math.floor((userScore / noOfQuestions) * 100) >
@@ -295,7 +300,7 @@ const ExamQPage: FunctionComponent = observer(() => {
     useEffect(() => {
         switch (CurrentLevel) {
             case 'Beginner':
-                setQuestions(Beginner?.filter(item => item?.exam_id < 3));
+                setQuestions(Beginner);
                 break;
             case 'Pre-Intermediate':
                 setQuestions(PreIntermediate);
@@ -315,6 +320,81 @@ const ExamQPage: FunctionComponent = observer(() => {
         }
     }, [CurrentLevel]);
 
+    useEffect(() => {
+        let intervalId: any;
+        if (timer > 0) {
+            intervalId = setInterval(() => {
+                setTimer(prevTimer => prevTimer - 1);
+            }, 1000);
+        }
+        if (timer === 0 && !hasSkipped) {
+            if (route.params?.retake) {
+                if (
+                    Math.floor((userScore / noOfQuestions) * 100) >
+                    (UserInfoStore?.user_info?.exams?.filter(
+                        item => item?.level === route.params?.CurrentLevel,
+                    )?.[0]?.score || 0)
+                ) {
+                    navigation.push(
+                        'HomeStack' as never,
+                        {
+                            screen: 'CongratulationsPage',
+                            params: {
+                                header_txt: 'Exam Completed.',
+                                message_txt: `You scored ${Math.floor(
+                                    (userScore / noOfQuestions) * 100,
+                                )}%`,
+                                nextPage: 7,
+                                hide_back_btn: true,
+                                exam_score: Math.floor(
+                                    (userScore / noOfQuestions) * 100,
+                                ),
+                                exam_level: UserInfoStore?.user_info?.level,
+                            },
+                        } as never,
+                    );
+                } else {
+                    navigation.push(
+                        'HomeStack' as never,
+                        {
+                            screen: 'CongratulationsPage',
+                            params: {
+                                header_txt: 'Exam Completed.',
+                                message_txt: `You scored ${Math.floor(
+                                    (userScore / noOfQuestions) * 100,
+                                )}% which is less than or the same as your previous score.`,
+                                nextPage: 3,
+                                hide_back_btn: true,
+                                hide_emoji: true,
+                                disable_sound: true,
+                            },
+                        } as never,
+                    );
+                }
+            } else {
+                navigation.push(
+                    'HomeStack' as never,
+                    {
+                        screen: 'CongratulationsPage',
+                        params: {
+                            header_txt: 'Exam Completed.',
+                            message_txt: `You scored ${Math.floor(
+                                (userScore / noOfQuestions) * 100,
+                            )}%`,
+                            nextPage: 7,
+                            hide_back_btn: true,
+                            exam_score: Math.floor(
+                                (userScore / noOfQuestions) * 100,
+                            ),
+                            exam_level: UserInfoStore?.user_info?.level,
+                        },
+                    } as never,
+                );
+            }
+        }
+        return () => clearInterval(intervalId);
+    }, [timer, navigation, noOfQuestions, route.params, userScore, hasSkipped]);
+
     return (
         <View style={styles.hw_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -331,8 +411,15 @@ const ExamQPage: FunctionComponent = observer(() => {
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                {/* <BackButton  /> */}
                 <BasicText inputText={'Exam'} textSize={20} textWeight={700} />
+                <BasicText
+                    inputText={seconds_to_minutes({
+                        time: timer,
+                    })}
+                    marginLeft={'auto'}
+                    textWeight={600}
+                    textColor={Colors.Primary}
+                />
             </View>
             <MiniAvatar
                 marginTop={15}

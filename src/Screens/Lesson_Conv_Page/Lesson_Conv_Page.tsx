@@ -16,7 +16,6 @@ import {
 import Colors from '../../Configs/Colors/Colors';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
-import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
@@ -27,41 +26,89 @@ import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
-import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
-import { socketIO } from '../../Configs/Socket_IO/Socket_IO';
+import { useMutation } from 'react-query';
+import { gpt_request } from '../../Configs/Queries/Chat/Chat';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
 
 const LessonConvPage: FunctionComponent = observer(() => {
     const route = useRoute<RouteProp<any>>();
-    const [chats, setChats] = useState<INTF_Conversation[]>([]);
     const [micText, setMicText] = useState<string>('');
     const [timer, setTimer] = useState<number>(1800);
     const flatListRef = useRef<FlatList<any> | null>(null);
 
+    const [messages, setMessages] = useState<INTF_ChatGPT[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const UserLevel = UserInfoStore?.user_info?.level;
+    const UserLevelID =
+        UserLevel === 'Confident'
+            ? 5
+            : UserLevel === 'Upper-Intermediate'
+            ? 4
+            : UserLevel === 'Intermediate'
+            ? 3
+            : UserLevel === 'Pre-Intermediate'
+            ? 2
+            : 1;
+
+    const GPT_PROMPT = `Act as a English language Tutor: Hi, there, my name is ${UserInfoStore?.user_info?.fullname}. I am on level ${UserLevelID}/5. The higher the level, the tougher you teach me. Let's have a conversation on ${route.params?.topic}. Note: Keep your replies short!`;
+
+    const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
+        onMutate: () => {
+            setIsLoading(true);
+            setMessages(prev => [
+                ...prev,
+                {
+                    role: 'user',
+                    content: messages?.length === 0 ? GPT_PROMPT : micText,
+                },
+            ]);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setIsLoading(false);
+                if (messages.length === 1) {
+                    setMessages([]);
+                } else {
+                    messages !== undefined &&
+                        setMessages(messages?.splice(messages.length - 1, 1));
+                }
+            } else {
+                setIsLoading(false);
+                if (data?.data?.chat_res) {
+                    setMessages(prev => [
+                        ...prev,
+                        { role: 'assistant', content: data?.data?.chat_res },
+                    ]);
+                    TextToSpeechStore.clear_speech();
+                    TextToSpeechStore?.play_speech({
+                        speech: data?.data?.chat_res,
+                    });
+                }
+                setMicText('');
+            }
+        },
+    });
+
     const send_message = no_double_clicks({
         execFunc: () => {
             if (micText) {
-                socketIO.emit('lesson', micText);
-                setChats(prev_chats => [
-                    ...prev_chats,
-                    { isAI: false, chat: micText },
-                ]);
+                gpt_req_mutate({
+                    messages: [...messages, { role: 'user', content: micText }],
+                });
             }
             Keyboard.isVisible() && Keyboard.dismiss();
-            setMicText('');
         },
     });
 
     useEffect(() => {
-        socketIO.on('lesson', reply => {
-            setChats(prevChat => [...prevChat, { isAI: true, chat: reply }]);
-            TextToSpeechStore.play_speech({
-                speech: reply,
+        if (messages?.length === 0) {
+            gpt_req_mutate({
+                messages: [...messages, { role: 'user', content: GPT_PROMPT }],
             });
-        });
-        return () => {
-            socketIO.disconnect();
-        };
-    }, [micText]);
+        }
+    }, [gpt_req_mutate, GPT_PROMPT, messages]);
 
     useEffect(() => {
         const first_timer = setTimeout(() => {
@@ -71,17 +118,17 @@ const LessonConvPage: FunctionComponent = observer(() => {
             }
         }, 100);
         return () => clearTimeout(first_timer);
-    }, [chats]);
+    }, [messages?.length]);
 
     useEffect(() => {
         let intervalId: any;
-        if (timer > 0) {
+        if (messages?.length > 0 && timer > 0) {
             intervalId = setInterval(() => {
                 setTimer(prevTimer => prevTimer - 1);
             }, 1000);
         }
         return () => clearInterval(intervalId);
-    }, [timer]);
+    }, [timer, messages?.length]);
 
     return (
         <View style={styles.conversation_main}>
@@ -111,14 +158,14 @@ const LessonConvPage: FunctionComponent = observer(() => {
                     textSize={20}
                     marginLeft={15}
                 />
-                <BasicText
+                {/* <BasicText
                     inputText={seconds_to_minutes({
                         time: timer,
                     })}
                     marginLeft={'auto'}
                     textWeight={600}
                     textColor={Colors.Primary}
-                />
+                /> */}
             </View>
             <MiniAvatar
                 marginTop={15}
@@ -138,7 +185,7 @@ const LessonConvPage: FunctionComponent = observer(() => {
                             : 8,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                {chats?.length > 0 ? (
+                {messages?.slice(1)?.length > 0 ? (
                     <FlatList
                         ref={flatListRef}
                         ListHeaderComponent={() =>
@@ -146,16 +193,22 @@ const LessonConvPage: FunctionComponent = observer(() => {
                                 <View style={{ marginTop: 16 }}>{''}</View>
                             ) as ReactElement<any>
                         }
-                        data={chats}
-                        keyExtractor={(item, index) =>
-                            item?.chat?.slice(0, 6) + index
+                        data={messages?.slice(1)}
+                        keyExtractor={(item: INTF_ChatGPT, index) =>
+                            item.role + index
                         }
-                        renderItem={({ item, index }) => (
+                        renderItem={({
+                            item,
+                            index,
+                        }: {
+                            item: INTF_ChatGPT;
+                            index: number;
+                        }) => (
                             <ChatCard
                                 key={index}
                                 chat={item}
                                 index={index}
-                                last_index={chats?.length - 1}
+                                last_index={messages?.slice(1)?.length - 1}
                             />
                         )}
                         style={{
@@ -179,36 +232,61 @@ const LessonConvPage: FunctionComponent = observer(() => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                        <BasicText
-                            inputText="Press the Microphone Button to start a Conversation."
-                            textSize={16}
-                            width={250}
-                            textAlign="center"
-                        />
+                        {!isLoading && (
+                            <BasicText
+                                inputText="Press the Microphone Button to start a Conversation."
+                                textSize={16}
+                                width={250}
+                                textAlign="center"
+                            />
+                        )}
                     </View>
                 )}
-                <MicAndTextInput
-                    inputMode="text"
-                    marginTop={3}
-                    marginLeft={10}
-                    marginRight={10}
-                    paddingBottom={7}
-                    paddingTop={3}
-                    placeHolderText="Type here.."
-                    inputValue={micText}
-                    setInputValue={setMicText}
-                    onChange={no_double_clicks({
-                        execFunc: () => {
-                            flatListRef?.current?.scrollToEnd();
-                        },
-                    })}
-                    onFocus={no_double_clicks({
-                        execFunc: () => {
-                            flatListRef?.current?.scrollToEnd();
-                        },
-                    })}
-                    onSend={send_message}
-                />
+                {isLoading ? (
+                    <View
+                        style={{
+                            marginHorizontal: 10,
+                            height: 56,
+                            minHeight: 56,
+                            maxHeight: 56,
+                            borderRadius: 8,
+                            borderColor: Colors.Border,
+                            borderWidth: 1,
+                            backgroundColor: Colors.InputBackground,
+                            flex: 1,
+                            justifyContent: 'center',
+                            paddingLeft: 12,
+                        }}>
+                        <BasicText
+                            inputText="Loading..."
+                            textSize={17}
+                            textColor={Colors.DarkGrey}
+                        />
+                    </View>
+                ) : (
+                    <MicAndTextInput
+                        inputMode="text"
+                        marginTop={3}
+                        marginLeft={10}
+                        marginRight={10}
+                        paddingBottom={7}
+                        paddingTop={3}
+                        placeHolderText="Type here.."
+                        inputValue={micText}
+                        setInputValue={setMicText}
+                        onChange={no_double_clicks({
+                            execFunc: () => {
+                                flatListRef?.current?.scrollToEnd();
+                            },
+                        })}
+                        onFocus={no_double_clicks({
+                            execFunc: () => {
+                                flatListRef?.current?.scrollToEnd();
+                            },
+                        })}
+                        onSend={send_message}
+                    />
+                )}
             </KeyboardAvoidingView>
         </View>
     );

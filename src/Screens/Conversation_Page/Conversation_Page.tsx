@@ -16,34 +16,77 @@ import {
 import Colors from '../../Configs/Colors/Colors';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
-import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import MicrophoneButton from '../../Components/Microphone_Button/Microphone_Button';
-import { socketIO } from '../../Configs/Socket_IO/Socket_IO';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
+import { useMutation } from 'react-query';
+import { gpt_request } from '../../Configs/Queries/Chat/Chat';
 
 const ConversationPage: FunctionComponent = observer(() => {
-    const [chats, setChats] = useState<INTF_Conversation[]>([]);
     const [chat, setChat] = useState<string>('');
     const flatListRef = useRef<FlatList<any> | null>(null);
     const [timer, setTimer] = useState<number>(1800);
     const [isRecording, setIsRecording] = useState<boolean>(false);
 
+    const [messages, setMessages] = useState<INTF_ChatGPT[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const UserInfo = UserInfoStore?.user_info;
+
+    const GPT_PROMPT = `My name is ${UserInfo?.fullname} and let's talk about my interest and also a bit of some English Tutoring. Here's an array of my interests: ${UserInfo?.interests}. Note: keep your replies short!`;
+
+    const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
+        onMutate: () => {
+            setIsLoading(true);
+            setMessages(prev => [
+                ...prev,
+                {
+                    role: 'user',
+                    content: messages?.length === 0 ? GPT_PROMPT : chat,
+                },
+            ]);
+        },
+        onSettled: async data => {
+            if (data?.error) {
+                setIsLoading(false);
+                if (messages.length === 1) {
+                    setMessages([]);
+                } else {
+                    messages !== undefined &&
+                        setMessages(messages?.splice(messages.length - 1, 1));
+                }
+            } else {
+                setIsLoading(false);
+                if (data?.data?.chat_res) {
+                    setMessages(prev => [
+                        ...prev,
+                        { role: 'assistant', content: data?.data?.chat_res },
+                    ]);
+                    TextToSpeechStore.clear_speech();
+                    TextToSpeechStore?.play_speech({
+                        speech: data?.data?.chat_res,
+                    });
+                }
+                setChat('');
+            }
+        },
+    });
+
     const send_message = no_double_clicks({
         execFunc: () => {
             if (chat) {
-                socketIO.emit('conversation', chat);
-                setChats(prevChat => [
-                    ...prevChat,
-                    { isAI: false, chat: chat },
-                ]);
-                // setChat('');
+                gpt_req_mutate({
+                    messages: [...messages, { role: 'user', content: chat }],
+                });
             }
+            Keyboard.isVisible() && Keyboard.dismiss();
         },
     });
 
@@ -57,26 +100,22 @@ const ConversationPage: FunctionComponent = observer(() => {
     });
 
     useEffect(() => {
-        socketIO.on('conversation', reply => {
-            setChats(prevChat => [...prevChat, { isAI: true, chat: reply }]);
-            TextToSpeechStore.play_speech({
-                speech: reply,
+        if (messages?.length === 0) {
+            gpt_req_mutate({
+                messages: [...messages, { role: 'user', content: GPT_PROMPT }],
             });
-        });
-        return () => {
-            socketIO.disconnect();
-        };
-    }, []);
+        }
+    }, [gpt_req_mutate, GPT_PROMPT, messages]);
 
     useEffect(() => {
         let intervalId: any;
-        if (timer > 0) {
+        if (messages?.length > 0 && timer > 0) {
             intervalId = setInterval(() => {
                 setTimer(prevTimer => prevTimer - 1);
             }, 1000);
         }
         return () => clearInterval(intervalId);
-    }, [timer]);
+    }, [timer, messages?.length]);
 
     useEffect(() => {
         const first_timer = setTimeout(() => {
@@ -86,7 +125,7 @@ const ConversationPage: FunctionComponent = observer(() => {
             }
         }, 100);
         return () => clearTimeout(first_timer);
-    }, [chats]);
+    }, [messages?.length]);
 
     return (
         <View style={styles.conversation_main}>
@@ -123,7 +162,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                     flex: 1,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                {chats?.length > 0 ? (
+                {messages?.slice(1)?.length > 0 ? (
                     <FlatList
                         ref={flatListRef}
                         ListHeaderComponent={() =>
@@ -131,16 +170,20 @@ const ConversationPage: FunctionComponent = observer(() => {
                                 <View style={{ marginTop: 16 }}>{''}</View>
                             ) as ReactElement<any>
                         }
-                        data={chats}
-                        keyExtractor={(item, index) =>
-                            item?.chat?.slice(0, 6) + index
-                        }
-                        renderItem={({ item, index }) => (
+                        data={messages?.slice(1)}
+                        keyExtractor={(item, index) => item?.role + index}
+                        renderItem={({
+                            item,
+                            index,
+                        }: {
+                            item: INTF_ChatGPT;
+                            index: number;
+                        }) => (
                             <ChatCard
                                 key={index}
                                 chat={item}
                                 index={index}
-                                last_index={chats?.length - 1}
+                                last_index={messages?.slice(1)?.length - 1}
                             />
                         )}
                         style={{
@@ -164,25 +207,51 @@ const ConversationPage: FunctionComponent = observer(() => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                        <BasicText
-                            inputText="Press the Microphone Button to start a Conversation."
-                            textSize={16}
-                            width={250}
-                            textAlign="center"
-                        />
+                        {!isLoading && (
+                            <BasicText
+                                inputText="Press the Microphone Button to start a Conversation."
+                                textSize={16}
+                                width={250}
+                                textAlign="center"
+                            />
+                        )}
                     </View>
                 )}
-                <MicrophoneButton
-                    microphoneSize={60}
-                    marginBottom={10}
-                    marginTop={2}
-                    marginLeft={'auto'}
-                    marginRight={'auto'}
-                    onMicSend={send_message}
-                    setMicText={setChat}
-                    isRecording={isRecording}
-                    setIsRecording={setIsRecording}
-                />
+                {isLoading ? (
+                    <View
+                        style={{
+                            marginHorizontal: 10,
+                            height: 56,
+                            minHeight: 56,
+                            maxHeight: 56,
+                            borderRadius: 8,
+                            borderColor: Colors.Border,
+                            borderWidth: 1,
+                            backgroundColor: Colors.InputBackground,
+                            flex: 1,
+                            justifyContent: 'center',
+                            paddingLeft: 12,
+                            marginBottom: 10,
+                        }}>
+                        <BasicText
+                            inputText="Loading..."
+                            textSize={17}
+                            textColor={Colors.DarkGrey}
+                        />
+                    </View>
+                ) : (
+                    <MicrophoneButton
+                        microphoneSize={60}
+                        marginBottom={10}
+                        marginTop={2}
+                        marginLeft={'auto'}
+                        marginRight={'auto'}
+                        onMicSend={send_message}
+                        setMicText={setChat}
+                        isRecording={isRecording}
+                        setIsRecording={setIsRecording}
+                    />
+                )}
             </KeyboardAvoidingView>
         </View>
     );

@@ -1,14 +1,19 @@
 import Axios from 'axios';
 import { base_url } from '../Base/Base_URL';
+import { INTF_ChatGPT } from '../../../Interface/Chat_GPT/Chat_GPT';
 
 const api_base_url = Axios.create({
     baseURL: base_url,
 });
 
-export const gpt_request = async ({ message }: { message: string }) => {
+export const gpt_request = async ({
+    messages,
+}: {
+    messages: INTF_ChatGPT[];
+}) => {
     return await api_base_url
         .post('chat', {
-            message: message,
+            messages: messages,
         })
         .catch(err => {
             return {

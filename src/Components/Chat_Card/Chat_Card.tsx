@@ -1,6 +1,5 @@
-import React, { FunctionComponent } from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
-import { INTF_Conversation } from '../../Interface/Conversation/Conversation';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import TutorAIIcon from '../../Images/SVGs/Tutor_AI_Icon.svg';
 import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
 import Colors from '../../Configs/Colors/Colors';
@@ -11,14 +10,58 @@ import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks'
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
+import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
+import { useMutation } from 'react-query';
+import { gpt_request } from '../../Configs/Queries/Chat/Chat';
 
 interface ChatCardProps {
-    chat: INTF_Conversation;
+    chat: INTF_ChatGPT;
     index: number;
     last_index: number;
 }
 const ChatCard: FunctionComponent<ChatCardProps> = observer(
     ({ chat, index, last_index }) => {
+        const [isError, setIsError] = useState<boolean>(true);
+        const [translation, setTranslation] = useState<string>('');
+        const [showT, setShowT] = useState<boolean>(false);
+
+        const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
+            onMutate: () => {
+                setIsError(false);
+            },
+            onSettled: async data => {
+                if (data?.error) {
+                    setIsError(true);
+                } else {
+                    if (data?.data?.chat_res) {
+                        setTranslation(data?.data?.chat_res);
+                        setIsError(false);
+                    } else {
+                        setIsError(true);
+                    }
+                }
+            },
+        });
+
+        useEffect(() => {
+            if (
+                isError &&
+                UserInfoStore?.user_info?.language !== null &&
+                !(UserInfoStore?.user_info?.language as string)?.includes(
+                    'English',
+                )
+            ) {
+                gpt_req_mutate({
+                    messages: [
+                        {
+                            role: 'user',
+                            content: `Translate "${chat.content}" to ${UserInfoStore?.user_info?.language}. Note: your response should only be the translated text.`,
+                        },
+                    ],
+                });
+            }
+        }, [isError, gpt_req_mutate, chat.content]);
+
         return (
             <View
                 style={{
@@ -27,7 +70,7 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             ? 1
                             : 0,
                 }}>
-                {chat.isAI ? (
+                {chat.role === 'assistant' && (
                     <View
                         style={{
                             flexDirection: 'row',
@@ -36,34 +79,27 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                         }}>
                         <TutorAIIcon width={31} height={31} />
                         <TouchableOpacity
-                            activeOpacity={0.55}
-                            style={{
-                                width: 200,
-                                maxWidth: 200,
-                                backgroundColor: Colors.ChatBG,
-                                marginLeft: 7,
-                                marginRight: 7,
-                                paddingVertical: 10,
-                                paddingHorizontal: 20,
-                                borderRadius: 20,
-                                borderBottomLeftRadius: 0,
-                                shadowColor: 'rgba(0 ,0 ,0 , 0.35)',
-                                shadowOffset: {
-                                    width: 1,
-                                    height: 2,
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    setShowT(!showT);
                                 },
-                                shadowOpacity: 0.34,
-                                shadowRadius: 3.27,
-                                elevation: 3,
-                                minHeight: 55,
-                            }}>
-                            <BasicText inputText={chat?.chat} textSize={15} />
+                            })}
+                            activeOpacity={0.55}
+                            style={styles.container}>
+                            <BasicText
+                                inputText={
+                                    !isError && showT && translation
+                                        ? translation
+                                        : chat?.content
+                                }
+                                textSize={15}
+                            />
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={no_double_clicks({
                                 execFunc: () => {
                                     TextToSpeechStore.play_speech({
-                                        speech: chat?.chat,
+                                        speech: chat?.content,
                                     });
                                 },
                             })}
@@ -71,7 +107,8 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             <TranscribeIcon width={30} height={30} />
                         </TouchableOpacity>
                     </View>
-                ) : (
+                )}
+                {chat.role === 'user' && (
                     <View
                         style={{
                             flexDirection: 'row',
@@ -99,29 +136,26 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             }}
                         />
                         <TouchableOpacity
-                            activeOpacity={0.55}
-                            style={{
-                                width: 200,
-                                maxWidth: 200,
-                                backgroundColor: Colors.Primary,
-                                marginLeft: 7,
-                                marginRight: 7,
-                                paddingVertical: 10,
-                                paddingHorizontal: 20,
-                                borderRadius: 20,
-                                borderBottomLeftRadius: 0,
-                                shadowColor: 'rgba(0 ,0 ,0 , 0.35)',
-                                shadowOffset: {
-                                    width: 1,
-                                    height: 2,
+                            onPress={no_double_clicks({
+                                execFunc: () => {
+                                    setShowT(!showT);
                                 },
-                                shadowOpacity: 0.34,
-                                shadowRadius: 3.27,
-                                elevation: 3,
-                                minHeight: 55,
-                            }}>
+                            })}
+                            activeOpacity={0.55}
+                            style={[
+                                styles.container,
+                                {
+                                    backgroundColor: Colors.Primary,
+                                    borderBottomLeftRadius: 20,
+                                    borderBottomRightRadius: 0,
+                                },
+                            ]}>
                             <BasicText
-                                inputText={chat?.chat}
+                                inputText={
+                                    !isError && showT && translation
+                                        ? translation
+                                        : chat?.content
+                                }
                                 textColor={Colors.White}
                                 textSize={15}
                             />
@@ -130,7 +164,7 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             onPress={no_double_clicks({
                                 execFunc: () => {
                                     TextToSpeechStore.play_speech({
-                                        speech: chat?.chat,
+                                        speech: chat?.content,
                                     });
                                 },
                             })}
@@ -145,3 +179,27 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
 );
 
 export default ChatCard;
+
+const styles = StyleSheet.create({
+    container: {
+        width: 240,
+        maxWidth: 240,
+        backgroundColor: Colors.ChatBG,
+        marginLeft: 7,
+        marginRight: 7,
+        paddingTop: 10,
+        paddingHorizontal: 12,
+        paddingBottom: 8,
+        borderRadius: 20,
+        borderBottomLeftRadius: 0,
+        shadowColor: 'rgba(0 ,0 ,0 , 0.35)',
+        shadowOffset: {
+            width: 1,
+            height: 2,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 3.27,
+        elevation: 3,
+        minHeight: 55,
+    },
+});

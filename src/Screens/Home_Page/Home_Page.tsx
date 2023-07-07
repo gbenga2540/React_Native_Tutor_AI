@@ -175,6 +175,19 @@ const HomePage: FunctionComponent = observer(() => {
                     )?.[0]?.score || 0) >= 70
                 ) {
                     setExamTShow(null);
+                } else if (
+                    UserInfoStore?.user_info?.level === 'Beginner' &&
+                    ((UserInfoStore?.user_info?.exams?.filter(
+                        item => item?.level === 'Beginner',
+                    )?.[0]?.score || 0) < 70 ||
+                        UserInfoStore?.user_info?.exams?.filter(
+                            item => item?.level === 'Beginner',
+                        )?.[0]?.score === null ||
+                        UserInfoStore?.user_info?.exams?.filter(
+                            item => item?.level === 'Beginner',
+                        )?.[0]?.score === undefined)
+                ) {
+                    setExamTShow('Beginner');
                 } else {
                     if (
                         (UserInfoStore?.user_info?.exams?.filter(
@@ -189,7 +202,6 @@ const HomePage: FunctionComponent = observer(() => {
             setExamTShow(null);
         }
     }, [examTShow, noOfHWDone, noOfLessons]);
-
     return (
         <View style={styles.home_main}>
             <CustomStatusBar backgroundColor={Colors.Background} />
@@ -494,12 +506,12 @@ const HomePage: FunctionComponent = observer(() => {
                         <TouchableOpacity
                             onPress={no_double_clicks({
                                 execFunc: () => {
-                                    navigation.push(
-                                        'HomeStack' as never,
-                                        {
-                                            screen: 'VocabularyPage',
-                                        } as never,
-                                    );
+                                    // navigation.push(
+                                    //     'HomeStack' as never,
+                                    //     {
+                                    //         screen: 'VocabularyPage',
+                                    //     } as never,
+                                    // );
                                 },
                             })}
                             activeOpacity={0.55}
