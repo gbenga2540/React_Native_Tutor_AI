@@ -74,6 +74,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                     AvatarVoiceStore.set_avatar_female_voice({
                         voice: femaleVoice,
                     });
+                    TextToSpeechStore.clear_speech();
                     navigation.push(
                         'AuthStack' as never,
                         {
@@ -117,7 +118,12 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                <BackButton />
+                <BackButton
+                    execFunc={() => {
+                        TextToSpeechStore.clear_speech();
+                        navigation.goBack();
+                    }}
+                />
             </View>
             <ScrollView style={{ flex: 1 }}>
                 <BasicText
@@ -164,6 +170,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             <VoiceButton
                                 execFunc={no_double_clicks({
                                     execFunc: () => {
+                                        TextToSpeechStore.clear_speech();
                                         if (
                                             femaleVoice ===
                                             ('Choose Voice' as INTF_AvatarFemaleVoice)
@@ -220,6 +227,7 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             <VoiceButton
                                 execFunc={no_double_clicks({
                                     execFunc: () => {
+                                        TextToSpeechStore.clear_speech();
                                         if (
                                             maleVoice ===
                                             ('Choose Voice' as INTF_AvatarMaleVoice)

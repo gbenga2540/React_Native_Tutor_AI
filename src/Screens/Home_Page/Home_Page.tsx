@@ -506,12 +506,12 @@ const HomePage: FunctionComponent = observer(() => {
                         <TouchableOpacity
                             onPress={no_double_clicks({
                                 execFunc: () => {
-                                    // navigation.push(
-                                    //     'HomeStack' as never,
-                                    //     {
-                                    //         screen: 'VocabularyPage',
-                                    //     } as never,
-                                    // );
+                                    navigation.push(
+                                        'HomeStack' as never,
+                                        {
+                                            screen: 'VocabularyPage',
+                                        } as never,
+                                    );
                                 },
                             })}
                             activeOpacity={0.55}

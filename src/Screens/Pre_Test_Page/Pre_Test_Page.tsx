@@ -54,6 +54,7 @@ const PreTestPage: FunctionComponent = observer(() => {
 
     const { mutate: update_level_mutate } = useMutation(update_level, {
         onMutate: () => {
+            TextToSpeechStore.clear_speech();
             setDisableButton(true);
             setShowSpinner(true);
         },
@@ -379,6 +380,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                         break;
                 }
                 setStage('Writing');
+                TextToSpeechStore.clear_speech();
                 TextToSpeechStore.play_speech({
                     speech: 'To begin your Writing Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                 });
@@ -402,6 +404,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                         ? 280
                         : 150)
             ) {
+                TextToSpeechStore.clear_speech();
                 update_level_mutate({
                     uid: UserInfoStore?.user_info?._id as string,
                     level: assignedLevel,
@@ -462,6 +465,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                         )[0],
                     );
                     setStage('Listening');
+                    TextToSpeechStore.clear_speech();
                     TextToSpeechStore.play_speech({
                         speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                     });
@@ -511,6 +515,7 @@ const PreTestPage: FunctionComponent = observer(() => {
                             break;
                     }
                     setStage('Listening');
+                    TextToSpeechStore.clear_speech();
                     TextToSpeechStore.play_speech({
                         speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
                     });
@@ -529,6 +534,7 @@ const PreTestPage: FunctionComponent = observer(() => {
     useEffect(() => {
         if (stage === 'Proficiency') {
             if (currentQuestion < noOfQuestions) {
+                TextToSpeechStore.clear_speech();
                 TextToSpeechStore.play_speech({
                     speech: pQuestions[
                         currentQuestion
@@ -546,6 +552,7 @@ const PreTestPage: FunctionComponent = observer(() => {
             }, 1000);
         }
         if (!hasNav && timer === 0) {
+            TextToSpeechStore.clear_speech();
             update_level_mutate({
                 uid: UserInfoStore?.user_info?._id as string,
                 level: assignedLevel,

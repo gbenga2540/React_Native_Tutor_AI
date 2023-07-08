@@ -47,6 +47,7 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
             if (
                 isError &&
                 UserInfoStore?.user_info?.language !== null &&
+                UserInfoStore?.user_info?.language !== undefined &&
                 !(UserInfoStore?.user_info?.language as string)?.includes(
                     'English',
                 )
@@ -88,7 +89,10 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             style={styles.container}>
                             <BasicText
                                 inputText={
-                                    !isError && showT && translation
+                                    !isError &&
+                                    showT &&
+                                    translation &&
+                                    UserInfoStore?.user_info?.language
                                         ? translation
                                         : chat?.content
                                 }
@@ -152,7 +156,10 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                             ]}>
                             <BasicText
                                 inputText={
-                                    !isError && showT && translation
+                                    !isError &&
+                                    showT &&
+                                    translation &&
+                                    UserInfoStore?.user_info?.language
                                         ? translation
                                         : chat?.content
                                 }

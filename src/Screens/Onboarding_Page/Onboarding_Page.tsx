@@ -217,6 +217,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
 
     const handle_go_back = () => {
         if (question === 1) {
+            TextToSpeechStore.clear_speech();
             navigation.canGoBack() && navigation.goBack();
         } else {
             prev_question({});
@@ -263,6 +264,7 @@ const OnboardingPage: FunctionComponent = observer(() => {
         useCallback(() => {
             const handleBackPress = () => {
                 if (question === 1) {
+                    TextToSpeechStore.clear_speech();
                     navigation.canGoBack() && navigation.goBack();
                     return true;
                 } else {

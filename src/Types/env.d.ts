@@ -9,5 +9,7 @@ declare module '@env' {
     export const SECURE_STORAGE_SCHEDULE_INFO: string;
     export const SECURE_STORAGE_VOICE_INFO: string;
     export const SECURE_STORAGE_CREDIT_CARD_INFO: string;
+    export const SECURE_STORAGE_GLOSSARY: string;
+    export const SECURE_STORAGE_SPEECH_CONTROLLER: string;
     export const STRIPE_PUBLIC_KEY: string;
 }

@@ -35,23 +35,31 @@ const HelpCenterPage: FunctionComponent = () => {
 
         if (search) {
             if (faq_type === 'All FAQs') {
-                setNewFAQs(
-                    faqs.filter(item => item.faq_title.includes(search)),
-                );
+                setNewFAQs([
+                    ...faqs.filter(item =>
+                        item.faq_title
+                            .toLowerCase()
+                            .includes(search.toLowerCase()),
+                    ),
+                ]);
             } else {
-                setNewFAQs(
-                    faqs.filter(
+                setNewFAQs([
+                    ...faqs.filter(
                         item =>
                             item.faq_type === faq_type &&
-                            item.faq_title.includes(search),
+                            item.faq_title
+                                .toLowerCase()
+                                .includes(search.toLowerCase()),
                     ),
-                );
+                ]);
             }
         } else {
             if (faq_type === 'All FAQs') {
-                setNewFAQs(faqs);
+                setNewFAQs([...faqs]);
             } else {
-                setNewFAQs(faqs.filter(item => item.faq_type === faq_type));
+                setNewFAQs([
+                    ...faqs.filter(item => item.faq_type === faq_type),
+                ]);
             }
         }
     }, [activeFAQ, search]);

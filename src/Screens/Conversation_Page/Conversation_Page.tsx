@@ -40,7 +40,7 @@ const ConversationPage: FunctionComponent = observer(() => {
 
     const UserInfo = UserInfoStore?.user_info;
 
-    const GPT_PROMPT = `My name is ${UserInfo?.fullname} and let's talk about my interest and also a bit of some English Tutoring. Here's an array of my interests: ${UserInfo?.interests}. Note: keep your replies short!`;
+    const GPT_PROMPT = `Hi, My name is ${UserInfo?.fullname}, let's talk about my interest and also a bit of some English Language Tutoring. Here's an array of my interests: ${UserInfo?.interests}. Note: keep your replies short and let the Conversation be as Natural as Possible!`;
 
     const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
         onMutate: () => {
@@ -164,6 +164,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 {messages?.slice(1)?.length > 0 ? (
                     <FlatList
+                        windowSize={4}
                         ref={flatListRef}
                         ListHeaderComponent={() =>
                             (

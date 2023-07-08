@@ -4,10 +4,12 @@ import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 import { useEffect } from 'react';
 import { AvatarSpeakStore } from '../../MobX/Avatar_Speak/Avatar_Speak';
-
-const SPEECH_REDUCTION = 0.25;
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const TextToSpeech = () => {
+    const PITCH_REDUCTION = (SpeechControllerStore.pitch || 90) / 100;
+    const RATE_REDUCTION = (SpeechControllerStore.rate || 90) / 100;
+
     const is_tts_engine_ready = async () => {
         const isInitialized = await TTS.getInitStatus();
         return isInitialized;
@@ -44,28 +46,28 @@ const TextToSpeech = () => {
         switch (type) {
             case 'British':
                 // TTS.setDefaultLanguage('en-US');
-                TTS.setDefaultPitch((isMale ? 1.1 : 1.0) - SPEECH_REDUCTION);
-                TTS.setDefaultRate((isMale ? 0.8 : 0.9) - SPEECH_REDUCTION);
+                TTS.setDefaultPitch((isMale ? 1.1 : 1.0) * PITCH_REDUCTION);
+                TTS.setDefaultRate((isMale ? 0.8 : 0.9) * RATE_REDUCTION);
                 break;
             case 'Australian':
                 // TTS.setDefaultLanguage('en-US');
-                TTS.setDefaultPitch((isMale ? 1.3 : 1.2) - SPEECH_REDUCTION);
-                TTS.setDefaultRate((isMale ? 0.85 : 0.9) - SPEECH_REDUCTION);
+                TTS.setDefaultPitch((isMale ? 1.3 : 1.2) * PITCH_REDUCTION);
+                TTS.setDefaultRate((isMale ? 0.85 : 0.9) * RATE_REDUCTION);
                 break;
             case 'Ireland':
                 // TTS.setDefaultLanguage('en-US');
-                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) - SPEECH_REDUCTION);
-                TTS.setDefaultRate((isMale ? 0.99 : 0.85) - SPEECH_REDUCTION);
+                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) * PITCH_REDUCTION);
+                TTS.setDefaultRate((isMale ? 0.99 : 0.85) * RATE_REDUCTION);
                 break;
             case 'American':
                 // TTS.setDefaultLanguage('en-US');
-                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) - SPEECH_REDUCTION);
-                TTS.setDefaultRate((isMale ? 1.0 : 0.9) - SPEECH_REDUCTION);
+                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) * PITCH_REDUCTION);
+                TTS.setDefaultRate((isMale ? 1.0 : 0.9) * RATE_REDUCTION);
                 break;
             default:
                 // TTS.setDefaultLanguage('en-US');
-                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) - SPEECH_REDUCTION);
-                TTS.setDefaultRate((isMale ? 1.0 : 0.9) - SPEECH_REDUCTION);
+                TTS.setDefaultPitch((isMale ? 1.2 : 1.1) * PITCH_REDUCTION);
+                TTS.setDefaultRate((isMale ? 1.0 : 0.9) * RATE_REDUCTION);
                 break;
         }
 

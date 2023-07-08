@@ -24,6 +24,13 @@ export const profile_menu_1: INTF_ProfileMenu[] = [
     },
     {
         id: 4,
+        name: 'Speech Controller',
+        stack: 'HomeStack',
+        screen: 'SpeechControllerPage',
+        params: {},
+    },
+    {
+        id: 5,
         name: 'Delete Account',
         stack: 'InfoPage',
         screen: '',

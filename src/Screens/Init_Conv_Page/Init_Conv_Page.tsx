@@ -201,6 +201,7 @@ const InitConvPage: FunctionComponent = observer(() => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 {messages?.slice(1)?.length > 0 ? (
                     <FlatList
+                        windowSize={4}
                         ref={flatListRef}
                         ListHeaderComponent={() =>
                             (

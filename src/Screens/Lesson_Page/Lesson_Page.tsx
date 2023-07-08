@@ -158,6 +158,7 @@ const LessonPage: FunctionComponent = observer(() => {
                 {lessons?.length > 0 && (
                     <Suspense fallback={null}>
                         <FlatList
+                            windowSize={4}
                             ListHeaderComponent={() =>
                                 (
                                     <View style={{ marginTop: 20 }}>{''}</View>

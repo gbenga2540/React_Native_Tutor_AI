@@ -22,6 +22,7 @@ import VerifyOTPPage from '../../Screens/Verify_OTP_Page/Verify_OTP_Page';
 import HomeWorkQPage from '../../Screens/Home_Work_Q_Page/Home_Work_Q_Page';
 import CongratulationsPage from '../../Screens/Congratulations_Page/Congratulations_Page';
 import ExamQPage from '../../Screens/Exam_Q_Page/Exam_Q_Page';
+import SpeechControllerPage from '../../Screens/Speech_Controller_Page/Speech_Controller_Page';
 
 type HomeStackParamList = {
     HomeTab: {};
@@ -46,6 +47,7 @@ type HomeStackParamList = {
     HomeWorkQPage: {};
     CongratulationsPage: {};
     ExamQPage: {};
+    SpeechControllerPage: {};
 };
 
 const Home_Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -124,6 +126,10 @@ const HomeStack: FunctionComponent = () => {
                 component={CongratulationsPage}
             />
             <Home_Stack.Screen name="ExamQPage" component={ExamQPage} />
+            <Home_Stack.Screen
+                name="SpeechControllerPage"
+                component={SpeechControllerPage}
+            />
         </Home_Stack.Navigator>
     );
 };

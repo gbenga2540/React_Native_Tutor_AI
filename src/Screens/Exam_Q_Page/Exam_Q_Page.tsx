@@ -328,6 +328,7 @@ const ExamQPage: FunctionComponent = observer(() => {
             }, 1000);
         }
         if (timer === 0 && !hasSkipped) {
+            TextToSpeechStore.clear_speech();
             if (route.params?.retake) {
                 if (
                     Math.floor((userScore / noOfQuestions) * 100) >

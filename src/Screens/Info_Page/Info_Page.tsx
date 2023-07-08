@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import SInfo from 'react-native-sensitive-info';
 import {
+    SECURE_STORAGE_CREDIT_CARD_INFO,
     SECURE_STORAGE_NAME,
     SECURE_STORAGE_SCHEDULE_INFO,
     SECURE_STORAGE_USER_INFO,
@@ -70,6 +71,10 @@ const InfoPage: FunctionComponent = () => {
                 keychainService: SECURE_STORAGE_NAME,
             });
             await SInfo.deleteItem(SECURE_STORAGE_VOICE_INFO, {
+                sharedPreferencesName: SECURE_STORAGE_NAME,
+                keychainService: SECURE_STORAGE_NAME,
+            });
+            await SInfo.deleteItem(SECURE_STORAGE_CREDIT_CARD_INFO, {
                 sharedPreferencesName: SECURE_STORAGE_NAME,
                 keychainService: SECURE_STORAGE_NAME,
             });

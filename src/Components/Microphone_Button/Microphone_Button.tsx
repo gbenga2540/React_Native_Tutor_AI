@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
 import Voice from '@react-native-voice/voice';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 const mic_size = 80;
 const anim_speed = 200;
@@ -110,10 +111,6 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
         };
     });
 
-    // const handlePressIn = () => {};
-
-    // const handlePressOut = () => {};
-
     const handlePress = () => {
         if (isRecording) {
             stop_recording();
@@ -127,6 +124,7 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
                 duration: animationSpeed || anim_speed,
             });
         } else {
+            TextToSpeechStore.clear_speech();
             opacityValue.value = withTiming(1, {
                 duration: animationSpeed || anim_speed,
             });
@@ -239,8 +237,6 @@ const MicrophoneButton: FunctionComponent<MicrophoneButtonProps> = ({
             ) : (
                 <Pressable
                     onPress={handlePress}
-                    // onPressIn={handlePressIn}
-                    // onPressOut={handlePressOut}
                     disabled={disabled || false}
                     style={[
                         styles.pressable,

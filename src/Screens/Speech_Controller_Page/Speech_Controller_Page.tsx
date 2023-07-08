@@ -15,68 +15,56 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
-import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
-import { useMutation } from 'react-query';
-import { forgot_password } from '../../Configs/Queries/Users/Users';
+import { observer } from 'mobx-react';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
+import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
+import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
 import { info_handler } from '../../Utils/Info_Handler/Info_Handler';
 
-const ForgotPasswordPage: FunctionComponent = () => {
+const SpeechControllerPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    const [email, setEmail] = useState<string>('');
+    const [rate, setRate] = useState<string>('');
+    const [pitch, setPitch] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
-    const [disableButton, setDisableButton] = useState<boolean>(false);
 
-    const { mutate: forgot_password_mutate } = useMutation(forgot_password, {
-        onMutate: () => {
-            setDisableButton(true);
-            setShowSpinner(true);
-        },
-        onSettled: async data => {
-            if (data?.error) {
-                setShowSpinner(false);
-                setDisableButton(false);
-                error_handler({
-                    navigation: navigation,
-                    error_mssg:
-                        'An error occured while trying to send new Password to your Email!',
-                    svr_error_mssg: data?.data,
+    const save_speech_data = no_double_clicks({
+        execFunc: () => {
+            if (rate && pitch) {
+                const p_rate = clamp_value({
+                    value: parseInt(rate, 10),
+                    minValue: 30,
+                    maxValue: 130,
                 });
-            } else {
+                const p_pitch = clamp_value({
+                    value: parseInt(pitch, 10),
+                    minValue: 30,
+                    maxValue: 130,
+                });
+                SpeechControllerStore.save_rate_pitch({
+                    rate: p_rate,
+                    pitch: p_pitch,
+                });
+
                 info_handler({
                     navigation: navigation,
-                    proceed_type: 3,
-                    success_mssg:
-                        'A New Password has been sent to your Email Address!',
-                    svr_success_mssg: '',
-                    hide_back_btn: false,
-                    hide_header: false,
-                });
-            }
-        },
-    });
-
-    const send_mail = no_double_clicks({
-        execFunc: () => {
-            if (regex_email_checker({ email: email?.trim() })) {
-                forgot_password_mutate({
-                    email: email?.trim(),
+                    success_mssg: `Speech Rate and Pitch set to ${p_rate} and ${p_pitch} respectively!.`,
+                    proceed_type: 4,
                 });
             } else {
                 error_handler({
                     navigation: navigation,
-                    error_mssg: 'Email field cannot be empty!',
+                    error_mssg: 'Fields cannot be Empty!',
                 });
             }
         },
     });
 
     return (
-        <View style={styles.fp_main}>
+        <View style={styles.sc_main}>
             <CustomStatusBar
                 showSpinner={showSpinner}
                 backgroundColor={Colors.Background}
@@ -88,29 +76,36 @@ const ForgotPasswordPage: FunctionComponent = () => {
             />
             <View
                 style={{
-                    marginLeft: 22,
-                    marginTop: navigation?.canGoBack()
-                        ? Platform.OS === 'ios'
-                            ? 56
-                            : 25
-                        : Platform.OS === 'ios'
-                        ? 70
-                        : 25,
-                    marginBottom: 15,
+                    marginTop:
+                        Platform.OS === 'ios'
+                            ? screen_height_less_than({
+                                  if_true: 45,
+                                  if_false: 65,
+                              })
+                            : 25,
+                    marginHorizontal: 22,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                 }}>
-                {navigation.canGoBack() && <BackButton />}
+                <BackButton />
+                <BasicText
+                    inputText="Speech Controller"
+                    textSize={20}
+                    textWeight={700}
+                    marginLeft={10}
+                />
             </View>
             <ScrollView style={{ flex: 1 }}>
                 <BasicText
-                    inputText="Forgot Password?"
+                    inputText="Customize your Speech Settings"
                     textWeight={700}
                     textSize={30}
                     marginLeft={22}
-                    width={280}
-                    marginBottom={2}
+                    marginBottom={20}
+                    marginTop={30}
                 />
                 <BasicText
-                    inputText="Enter Your Email to receive reset link."
+                    inputText="Speech Rate"
                     textWeight={500}
                     textSize={16}
                     marginLeft={22}
@@ -118,11 +113,28 @@ const ForgotPasswordPage: FunctionComponent = () => {
                     textColor={Colors.Grey}
                 />
                 <BasicTextEntry
-                    placeHolderText="johndoe@gmail.com"
-                    inputValue={email}
-                    setInputValue={setEmail}
-                    marginTop={20}
-                    inputMode="email"
+                    placeHolderText={`Current Speech Rate: ${SpeechControllerStore.rate}`}
+                    inputValue={rate}
+                    setInputValue={setRate}
+                    marginTop={6}
+                    inputMode="text"
+                    marginBottom={23}
+                    autoComplete="off"
+                />
+                <BasicText
+                    inputText="Speech Pitch"
+                    textWeight={500}
+                    textSize={16}
+                    marginLeft={22}
+                    marginRight={22}
+                    textColor={Colors.Grey}
+                />
+                <BasicTextEntry
+                    placeHolderText={`Current Speech Pitch: ${SpeechControllerStore.pitch}`}
+                    inputValue={pitch}
+                    setInputValue={setPitch}
+                    marginTop={6}
+                    inputMode="text"
                     marginBottom={18}
                     autoComplete="off"
                 />
@@ -131,12 +143,11 @@ const ForgotPasswordPage: FunctionComponent = () => {
                 style={{ zIndex: 2 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <BasicButton
-                    buttonText="Send Mail"
+                    buttonText="Save Data"
                     borderRadius={8}
                     marginHorizontal={22}
-                    execFunc={() => send_mail({})}
+                    execFunc={() => save_speech_data({})}
                     buttonHeight={56}
-                    disabled={disableButton}
                     marginBottom={
                         Platform.OS === 'ios'
                             ? screen_height_less_than({
@@ -161,12 +172,12 @@ const ForgotPasswordPage: FunctionComponent = () => {
             />
         </View>
     );
-};
+});
 
-export default ForgotPasswordPage;
+export default SpeechControllerPage;
 
 const styles = StyleSheet.create({
-    fp_main: {
+    sc_main: {
         flex: 1,
         backgroundColor: Colors.Background,
     },

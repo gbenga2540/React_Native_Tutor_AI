@@ -5,23 +5,42 @@ import BasicText from '../Basic_Text/Basic_Text';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import TextDivider from '../Text_Divider/Text_Divider';
 import TranscribeIcon from '../../Images/SVGs/Transcribe_Icon.svg';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 interface GlossaryItemProps {
     word: string;
     meaning: string;
+    translation: string;
+    example: string;
     lastWordInit?: string;
     index: number | null;
 }
 const GlossaryItem: FunctionComponent<GlossaryItemProps> = ({
     word,
     meaning,
+    translation,
+    example,
     lastWordInit,
     index,
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const transcribe_text = no_double_clicks({
-        execFunc: () => {},
+        execFunc: () => {
+            TextToSpeechStore.clear_speech();
+            TextToSpeechStore.play_speech({
+                speech: `
+                Word:
+                ${word}
+
+                Meaning:
+                ${meaning}
+
+                Example:
+                ${example}
+                `,
+            });
+        },
     });
 
     return (
@@ -79,6 +98,23 @@ const GlossaryItem: FunctionComponent<GlossaryItemProps> = ({
                                         marginTop: 7,
                                     }}>
                                     <BasicText
+                                        inputText={'Translation: '}
+                                        textSize={15}
+                                        textWeight={600}
+                                    />
+                                    <View style={{ flex: 1 }}>
+                                        <BasicText
+                                            inputText={translation}
+                                            textSize={14}
+                                        />
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginTop: 7,
+                                    }}>
+                                    <BasicText
                                         inputText={'Meaning: '}
                                         textSize={15}
                                         textWeight={600}
@@ -96,13 +132,13 @@ const GlossaryItem: FunctionComponent<GlossaryItemProps> = ({
                                         marginTop: 7,
                                     }}>
                                     <BasicText
-                                        inputText={'Translated: '}
+                                        inputText={'Example: '}
                                         textSize={15}
                                         textWeight={600}
                                     />
                                     <View style={{ flex: 1 }}>
                                         <BasicText
-                                            inputText={meaning}
+                                            inputText={example}
                                             textSize={14}
                                         />
                                     </View>

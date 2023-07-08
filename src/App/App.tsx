@@ -22,7 +22,6 @@ import { TextToSpeech } from '../Hooks/Text_To_Speech/Text_To_Speech';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLIC_KEY } from '@env';
 import { AndroidNotification } from '../Hooks/Android_Notification/Android_Notification';
-import { GetInstalledApps } from '../Hooks/Load_Apps/Load_Apps';
 
 const App: FunctionComponent = observer(() => {
     useEffect(() => {
@@ -30,7 +29,7 @@ const App: FunctionComponent = observer(() => {
         SetClassSchedule();
         LoadAvatarVoice();
         AndroidNotification();
-        GetInstalledApps();
+        // GetInstalledApps();
     }, []);
 
     TextToSpeech();

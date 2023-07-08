@@ -54,6 +54,7 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
 
     const proceed_to_home_page = no_double_clicks({
         execFunc: () => {
+            TextToSpeechStore.clear_speech();
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
@@ -87,7 +88,12 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                <BackButton />
+                <BackButton
+                    execFunc={() => {
+                        TextToSpeechStore.clear_speech();
+                        navigation.goBack();
+                    }}
+                />
                 <BasicText
                     inputText="Customize Voice"
                     textSize={20}

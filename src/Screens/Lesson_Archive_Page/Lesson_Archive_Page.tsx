@@ -252,6 +252,7 @@ const LessonArchivePage: FunctionComponent = observer(() => {
                 <Suspense fallback={null}>
                     {lessonsDone.length > 0 && (
                         <FlatList
+                            windowSize={4}
                             data={lessonsDone}
                             keyExtractor={item => item.lesson_id as any}
                             renderItem={({ item, index }) => (

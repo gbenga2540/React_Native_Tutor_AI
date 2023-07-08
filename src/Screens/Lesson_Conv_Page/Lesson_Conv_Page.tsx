@@ -19,7 +19,7 @@ import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import ChatCard from '../../Components/Chat_Card/Chat_Card';
 import MicAndTextInput from '../../Components/Mic_And_Text_Input/Mic_And_Text_Input';
 import { observer } from 'mobx-react';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { shorten_text } from '../../Utils/Shorten_Text/Shorten_Text';
@@ -30,8 +30,11 @@ import { useMutation } from 'react-query';
 import { gpt_request } from '../../Configs/Queries/Chat/Chat';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
+import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const LessonConvPage: FunctionComponent = observer(() => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const route = useRoute<RouteProp<any>>();
     const [micText, setMicText] = useState<string>('');
     const [timer, setTimer] = useState<number>(1800);
@@ -40,19 +43,7 @@ const LessonConvPage: FunctionComponent = observer(() => {
     const [messages, setMessages] = useState<INTF_ChatGPT[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const UserLevel = UserInfoStore?.user_info?.level;
-    const UserLevelID =
-        UserLevel === 'Confident'
-            ? 5
-            : UserLevel === 'Upper-Intermediate'
-            ? 4
-            : UserLevel === 'Intermediate'
-            ? 3
-            : UserLevel === 'Pre-Intermediate'
-            ? 2
-            : 1;
-
-    const GPT_PROMPT = `Act as a English language Tutor: Hi, there, my name is ${UserInfoStore?.user_info?.fullname}. I am on level ${UserLevelID}/5. The higher the level, the tougher you teach me. Let's have a conversation on ${route.params?.topic}. Note: Keep your replies short!`;
+    const GPT_PROMPT = `Act as an English Language Tutor; Hello, I'm ${UserInfoStore?.user_info?.fullname}, and I'm seeking your guidance in learning && engaging in a conversation about ${route.params?.topic}". Please keep your responses brief.`;
 
     const { mutate: gpt_req_mutate } = useMutation(gpt_request, {
         onMutate: () => {
@@ -146,7 +137,12 @@ const LessonConvPage: FunctionComponent = observer(() => {
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                <BackButton />
+                <BackButton
+                    execFunc={() => {
+                        TextToSpeechStore.clear_speech();
+                        navigation.goBack();
+                    }}
+                />
                 <BasicText
                     inputText={
                         shorten_text({
@@ -182,11 +178,14 @@ const LessonConvPage: FunctionComponent = observer(() => {
                                   if_false: 35,
                                   if_true: 10,
                               })
+                            : KeyboardStore.keyboard_active
+                            ? 15
                             : 8,
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 {messages?.slice(1)?.length > 0 ? (
                     <FlatList
+                        windowSize={4}
                         ref={flatListRef}
                         ListHeaderComponent={() =>
                             (
