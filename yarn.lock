@@ -6601,11 +6601,6 @@ react-native-linear-gradient@^2.6.2:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz#56598a76832724b2afa7889747635b5c80948f38"
   integrity sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ==
 
-react-native-lock-task@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-lock-task/-/react-native-lock-task-1.2.0.tgz#0a0d2eafed1768034f5910cd61134668810966e2"
-  integrity sha512-Uz3iD1n0oUGXKlmxqilfJXwzZam2vMuyzcI10t+LZfHD91WnG2axqBX1KV+4VofMomhBFo/MM5foN1/pwTOD8g==
-
 react-native-otp-textinput@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-otp-textinput/-/react-native-otp-textinput-1.0.1.tgz#1379c2994556c5c91a6b7cb69010469dbf82cbb3"

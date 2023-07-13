@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, NativeModules } from 'react-native';
 import Colors from '../../Configs/Colors/Colors';
 import BackButton from '../../Components/Back_Button/Back_Button';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
-import RNLockTask from 'react-native-lock-task';
+// import RNLockTask from 'react-native-lock-task';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import CheckBox from '../../Components/Check_Box/Check_Box';
 import BasicButton from '../../Components/Basic_Button/Basic_Button';
@@ -18,9 +18,22 @@ const LockAppsPage: FunctionComponent = () => {
 
     const proceed = no_double_clicks({
         execFunc: async () => {
+            //         let active = await LockTaskAndroid.isLockTaskOn();
+            // if (active) {
+            //   LockTaskAndroid.stopLockTask();
+            // } else {
+            //   LockTaskAndroid.startLockTask();
+            // }
             if (pControl) {
                 if (Platform.OS === 'android') {
-                    RNLockTask.startLockTask();
+                    // RNLockTask.startLockTask();
+                    const active =
+                        await NativeModules.LockTaskModule.isLockTaskOn();
+                    console.log(active);
+
+                    if (!active) {
+                        await NativeModules.LockTaskModule.startLockTask();
+                    }
                 } else {
                     try {
                         // const enable_lock =
@@ -30,7 +43,13 @@ const LockAppsPage: FunctionComponent = () => {
                 }
             } else {
                 if (Platform.OS === 'android') {
-                    RNLockTask.stopLockTask();
+                    const active =
+                        await NativeModules.LockTaskModule.isLockTaskOn();
+                    console.log(active);
+                    if (active) {
+                        await NativeModules.LockTaskModule.stopLockTask();
+                    }
+                    // RNLockTask.stopLockTask();
                 } else {
                     try {
                         // const disable_lock =

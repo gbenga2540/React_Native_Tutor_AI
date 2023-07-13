@@ -17,22 +17,24 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
-    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.front" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
+      <!-- android:launchMode="singleTask"
+      android:stateNotNeeded="true" -->
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme"
-      android:launchMode="singleTask"
-      android:stateNotNeeded="true">
+      android:theme="@style/AppTheme">
       <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
         <meta-data android:name="com.dieam.reactnativepushnotification.notification_foreground" android:value="false"/>
         <!-- Change the resource name to your App's accent color - or any other color you want -->
@@ -49,7 +51,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:exported="true" android:name="com.rnlocktask.MyAdmin"
+        <!-- <receiver android:exported="true" android:name="com.rnlocktask.MyAdmin"
            android:label="@string/sample_device_admin"
            android:description="@string/sample_device_admin_description"
            android:permission="android.permission.BIND_DEVICE_ADMIN">
@@ -58,7 +60,7 @@
            <intent-filter>
                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
            </intent-filter>
-       </receiver>
+       </receiver> -->
 
 
         <service
@@ -78,7 +80,7 @@
         android:exported="true">
           <intent-filter>
               <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.HOME" />
+              <!-- <category android:name="android.intent.category.HOME" /> -->
               <category android:name="android.intent.category.LAUNCHER" />
           </intent-filter>
       </activity>
