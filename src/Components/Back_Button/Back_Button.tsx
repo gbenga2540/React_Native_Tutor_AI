@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
 import Feather from 'react-native-vector-icons/Feather';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 
 interface BackButtonProps {
     execFunc?: () => void;
@@ -28,8 +29,10 @@ const BackButton: FunctionComponent<BackButtonProps> = ({
                 Keyboard.dismiss();
             }
             if (execFunc === undefined) {
+                TextToSpeechStore.clear_speech();
                 navigation.canGoBack() && navigation.goBack();
             } else {
+                TextToSpeechStore.clear_speech();
                 execFunc();
             }
         },

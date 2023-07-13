@@ -28,30 +28,23 @@ const SpeechControllerPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [rate, setRate] = useState<string>('');
-    const [pitch, setPitch] = useState<string>('');
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
     const save_speech_data = no_double_clicks({
         execFunc: () => {
-            if (rate && pitch) {
+            if (rate) {
                 const p_rate = clamp_value({
                     value: parseInt(rate, 10),
-                    minValue: 30,
-                    maxValue: 130,
-                });
-                const p_pitch = clamp_value({
-                    value: parseInt(pitch, 10),
-                    minValue: 30,
-                    maxValue: 130,
+                    minValue: 70,
+                    maxValue: 150,
                 });
                 SpeechControllerStore.save_rate_pitch({
                     rate: p_rate,
-                    pitch: p_pitch,
                 });
 
                 info_handler({
                     navigation: navigation,
-                    success_mssg: `Speech Rate and Pitch set to ${p_rate} and ${p_pitch} respectively!.`,
+                    success_mssg: `Speech Rate set to ${p_rate} successfully!.`,
                     proceed_type: 4,
                 });
             } else {
@@ -113,29 +106,12 @@ const SpeechControllerPage: FunctionComponent = observer(() => {
                     textColor={Colors.Grey}
                 />
                 <BasicTextEntry
-                    placeHolderText={`Current Speech Rate: ${SpeechControllerStore.rate}`}
+                    placeHolderText={`Current Speech Rate: ${SpeechControllerStore.rate}. (Min: 70, Max: 150)`}
                     inputValue={rate}
                     setInputValue={setRate}
                     marginTop={6}
                     inputMode="text"
                     marginBottom={23}
-                    autoComplete="off"
-                />
-                <BasicText
-                    inputText="Speech Pitch"
-                    textWeight={500}
-                    textSize={16}
-                    marginLeft={22}
-                    marginRight={22}
-                    textColor={Colors.Grey}
-                />
-                <BasicTextEntry
-                    placeHolderText={`Current Speech Pitch: ${SpeechControllerStore.pitch}`}
-                    inputValue={pitch}
-                    setInputValue={setPitch}
-                    marginTop={6}
-                    inputMode="text"
-                    marginBottom={18}
                     autoComplete="off"
                 />
             </ScrollView>

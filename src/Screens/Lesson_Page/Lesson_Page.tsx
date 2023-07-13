@@ -11,10 +11,7 @@ import LessonCard from '../../Components/Lesson_Card/Lesson_Card';
 import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Bar';
 import { observer } from 'mobx-react';
 import BasicText from '../../Components/Basic_Text/Basic_Text';
-import {
-    screen_height_less_than,
-    screen_width_less_than,
-} from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import {
     Beginner,
@@ -132,7 +129,7 @@ const LessonPage: FunctionComponent = observer(() => {
                             textWeight={600}
                         />
                     </View>
-                    <View
+                    {/* <View
                         style={{
                             backgroundColor: Colors.LightPrimary,
                             width: screen_width_less_than({
@@ -153,7 +150,7 @@ const LessonPage: FunctionComponent = observer(() => {
                             textSize={18}
                             textWeight={600}
                         />
-                    </View>
+                    </View> */}
                 </View>
                 {lessons?.length > 0 && (
                     <Suspense fallback={null}>
@@ -169,7 +166,7 @@ const LessonPage: FunctionComponent = observer(() => {
                             renderItem={({ item, index }) => (
                                 <LessonCard
                                     lesson={item}
-                                    index={index}
+                                    current_index={index}
                                     last_index={
                                         lessons?.length <= 1
                                             ? 0

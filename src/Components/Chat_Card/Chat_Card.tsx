@@ -13,6 +13,8 @@ import { http_link_fix } from '../../Utils/HTTP_Link_Fix/HTTP_Link_Fix';
 import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
 import { useMutation } from 'react-query';
 import { gpt_request } from '../../Configs/Queries/Chat/Chat';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 interface ChatCardProps {
     chat: INTF_ChatGPT;
@@ -104,6 +106,12 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 execFunc: () => {
                                     TextToSpeechStore.play_speech({
                                         speech: chat?.content,
+                                        isMale: AvatarVoiceStore.is_avatar_male,
+                                        femaleVoice:
+                                            AvatarVoiceStore.avatar_female_voice,
+                                        maleVoice:
+                                            AvatarVoiceStore.avatar_male_voice,
+                                        speechRate: SpeechControllerStore.rate,
                                     });
                                 },
                             })}
@@ -167,17 +175,23 @@ const ChatCard: FunctionComponent<ChatCardProps> = observer(
                                 textSize={15}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={no_double_clicks({
                                 execFunc: () => {
                                     TextToSpeechStore.play_speech({
                                         speech: chat?.content,
+                                        isMale: AvatarVoiceStore.is_avatar_male,
+                                        femaleVoice:
+                                            AvatarVoiceStore.avatar_female_voice,
+                                        maleVoice:
+                                            AvatarVoiceStore.avatar_male_voice,
+                                        speechRate: SpeechControllerStore.rate,
                                     });
                                 },
                             })}
                             activeOpacity={0.5}>
                             <TranscribeIcon width={30} height={30} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 )}
             </View>

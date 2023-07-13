@@ -32,6 +32,8 @@ import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { useMutation } from 'react-query';
 import { gpt_request } from '../../Configs/Queries/Chat/Chat';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const InitConvPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -61,12 +63,12 @@ const InitConvPage: FunctionComponent = observer(() => {
         onSettled: async data => {
             if (data?.error) {
                 setIsLoading(false);
-                if (messages.length === 1) {
-                    setMessages([]);
-                } else {
-                    messages !== undefined &&
-                        setMessages(messages?.splice(messages.length - 1, 1));
-                }
+                // if (messages.length === 1) {
+                //     setMessages([]);
+                // } else {
+                //     messages !== undefined &&
+                //         setMessages(messages?.splice(messages.length - 1, 1));
+                // }
             } else {
                 setIsLoading(false);
                 if (data?.data?.chat_res) {
@@ -74,9 +76,12 @@ const InitConvPage: FunctionComponent = observer(() => {
                         ...prev,
                         { role: 'assistant', content: data?.data?.chat_res },
                     ]);
-                    TextToSpeechStore.clear_speech();
-                    TextToSpeechStore?.play_speech({
+                    TextToSpeechStore.play_speech({
                         speech: data?.data?.chat_res,
+                        isMale: AvatarVoiceStore.is_avatar_male,
+                        femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                        maleVoice: AvatarVoiceStore.avatar_male_voice,
+                        speechRate: SpeechControllerStore.rate,
                     });
                 }
                 setMicText('');

@@ -40,6 +40,8 @@ import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import SInfo from 'react-native-sensitive-info';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const TOTAL_PAGES = 3;
 
@@ -226,36 +228,58 @@ const OnboardingPage: FunctionComponent = observer(() => {
 
     const speak_question = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             if (question === 1) {
                 TextToSpeechStore.play_speech({
                     speech: 'Select your Native Language.',
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             } else if (question === 2) {
                 TextToSpeechStore.play_speech({
                     speech: 'Select the number of minutes you wish to study per day.',
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             } else {
                 TextToSpeechStore.play_speech({
                     speech: 'Select the topics you find interesting.',
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             }
         },
     });
 
     useEffect(() => {
-        TextToSpeechStore.clear_speech();
         if (question === 1) {
             TextToSpeechStore.play_speech({
                 speech: 'Select your Native Language.',
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         } else if (question === 2) {
             TextToSpeechStore.play_speech({
                 speech: 'Select the number of minutes you wish to study per day.',
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         } else {
             TextToSpeechStore.play_speech({
                 speech: 'Select the topics you find interesting.',
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         }
     }, [question]);

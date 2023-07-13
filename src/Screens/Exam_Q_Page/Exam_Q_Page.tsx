@@ -31,6 +31,8 @@ import {
 } from '../../Data/Exams_Q/Exams_Q';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const ExamQPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -62,13 +64,16 @@ const ExamQPage: FunctionComponent = observer(() => {
 
     const speak_question = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             if (currentQ < noOfQuestions) {
                 TextToSpeechStore.play_speech({
                     speech: questions[currentQ]?.question?.replace(
                         /____/g,
                         'dash',
                     ),
+                    isMale: !AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             }
         },
@@ -219,6 +224,10 @@ const ExamQPage: FunctionComponent = observer(() => {
         if (currentQ < noOfQuestions) {
             TextToSpeechStore.play_speech({
                 speech: questions[currentQ]?.question?.replace(/____/g, 'dash'),
+                isMale: !AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         } else {
             if (noOfQuestions > 1) {

@@ -33,6 +33,7 @@ import {
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import MiniAvatar from '../../Components/Mini_Avatar/Mini_Avatar';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const CustomizeVoicePage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -48,6 +49,10 @@ const CustomizeVoicePage: FunctionComponent = observer(() => {
                         ? AvatarVoiceStore.avatar_male_voice
                         : AvatarVoiceStore.avatar_female_voice
                 }`,
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         },
     });

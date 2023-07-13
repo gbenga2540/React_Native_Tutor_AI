@@ -22,17 +22,17 @@ import BasicText from '../../Components/Basic_Text/Basic_Text';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import MicrophoneButton from '../../Components/Microphone_Button/Microphone_Button';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { INTF_ChatGPT } from '../../Interface/Chat_GPT/Chat_GPT';
 import { useMutation } from 'react-query';
 import { gpt_request } from '../../Configs/Queries/Chat/Chat';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const ConversationPage: FunctionComponent = observer(() => {
     const [chat, setChat] = useState<string>('');
     const flatListRef = useRef<FlatList<any> | null>(null);
-    const [timer, setTimer] = useState<number>(1800);
     const [isRecording, setIsRecording] = useState<boolean>(false);
 
     const [messages, setMessages] = useState<INTF_ChatGPT[]>([]);
@@ -56,12 +56,12 @@ const ConversationPage: FunctionComponent = observer(() => {
         onSettled: async data => {
             if (data?.error) {
                 setIsLoading(false);
-                if (messages.length === 1) {
-                    setMessages([]);
-                } else {
-                    messages !== undefined &&
-                        setMessages(messages?.splice(messages.length - 1, 1));
-                }
+                // if (messages.length === 1) {
+                //     setMessages([]);
+                // } else {
+                //     messages !== undefined &&
+                //         setMessages(messages?.splice(messages.length - 1, 1));
+                // }
             } else {
                 setIsLoading(false);
                 if (data?.data?.chat_res) {
@@ -69,9 +69,12 @@ const ConversationPage: FunctionComponent = observer(() => {
                         ...prev,
                         { role: 'assistant', content: data?.data?.chat_res },
                     ]);
-                    TextToSpeechStore.clear_speech();
-                    TextToSpeechStore?.play_speech({
+                    TextToSpeechStore.play_speech({
                         speech: data?.data?.chat_res,
+                        isMale: AvatarVoiceStore.is_avatar_male,
+                        femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                        maleVoice: AvatarVoiceStore.avatar_male_voice,
+                        speechRate: SpeechControllerStore.rate,
                     });
                 }
                 setChat('');
@@ -92,9 +95,12 @@ const ConversationPage: FunctionComponent = observer(() => {
 
     const speak_info = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             TextToSpeechStore.play_speech({
                 speech: 'Press the Microphone Button to start or continue a conversation.',
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         },
     });
@@ -107,15 +113,16 @@ const ConversationPage: FunctionComponent = observer(() => {
         }
     }, [gpt_req_mutate, GPT_PROMPT, messages]);
 
-    useEffect(() => {
-        let intervalId: any;
-        if (messages?.length > 0 && timer > 0) {
-            intervalId = setInterval(() => {
-                setTimer(prevTimer => prevTimer - 1);
-            }, 1000);
-        }
-        return () => clearInterval(intervalId);
-    }, [timer, messages?.length]);
+    // const [timer, setTimer] = useState<number>(1800);
+    // useEffect(() => {
+    //     let intervalId: any;
+    //     if (messages?.length > 0 && timer > 0) {
+    //         intervalId = setInterval(() => {
+    //             setTimer(prevTimer => prevTimer - 1);
+    //         }, 1000);
+    //     }
+    //     return () => clearInterval(intervalId);
+    // }, [timer, messages?.length]);
 
     useEffect(() => {
         const first_timer = setTimeout(() => {
@@ -138,7 +145,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                     marginTop={'auto'}
                     marginBottom={18}
                 />
-                <BasicText
+                {/* <BasicText
                     inputText={seconds_to_minutes({
                         time: timer,
                     })}
@@ -148,7 +155,7 @@ const ConversationPage: FunctionComponent = observer(() => {
                     marginRight={22}
                     textWeight={600}
                     textColor={Colors.Primary}
-                />
+                /> */}
             </View>
             <MiniAvatar
                 marginTop={15}

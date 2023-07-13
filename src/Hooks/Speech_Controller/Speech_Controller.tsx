@@ -12,8 +12,7 @@ const SpeechController = async () => {
                 const json_res: { rate: number; pitch: number } =
                     JSON.parse(res);
                 SpeechControllerStore.set_rate_pitch({
-                    rate: json_res?.rate || 90,
-                    pitch: json_res?.pitch || 90,
+                    rate: json_res?.rate || 100,
                 });
             }
         });

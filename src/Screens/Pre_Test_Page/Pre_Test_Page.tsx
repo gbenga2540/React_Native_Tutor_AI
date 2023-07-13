@@ -41,6 +41,8 @@ import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 import SInfo from 'react-native-sensitive-info';
 import { seconds_to_minutes } from '../../Utils/Seconds_To_Minutes/Seconds_To_Minutes';
 import Sound from 'react-native-sound';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const PreTestPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -150,13 +152,16 @@ const PreTestPage: FunctionComponent = observer(() => {
 
     const speak_question = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             if (stage === 'Proficiency') {
                 if (currentQuestion < noOfQuestions) {
                     TextToSpeechStore.play_speech({
                         speech: pQuestions[
                             currentQuestion
                         ]?.question?.word?.replace(/____/g, 'dash'),
+                        isMale: AvatarVoiceStore.is_avatar_male,
+                        femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                        maleVoice: AvatarVoiceStore.avatar_male_voice,
+                        speechRate: SpeechControllerStore.rate,
                     });
                 }
             } else if (stage === 'Listening') {
@@ -164,12 +169,50 @@ const PreTestPage: FunctionComponent = observer(() => {
                     speech:
                         'Listen to the following and select the appropraite answer.\n' +
                         lQuestions.question,
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
-            } else if (stage === 'Writing') {
+            }
+        },
+    });
+
+    let writing_audio: number = 0;
+
+    const speak_question_left = no_double_clicks({
+        execFunc: () => {
+            if (stage === 'Writing') {
+                writing_audio = clamp_value({
+                    value: writing_audio - 1,
+                    minValue: 0,
+                    maxValue: wQuestions.question.length - 1,
+                });
                 TextToSpeechStore.play_speech({
-                    speech:
-                        'Listen to the following and type out what you hear.\n' +
-                        wQuestions.question,
+                    speech: wQuestions.question[writing_audio],
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
+                });
+            }
+        },
+    });
+
+    const speak_question_right = no_double_clicks({
+        execFunc: () => {
+            if (stage === 'Writing') {
+                writing_audio = clamp_value({
+                    value: writing_audio + 1,
+                    minValue: 0,
+                    maxValue: wQuestions.question.length - 1,
+                });
+                TextToSpeechStore.play_speech({
+                    speech: wQuestions.question[writing_audio],
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             }
         },
@@ -380,9 +423,15 @@ const PreTestPage: FunctionComponent = observer(() => {
                         break;
                 }
                 setStage('Writing');
-                TextToSpeechStore.clear_speech();
                 TextToSpeechStore.play_speech({
-                    speech: 'To begin your Writing Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
+                    speech:
+                        'To begin your Writing Test, press the button at the bottom-left or bottom-right of the Avatar to Listen to the Previous or Next Dictation. \nThe first Dictation is ' +
+                        wQuestions.question[0] +
+                        '\nPress the bottom-right button to listen to the next Dictation.',
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             } else {
                 error_handler({
@@ -399,12 +448,11 @@ const PreTestPage: FunctionComponent = observer(() => {
                         : assignedLevel === 'Pre-Intermediate'
                         ? 70
                         : assignedLevel === 'Intermediate'
-                        ? 140
+                        ? 150
                         : assignedLevel === 'Upper-Intermediate'
-                        ? 280
-                        : 150)
+                        ? 290
+                        : 160)
             ) {
-                TextToSpeechStore.clear_speech();
                 update_level_mutate({
                     uid: UserInfoStore?.user_info?._id as string,
                     level: assignedLevel,
@@ -465,9 +513,12 @@ const PreTestPage: FunctionComponent = observer(() => {
                         )[0],
                     );
                     setStage('Listening');
-                    TextToSpeechStore.clear_speech();
                     TextToSpeechStore.play_speech({
                         speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
+                        isMale: AvatarVoiceStore.is_avatar_male,
+                        femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                        maleVoice: AvatarVoiceStore.avatar_male_voice,
+                        speechRate: SpeechControllerStore.rate,
                     });
                 } else {
                     switch (assignedLevel) {
@@ -515,9 +566,12 @@ const PreTestPage: FunctionComponent = observer(() => {
                             break;
                     }
                     setStage('Listening');
-                    TextToSpeechStore.clear_speech();
                     TextToSpeechStore.play_speech({
                         speech: 'To begin your Listening Test, press the button at the bottom-right of the Avatar.\nNote that you can always press the button again to Listen once more.',
+                        isMale: AvatarVoiceStore.is_avatar_male,
+                        femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                        maleVoice: AvatarVoiceStore.avatar_male_voice,
+                        speechRate: SpeechControllerStore.rate,
                     });
                 }
             }
@@ -534,11 +588,14 @@ const PreTestPage: FunctionComponent = observer(() => {
     useEffect(() => {
         if (stage === 'Proficiency') {
             if (currentQuestion < noOfQuestions) {
-                TextToSpeechStore.clear_speech();
                 TextToSpeechStore.play_speech({
                     speech: pQuestions[
                         currentQuestion
                     ]?.question?.word?.replace(/____/g, 'dash'),
+                    isMale: AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             }
         }
@@ -552,7 +609,6 @@ const PreTestPage: FunctionComponent = observer(() => {
             }, 1000);
         }
         if (!hasNav && timer === 0) {
-            TextToSpeechStore.clear_speech();
             update_level_mutate({
                 uid: UserInfoStore?.user_info?._id as string,
                 level: assignedLevel,
@@ -601,7 +657,10 @@ const PreTestPage: FunctionComponent = observer(() => {
                 marginBottom={4}
                 marginHorizontal={22}
                 isSubtitleIcon
+                isWritingTest={stage === 'Writing'}
                 onPressVoice={speak_question}
+                onPressVoiceLeft={speak_question_left}
+                onPressVoiceRight={speak_question_right}
             />
             {stage === 'Proficiency' && (
                 <Fragment>

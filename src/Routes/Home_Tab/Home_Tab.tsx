@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { fonts } from '../../Configs/Fonts/Fonts';
@@ -14,6 +14,10 @@ import HomeWorkIcon from '../../Images/SVGs/Home_Work_Icon.svg';
 import ConversationIcon from '../../Images/SVGs/Conversation_Icon.svg';
 import ProfileIcon from '../../Images/SVGs/Profile_Icon.svg';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
+import { observer } from 'mobx-react';
+import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeTabParamList = {
     HomePage: {};
@@ -25,7 +29,24 @@ type HomeTabParamList = {
 
 const Home_Tab = createBottomTabNavigator<HomeTabParamList>();
 
-const HomeTab: FunctionComponent = () => {
+const HomeTab: FunctionComponent = observer(() => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
+    const speech = TextToSpeechStore.speech;
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('state', e => {
+            if (
+                e.data.state.routes[0].name === 'HomeTab' &&
+                e.data.state.routes[0].state?.index !== 3
+            ) {
+                if (speech) {
+                    TextToSpeechStore.clear_speech();
+                }
+            }
+        });
+        return unsubscribe;
+    }, [navigation, speech]);
+
     return (
         <Home_Tab.Navigator
             initialRouteName="HomePage"
@@ -43,7 +64,6 @@ const HomeTab: FunctionComponent = () => {
                 name="HomePage"
                 component={HomePage}
                 options={{
-                    // eslint-disable-next-line react/no-unstable-nested-components
                     tabBarIcon: ({ color }) => (
                         <HomeIcon width={26} height={26} color={color} />
                     ),
@@ -54,7 +74,6 @@ const HomeTab: FunctionComponent = () => {
                 name="LessonPage"
                 component={LessonPage}
                 options={{
-                    // eslint-disable-next-line react/no-unstable-nested-components
                     tabBarIcon: ({ color }) => (
                         <LessonIcon width={26} height={26} color={color} />
                     ),
@@ -65,7 +84,6 @@ const HomeTab: FunctionComponent = () => {
                 name="HomeWorkPage"
                 component={HomeWorkPage}
                 options={{
-                    // eslint-disable-next-line react/no-unstable-nested-components
                     tabBarIcon: ({ color }) => (
                         <HomeWorkIcon width={26} height={26} color={color} />
                     ),
@@ -76,7 +94,6 @@ const HomeTab: FunctionComponent = () => {
                 name="ConversationPage"
                 component={ConversationPage}
                 options={{
-                    // eslint-disable-next-line react/no-unstable-nested-components
                     tabBarIcon: ({ color }) => (
                         <ConversationIcon
                             width={26}
@@ -91,7 +108,6 @@ const HomeTab: FunctionComponent = () => {
                 name="ProfilePage"
                 component={ProfilePage}
                 options={{
-                    // eslint-disable-next-line react/no-unstable-nested-components
                     tabBarIcon: ({ color }) => (
                         <ProfileIcon width={26} height={26} color={color} />
                     ),
@@ -100,7 +116,7 @@ const HomeTab: FunctionComponent = () => {
             />
         </Home_Tab.Navigator>
     );
-};
+});
 
 export default HomeTab;
 

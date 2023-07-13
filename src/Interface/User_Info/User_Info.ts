@@ -28,6 +28,7 @@ export interface INTF_UserInfo {
         url?: string;
     };
     parental_control?: string;
+    delete_otp?: string;
     password?: string;
     verified?: boolean;
     accessToken?: string;

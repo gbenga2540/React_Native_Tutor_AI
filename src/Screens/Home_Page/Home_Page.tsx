@@ -82,6 +82,17 @@ const HomePage: FunctionComponent = observer(() => {
         },
     });
 
+    const nav_to_voc_page = no_double_clicks({
+        execFunc: () => {
+            navigation.push(
+                'HomeStack' as never,
+                {
+                    screen: 'VocabularyPage',
+                } as never,
+            );
+        },
+    });
+
     const get_level_number = () => {
         switch (UserInfoStore?.user_info?.level) {
             case 'Beginner':
@@ -504,16 +515,7 @@ const HomePage: FunctionComponent = observer(() => {
                             marginLeft: 11,
                         }}>
                         <TouchableOpacity
-                            onPress={no_double_clicks({
-                                execFunc: () => {
-                                    navigation.push(
-                                        'HomeStack' as never,
-                                        {
-                                            screen: 'VocabularyPage',
-                                        } as never,
-                                    );
-                                },
-                            })}
+                            onPress={nav_to_voc_page}
                             activeOpacity={0.55}
                             style={{
                                 backgroundColor: Colors.Pink,

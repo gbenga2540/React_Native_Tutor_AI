@@ -14,14 +14,16 @@ import BasicButton from '../../Components/Basic_Button/Basic_Button';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { screen_height_less_than } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { KeyboardStore } from '../../MobX/Keyboard/Keyboard';
-import { Observer } from 'mobx-react';
+import { Observer, observer } from 'mobx-react';
 import TextButton from '../../Components/Text_Button/Text_Button';
 import { useMutation } from 'react-query';
-import { resend_pin } from '../../Configs/Queries/Auth/Auth';
+import { resend_pc_pin } from '../../Configs/Queries/Auth/Auth';
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import SInfo from 'react-native-sensitive-info';
+import { SECURE_STORAGE_NAME, SECURE_STORAGE_USER_INFO } from '@env';
 
-const ParentalControlPage: FunctionComponent = () => {
+const ParentalControlPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
     const [pcPIN, setPCPIN] = useState<string>('');
@@ -33,7 +35,7 @@ const ParentalControlPage: FunctionComponent = () => {
         "A PIN was assigned to your Account when you registered your Account. Please check your Email for the PIN or click the 'Resend PIN' to generate a new PIN.",
     );
 
-    const { mutate: resend_pin_mutate } = useMutation(resend_pin, {
+    const { mutate: resend_pc_pin_mutate } = useMutation(resend_pc_pin, {
         onMutate: () => {
             setDisableButton(true);
             setShowSpinner(true);
@@ -49,6 +51,41 @@ const ParentalControlPage: FunctionComponent = () => {
                 });
             } else {
                 setPinText('A New PIN has been sent your Email Address!');
+
+                const prevUserInfo = UserInfoStore?.user_info;
+
+                const update_info = () => {
+                    UserInfoStore.set_user_info({
+                        user_info: {
+                            ...prevUserInfo,
+                            parental_control: data?.data?.pc_pin,
+                        },
+                    });
+                };
+
+                try {
+                    await SInfo.setItem(
+                        SECURE_STORAGE_USER_INFO,
+                        JSON.stringify({
+                            user_info: {
+                                ...prevUserInfo,
+                                parental_control: data?.data?.pc_pin,
+                            },
+                        }),
+                        {
+                            sharedPreferencesName: SECURE_STORAGE_NAME,
+                            keychainService: SECURE_STORAGE_NAME,
+                        },
+                    )
+                        .catch(err => {
+                            err && update_info();
+                        })
+                        .then(() => {
+                            update_info();
+                        });
+                } catch (error) {
+                    update_info();
+                }
             }
         },
     });
@@ -58,7 +95,7 @@ const ParentalControlPage: FunctionComponent = () => {
             navigation.push(
                 'HomeStack' as never,
                 {
-                    screen: 'BlockAppsPage',
+                    screen: 'LockAppsPage',
                 } as never,
             );
         },
@@ -66,7 +103,7 @@ const ParentalControlPage: FunctionComponent = () => {
 
     const resend__pin = no_double_clicks({
         execFunc: () => {
-            resend_pin_mutate({
+            resend_pc_pin_mutate({
                 userAuth: UserInfoStore?.user_info?.accessToken as string,
             });
         },
@@ -74,7 +111,11 @@ const ParentalControlPage: FunctionComponent = () => {
 
     const enable_block_apps = no_double_clicks({
         execFunc: () => {
-            if (pcPIN) {
+            if (
+                pcPIN?.length > 3 &&
+                pcPIN?.split('').join(' ') ===
+                    UserInfoStore?.user_info?.parental_control
+            ) {
                 setShowBlockApps(true);
             } else {
                 error_handler({
@@ -130,7 +171,7 @@ const ParentalControlPage: FunctionComponent = () => {
                                 textColor={Colors.Dark}
                             />
                             <BasicText
-                                inputText="PIN --> Use 1234 for now"
+                                inputText="PIN"
                                 textSize={15}
                                 textWeight={500}
                                 marginTop={20}
@@ -256,7 +297,7 @@ const ParentalControlPage: FunctionComponent = () => {
             </View>
         </View>
     );
-};
+});
 
 export default ParentalControlPage;
 

@@ -33,6 +33,7 @@ import {
     screen_width_less_than,
 } from '../../Utils/Screen_Less_Than/Screen_Less_Than';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const AVATAR_SIZE = screen_width_less_than({ if_false: 130, if_true: 120 });
 
@@ -170,17 +171,30 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             <VoiceButton
                                 execFunc={no_double_clicks({
                                     execFunc: () => {
-                                        TextToSpeechStore.clear_speech();
                                         if (
                                             femaleVoice ===
                                             ('Choose Voice' as INTF_AvatarFemaleVoice)
                                         ) {
                                             TextToSpeechStore.play_speech({
                                                 speech: 'Please, select a Voice for the Female Avatar.',
+                                                isMale: AvatarVoiceStore.is_avatar_male,
+                                                femaleVoice:
+                                                    AvatarVoiceStore.avatar_female_voice,
+                                                maleVoice:
+                                                    AvatarVoiceStore.avatar_male_voice,
+                                                speechRate:
+                                                    SpeechControllerStore.rate,
                                             });
                                         } else {
                                             TextToSpeechStore.play_speech({
                                                 speech: `Hi there, My Name is ${femaleVoice}. Welcome to TutorAI.`,
+                                                isMale: AvatarVoiceStore.is_avatar_male,
+                                                femaleVoice:
+                                                    AvatarVoiceStore.avatar_female_voice,
+                                                maleVoice:
+                                                    AvatarVoiceStore.avatar_male_voice,
+                                                speechRate:
+                                                    SpeechControllerStore.rate,
                                             });
                                         }
                                     },
@@ -227,17 +241,30 @@ const PreAvatarPage: FunctionComponent = observer(() => {
                             <VoiceButton
                                 execFunc={no_double_clicks({
                                     execFunc: () => {
-                                        TextToSpeechStore.clear_speech();
                                         if (
                                             maleVoice ===
                                             ('Choose Voice' as INTF_AvatarMaleVoice)
                                         ) {
                                             TextToSpeechStore.play_speech({
                                                 speech: 'Please, select a Voice for the Male Avatar.',
+                                                isMale: AvatarVoiceStore.is_avatar_male,
+                                                femaleVoice:
+                                                    AvatarVoiceStore.avatar_female_voice,
+                                                maleVoice:
+                                                    AvatarVoiceStore.avatar_male_voice,
+                                                speechRate:
+                                                    SpeechControllerStore.rate,
                                             });
                                         } else {
                                             TextToSpeechStore.play_speech({
                                                 speech: `Hi there, My Name is ${maleVoice}. Welcome to TutorAI.`,
+                                                isMale: AvatarVoiceStore.is_avatar_male,
+                                                femaleVoice:
+                                                    AvatarVoiceStore.avatar_female_voice,
+                                                maleVoice:
+                                                    AvatarVoiceStore.avatar_male_voice,
+                                                speechRate:
+                                                    SpeechControllerStore.rate,
                                             });
                                         }
                                     },

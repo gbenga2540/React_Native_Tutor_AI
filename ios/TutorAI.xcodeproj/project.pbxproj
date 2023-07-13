@@ -15,6 +15,7 @@
 		19B1E02F3855431C9774973C /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 648F9845EA364DA9B4504E55 /* Urbanist-Medium.ttf */; };
 		3D3B902B2A4A860D00EF99B9 /* congrats.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B90282A4A860B00EF99B9 /* congrats.mp3 */; };
 		3D3B902C2A4A860D00EF99B9 /* correct.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B90292A4A860C00EF99B9 /* correct.mp3 */; };
+		3D3E99592A5CC6A900A8C452 /* LockAppModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E99582A5CC6A900A8C452 /* LockAppModule.m */; };
 		3D8407282A25B0D400289027 /* MyAppInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8407272A25B0D400289027 /* MyAppInfoModule.m */; };
 		3DA3A67E2A4E34510040B797 /* incorrect.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DA3A67D2A4E34510040B797 /* incorrect.mp3 */; };
 		3DA438052A267B1A00CD90DB /* MyAppHideModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA438042A267B1A00CD90DB /* MyAppHideModule.m */; };
@@ -53,6 +54,7 @@
 		3BD29EE9F1A949F7ADB36684 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../src/Fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		3D3B90282A4A860B00EF99B9 /* congrats.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = congrats.mp3; sourceTree = "<group>"; };
 		3D3B90292A4A860C00EF99B9 /* correct.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = correct.mp3; sourceTree = "<group>"; };
+		3D3E99582A5CC6A900A8C452 /* LockAppModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LockAppModule.m; sourceTree = "<group>"; };
 		3D8407272A25B0D400289027 /* MyAppInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAppInfoModule.m; sourceTree = "<group>"; };
 		3D97AAFD2A0ABA230015A060 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		3D97AAFE2A0ABA230015A060 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				3D8407272A25B0D400289027 /* MyAppInfoModule.m */,
 				3DA438042A267B1A00CD90DB /* MyAppHideModule.m */,
+				3D3E99582A5CC6A900A8C452 /* LockAppModule.m */,
 			);
 			name = TutorAI;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				3D8407282A25B0D400289027 /* MyAppInfoModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				3D3E99592A5CC6A900A8C452 /* LockAppModule.m in Sources */,
 				3DA438052A267B1A00CD90DB /* MyAppHideModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,7 +551,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutorai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TutorAI.app/TutorAI";
 			};
@@ -571,7 +575,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutorai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TutorAI.app/TutorAI";
 			};
@@ -601,7 +605,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutorai;
 				PRODUCT_NAME = TutorAI;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -632,7 +636,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutorai;
 				PRODUCT_NAME = TutorAI;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -231,7 +231,13 @@ const LessonArchivePage: FunctionComponent = observer(() => {
                             borderRadius: 10,
                         }}>
                         <BasicText
-                            inputText={`${lessonsDone?.length * 30}mins`}
+                            inputText={`${
+                                lessonsDone?.length *
+                                    (UserInfo?.study_target as number) ===
+                                60
+                                    ? 60
+                                    : 30
+                            }mins`}
                         />
                     </View>
                     <View
@@ -258,7 +264,7 @@ const LessonArchivePage: FunctionComponent = observer(() => {
                             renderItem={({ item, index }) => (
                                 <LessonCard
                                     lesson={item}
-                                    index={index}
+                                    current_index={index}
                                     last_index={
                                         lessonsDone?.length <= 1
                                             ? 0

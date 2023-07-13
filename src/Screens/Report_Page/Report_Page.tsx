@@ -271,7 +271,13 @@ const ReportPage: FunctionComponent = observer(() => {
                                 textWeight={500}
                             />
                             <BasicText
-                                inputText={`Total: ${lessons?.length * 30}mins`}
+                                inputText={`Total: ${
+                                    lessons?.length *
+                                        (UserInfo?.study_target as number) ===
+                                    60
+                                        ? 60
+                                        : 30
+                                }mins`}
                                 textSize={16}
                                 textWeight={700}
                                 marginTop={10}

@@ -31,6 +31,8 @@ import { clamp_value } from '../../Utils/Clamp_Value/Clamp_Value';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { UserInfoStore } from '../../MobX/User_Info/User_Info';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const HomeWorkQPage: FunctionComponent = observer(() => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -60,13 +62,16 @@ const HomeWorkQPage: FunctionComponent = observer(() => {
 
     const speak_question = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             if (currentQ < noOfQuestions) {
                 TextToSpeechStore.play_speech({
                     speech: questions[currentQ]?.question?.replace(
                         /____/g,
                         'dash',
                     ),
+                    isMale: !AvatarVoiceStore.is_avatar_male,
+                    femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                    maleVoice: AvatarVoiceStore.avatar_male_voice,
+                    speechRate: SpeechControllerStore.rate,
                 });
             }
         },
@@ -215,6 +220,10 @@ const HomeWorkQPage: FunctionComponent = observer(() => {
         if (currentQ < noOfQuestions) {
             TextToSpeechStore.play_speech({
                 speech: questions[currentQ]?.question?.replace(/____/g, 'dash'),
+                isMale: !AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         } else {
             if (noOfQuestions > 1) {

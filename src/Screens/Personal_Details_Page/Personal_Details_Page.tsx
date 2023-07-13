@@ -18,7 +18,6 @@ import CustomStatusBar from '../../Components/Custom_Status_Bar/Custom_Status_Ba
 import OverlaySpinner from '../../Components/Overlay_Spinner/Overlay_Spinner';
 import { error_handler } from '../../Utils/Error_Handler/Error_Handler';
 import { no_double_clicks } from '../../Utils/No_Double_Clicks/No_Double_Clicks';
-import { regex_email_checker } from '../../Utils/Email_Checker/Email_Checker';
 import PhoneNumberInput from '../../Components/Phone_Number_Input/Phone_Number_Input';
 import RNDropDown from '../../Components/RN_Drop_Down/RN_Drop_Down';
 import Feather from 'react-native-vector-icons/Feather';
@@ -48,7 +47,7 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
     const [disableButton, setDisableButton] = useState<boolean>(false);
 
     const [fullName, setFullName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
+    // const [email, setEmail] = useState<string>('');
     const [phoneNo, setPhoneNo] = useState<string>('');
     const [phoneNoValid, setPhoneNoValid] = useState<boolean>(false);
     const [language, setLanguage] = useState<string>('');
@@ -91,7 +90,6 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         user_info: {
                             ...prevUserInfo,
                             language: p_language,
-                            email: email?.trim(),
                             mobile: phoneNo,
                             dateOfBirth: dob.toString(),
                             fullname: fullName,
@@ -115,7 +113,6 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                             user_info: {
                                 ...prevUserInfo,
                                 language: p_language,
-                                email: email?.trim(),
                                 mobile: phoneNo,
                                 dateOfBirth: dob.toString(),
                                 fullname: fullName,
@@ -171,7 +168,7 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                     const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
                     update_user_info_mutate({
                         uid: UserInfoStore?.user_info?._id as string,
-                        email: email?.trim(),
+                        email: UserInfoStore?.user_info?.email as string,
                         dateOfBirth: dob.toString(),
                         fullname: fullName,
                         language: p_language,
@@ -215,48 +212,39 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
     const edit_personal_details = no_double_clicks({
         execFunc: () => {
             if (language !== NativeLanguagesChooser[0]?.value && language) {
-                if (regex_email_checker({ email: email?.trim() })) {
-                    if (fullName) {
-                        if (phoneNoValid && phoneNo) {
-                            const language_filter = native_languages.filter(
-                                item => item.name === language,
-                            );
-                            const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
+                if (fullName) {
+                    if (phoneNoValid && phoneNo) {
+                        const language_filter = native_languages.filter(
+                            item => item.name === language,
+                        );
+                        const p_language = `${language_filter[0]?.name} - ${language_filter[0]?.code}`;
 
-                            if (displayPicture) {
-                                update_dp_mutate({
-                                    uid: UserInfoStore?.user_info
-                                        ?._id as string,
-                                    displayPicture: displayPicture,
-                                });
-                            } else {
-                                update_user_info_mutate({
-                                    uid: UserInfoStore?.user_info
-                                        ?._id as string,
-                                    email: email?.trim(),
-                                    dateOfBirth: dob.toString(),
-                                    fullname: fullName,
-                                    language: p_language,
-                                    mobile: phoneNo,
-                                });
-                            }
+                        if (displayPicture) {
+                            update_dp_mutate({
+                                uid: UserInfoStore?.user_info?._id as string,
+                                displayPicture: displayPicture,
+                            });
                         } else {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg:
-                                    'Invalid / Incorrect Mobile Number!',
+                            update_user_info_mutate({
+                                uid: UserInfoStore?.user_info?._id as string,
+                                email: UserInfoStore?.user_info
+                                    ?.email as string,
+                                dateOfBirth: dob.toString(),
+                                fullname: fullName,
+                                language: p_language,
+                                mobile: phoneNo,
                             });
                         }
                     } else {
                         error_handler({
                             navigation: navigation,
-                            error_mssg: 'FullName field cannot be empty!',
+                            error_mssg: 'Invalid / Incorrect Mobile Number!',
                         });
                     }
                 } else {
                     error_handler({
                         navigation: navigation,
-                        error_mssg: 'Email field cannot be empty!',
+                        error_mssg: 'Invalid FullName!',
                     });
                 }
             } else {
@@ -532,7 +520,7 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                     execFunc={open_dob}
                     textColor={Colors.LightPink}
                 />
-                <BasicText
+                {/* <BasicText
                     inputText={
                         (get_age({
                             input_date: dob?.toString(),
@@ -555,7 +543,7 @@ const PersonalDetailsPage: FunctionComponent = observer(() => {
                         scrollViewRef.current?.scrollToEnd()
                     }
                     autoComplete="off"
-                />
+                /> */}
                 <BasicText
                     inputText="Full Name"
                     marginLeft={22}

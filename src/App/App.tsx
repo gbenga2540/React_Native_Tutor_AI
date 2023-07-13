@@ -18,7 +18,6 @@ import Colors from '../Configs/Colors/Colors';
 import { HideSplashScreen } from '../Hooks/Hide_Splash_Screen/Hide_Splash_Screen';
 import { SetClassSchedule } from '../Hooks/Set_Class_Schedule/Set_Class_Schedule';
 import { LoadAvatarVoice } from '../Hooks/Load_Avatar_Voice/Load_Avatar_Voice';
-import { TextToSpeech } from '../Hooks/Text_To_Speech/Text_To_Speech';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLIC_KEY } from '@env';
 import { AndroidNotification } from '../Hooks/Android_Notification/Android_Notification';
@@ -29,10 +28,8 @@ const App: FunctionComponent = observer(() => {
         SetClassSchedule();
         LoadAvatarVoice();
         AndroidNotification();
-        // GetInstalledApps();
     }, []);
 
-    TextToSpeech();
     OnlineManager();
     OnAppFocus();
     KeyboardManager();

@@ -12,4 +12,7 @@ declare module '@env' {
     export const SECURE_STORAGE_GLOSSARY: string;
     export const SECURE_STORAGE_SPEECH_CONTROLLER: string;
     export const STRIPE_PUBLIC_KEY: string;
+    export const GOOGLE_TTS_ANDROID: string;
+    export const GOOGLE_TTS_IOS: string;
+    export const GOOGLE_TTS_LINK: string;
 }

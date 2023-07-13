@@ -203,7 +203,7 @@ export const login = async ({
         });
 };
 
-export const resend_pin = async ({ userAuth }: { userAuth: string }) => {
+export const resend_pc_pin = async ({ userAuth }: { userAuth: string }) => {
     const headersConfig = {
         headers: {
             'Content-Type': 'application/json',
@@ -212,6 +212,43 @@ export const resend_pin = async ({ userAuth }: { userAuth: string }) => {
     };
     return await api_base_url
         .post('auth/token/control-pin', {}, headersConfig)
+        .catch(err => {
+            return {
+                error: true,
+                data: JSON.stringify(err?.response?.data || err?.message),
+            };
+        })
+        .then((res: any) => {
+            if (res?.error) {
+                return {
+                    error: true,
+                    data: res?.data,
+                };
+            } else {
+                if (res?.data?.error) {
+                    return {
+                        error: true,
+                        data: res?.data,
+                    };
+                } else {
+                    return {
+                        error: false,
+                        data: res?.data,
+                    };
+                }
+            }
+        });
+};
+
+export const resend_del_pin = async ({ userAuth }: { userAuth: string }) => {
+    const headersConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: userAuth,
+        },
+    };
+    return await api_base_url
+        .post('auth/token/del-acc-otp', {}, headersConfig)
         .catch(err => {
             return {
                 error: true,

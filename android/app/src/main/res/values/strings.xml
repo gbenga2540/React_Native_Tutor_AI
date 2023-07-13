@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">TutorAI</string>
     <string name="default_notification_channel_id">TutorAI</string>
+    <string name="sample_device_admin">TutorAI</string>
+    <string name="sample_device_admin_description">TutorAI</string>
 </resources>

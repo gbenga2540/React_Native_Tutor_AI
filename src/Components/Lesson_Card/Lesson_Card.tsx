@@ -1,4 +1,9 @@
-import React, { Dispatch, FunctionComponent, SetStateAction } from 'react';
+import React, {
+    Dispatch,
+    FunctionComponent,
+    SetStateAction,
+    useState,
+} from 'react';
 import {
     StyleSheet,
     View,
@@ -25,7 +30,7 @@ import SInfo from 'react-native-sensitive-info';
 
 interface LessonCardProps {
     lesson: INTF_LessonTopics;
-    index: number;
+    current_index: number;
     last_index: number;
     disabled?: boolean;
     is_available?: boolean;
@@ -35,7 +40,7 @@ interface LessonCardProps {
 const LessonCard: FunctionComponent<LessonCardProps> = observer(
     ({
         lesson,
-        index,
+        current_index,
         last_index,
         disabled,
         is_available,
@@ -44,6 +49,7 @@ const LessonCard: FunctionComponent<LessonCardProps> = observer(
     }) => {
         const navigation = useNavigation<NativeStackNavigationProp<any>>();
         const UserLessonScore = UserInfoStore?.user_info?.lessons || [];
+        const [showSub, setShowSub] = useState<boolean>(false);
 
         const show_lesson = is_available || false;
 
@@ -91,15 +97,7 @@ const LessonCard: FunctionComponent<LessonCardProps> = observer(
                             UserInfoStore?.set_user_info({
                                 user_info: newUserInfo,
                             });
-                            navigation.push(
-                                'HomeStack' as never,
-                                {
-                                    screen: 'LessonConvPage',
-                                    params: {
-                                        topic: lesson?.lesson_topic,
-                                    },
-                                } as never,
-                            );
+                            setShowSub(true);
                         };
 
                         try {
@@ -127,47 +125,55 @@ const LessonCard: FunctionComponent<LessonCardProps> = observer(
             },
         );
 
+        const nav_to_lesson = ({ index }: { index: number }) => {
+            navigation.push(
+                'HomeStack' as never,
+                {
+                    screen: 'LessonConvPage',
+                    params: {
+                        topic: lesson?.lesson_topic,
+                        sub_topic: lesson.lesson_sub_topic[index],
+                    },
+                } as never,
+            );
+        };
+
         const open_lesson = no_double_clicks({
             execFunc: () => {
-                const nav_to_lesson = () => {
-                    navigation.push(
-                        'HomeStack' as never,
-                        {
-                            screen: 'LessonConvPage',
-                            params: {
-                                topic: lesson?.lesson_topic,
-                            },
-                        } as never,
-                    );
-                };
-
-                if (is_available) {
-                    nav_to_lesson();
+                if (showSub) {
+                    setShowSub(false);
                 } else {
-                    if (
-                        lesson?.lesson_id === 101 ||
-                        lesson?.lesson_id === 201 ||
-                        lesson?.lesson_id === 301 ||
-                        lesson?.lesson_id === 401 ||
-                        lesson?.lesson_id === 501
-                    ) {
-                        nav_to_lesson();
+                    if (is_available) {
+                        // nav_to_lesson();
+                        setShowSub(true);
                     } else {
                         if (
-                            UserLessonScore?.filter(
-                                item => item?.id === lesson?.lesson_id - 1,
-                            )?.length > 0
+                            lesson?.lesson_id === 101 ||
+                            lesson?.lesson_id === 201 ||
+                            lesson?.lesson_id === 301 ||
+                            lesson?.lesson_id === 401 ||
+                            lesson?.lesson_id === 501
                         ) {
-                            activate_lesson_mutate({
-                                userId: UserInfoStore?.user_info?._id as string,
-                                lessonId: lesson?.lesson_id as number,
-                            });
+                            // nav_to_lesson();
+                            setShowSub(true);
                         } else {
-                            error_handler({
-                                navigation: navigation,
-                                error_mssg:
-                                    'You need to activate other lessons above to unlock this lesson.',
-                            });
+                            if (
+                                UserLessonScore?.filter(
+                                    item => item?.id === lesson?.lesson_id - 1,
+                                )?.length > 0
+                            ) {
+                                activate_lesson_mutate({
+                                    userId: UserInfoStore?.user_info
+                                        ?._id as string,
+                                    lessonId: lesson?.lesson_id as number,
+                                });
+                            } else {
+                                error_handler({
+                                    navigation: navigation,
+                                    error_mssg:
+                                        'You need to activate other lessons above to unlock this lesson.',
+                                });
+                            }
                         }
                     }
                 }
@@ -175,107 +181,132 @@ const LessonCard: FunctionComponent<LessonCardProps> = observer(
         });
 
         return (
-            <TouchableOpacity
-                onPress={open_lesson}
-                disabled={disabled || false}
-                activeOpacity={0.5}
-                style={[
-                    styles.lesson_main,
-                    {
-                        backgroundColor: show_lesson
-                            ? Colors.Primary
-                            : Colors.LightPurple3,
-                        marginBottom:
-                            index === last_index
-                                ? Platform.OS === 'ios'
-                                    ? 67
-                                    : 22
-                                : 17,
-                    },
-                ]}>
-                <ArcInnerIcon
-                    style={{ position: 'absolute', right: 0 }}
-                    color={show_lesson ? Colors.ArcInner_A : Colors.ArcInner_I}
-                />
-                <ArcOuterIcon
-                    style={{ position: 'absolute', right: 0 }}
-                    color={show_lesson ? Colors.ArcOuter_A : Colors.ArcOuter_I}
-                />
-                {/* <Text
+            <View
                 style={{
-                    color: show_lesson ? Colors.White : Colors.Black,
-                    fontFamily: fonts.Urbanist_600,
-                    fontSize: 15,
-                    position: 'absolute',
-                    right: 10,
-                    top: 10,
-                }}>{`${lesson_progress}%`}</Text> */}
-                <View style={{ flexDirection: 'row' }}>
-                    <View
-                        style={{
-                            marginLeft: 12,
-                            marginTop: 10,
-                            marginRight: 4,
-                            width: 100,
-                            height: 100,
-                            borderRadius: 100,
-                            borderWidth: 2,
-                            borderColor: show_lesson
-                                ? Colors.ArcInner_A
-                                : Colors.ArcInner_I,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}>
-                        <Image
-                            source={require('../../Images/Logos/Tutor_AI_Logo.png')}
+                    marginBottom:
+                        current_index === last_index
+                            ? Platform.OS === 'ios'
+                                ? 67
+                                : 22
+                            : 17,
+                }}>
+                <TouchableOpacity
+                    onPress={open_lesson}
+                    disabled={disabled || false}
+                    activeOpacity={0.5}
+                    style={[
+                        styles.lesson_main,
+                        {
+                            backgroundColor: show_lesson
+                                ? Colors.Primary
+                                : Colors.LightPurple3,
+                        },
+                    ]}>
+                    <ArcInnerIcon
+                        style={{ position: 'absolute', right: 0 }}
+                        color={
+                            show_lesson ? Colors.ArcInner_A : Colors.ArcInner_I
+                        }
+                    />
+                    <ArcOuterIcon
+                        style={{ position: 'absolute', right: 0 }}
+                        color={
+                            show_lesson ? Colors.ArcOuter_A : Colors.ArcOuter_I
+                        }
+                    />
+                    <View style={{ flexDirection: 'row' }}>
+                        <View
                             style={{
-                                borderRadius: 90,
-                                width: 90,
-                                height: 90,
-                            }}
-                        />
-                    </View>
+                                marginLeft: 12,
+                                marginTop: 10,
+                                marginRight: 4,
+                                width: 100,
+                                height: 100,
+                                borderRadius: 100,
+                                borderWidth: 2,
+                                borderColor: show_lesson
+                                    ? Colors.ArcInner_A
+                                    : Colors.ArcInner_I,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                            <Image
+                                source={require('../../Images/Logos/Tutor_AI_Logo.png')}
+                                style={{
+                                    borderRadius: 90,
+                                    width: 90,
+                                    height: 90,
+                                }}
+                            />
+                        </View>
 
-                    <View
-                        style={{
-                            width: 200,
-                            paddingTop: 26,
-                            paddingBottom: 12,
-                        }}>
-                        <BasicText
-                            inputText={`Lesson ${lesson?.lesson_index} ${
-                                isArchives
-                                    ? lesson?.lesson_id?.toString()?.[0] === '1'
-                                        ? ' - Beginner'
-                                        : lesson?.lesson_id?.toString()?.[0] ===
-                                          '2'
-                                        ? ' - Pre-Intermediate'
-                                        : lesson?.lesson_id?.toString()?.[0] ===
-                                          '3'
-                                        ? ' - Intermediate'
-                                        : lesson?.lesson_id?.toString()?.[0] ===
-                                          '4'
-                                        ? ' - Upper-Intermediate'
-                                        : ' - Confident'
-                                    : ''
-                            }`}
-                            textWeight={500}
-                            textSize={15}
-                            textColor={
-                                show_lesson ? Colors.White : Colors.Black
-                            }
-                        />
-                        <BasicText
-                            inputText={lesson?.lesson_topic as string}
-                            textWeight={600}
-                            textSize={18}
-                            textColor={
-                                show_lesson ? Colors.White : Colors.Black
-                            }
-                        />
+                        <View
+                            style={{
+                                width: 200,
+                                paddingTop: 26,
+                                paddingBottom: 12,
+                            }}>
+                            <BasicText
+                                inputText={`Subject ${lesson?.lesson_index} ${
+                                    isArchives
+                                        ? lesson?.lesson_id?.toString()?.[0] ===
+                                          '1'
+                                            ? ' - Beginner'
+                                            : lesson?.lesson_id?.toString()?.[0] ===
+                                              '2'
+                                            ? ' - Pre-Intermediate'
+                                            : lesson?.lesson_id?.toString()?.[0] ===
+                                              '3'
+                                            ? ' - Intermediate'
+                                            : lesson?.lesson_id?.toString()?.[0] ===
+                                              '4'
+                                            ? ' - Upper-Intermediate'
+                                            : ' - Confident'
+                                        : ''
+                                }`}
+                                textWeight={500}
+                                textSize={15}
+                                textColor={
+                                    show_lesson ? Colors.White : Colors.Black
+                                }
+                            />
+                            <BasicText
+                                inputText={lesson?.lesson_topic as string}
+                                textWeight={600}
+                                textSize={18}
+                                textColor={
+                                    show_lesson ? Colors.White : Colors.Black
+                                }
+                            />
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                {showSub && (
+                    <>
+                        {lesson.lesson_sub_topic.map((item, index) => (
+                            <TouchableOpacity
+                                activeOpacity={0.55}
+                                onPress={() => nav_to_lesson({ index: index })}
+                                style={{
+                                    marginBottom: 1,
+                                    marginTop: 8,
+                                    backgroundColor: Colors.LightGrey,
+                                    borderRadius: 10,
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 11,
+                                }}
+                                key={index}>
+                                <BasicText
+                                    inputText={`Lesson ${index + 1}`}
+                                    textWeight={700}
+                                    textSize={17}
+                                />
+                                <BasicText inputText={item} textSize={15} />
+                            </TouchableOpacity>
+                        ))}
+                    </>
+                )}
+            </View>
         );
     },
 );
@@ -286,6 +317,5 @@ const styles = StyleSheet.create({
     lesson_main: {
         minHeight: 120,
         borderRadius: 15,
-        marginBottom: 17,
     },
 });

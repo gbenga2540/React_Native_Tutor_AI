@@ -32,6 +32,8 @@ import { UserInfoStore } from '../../MobX/User_Info/User_Info';
 import { TextToSpeechStore } from '../../MobX/Text_To_Speech/Text_To_Speech';
 import SInfo from 'react-native-sensitive-info';
 import { SECURE_STORAGE_GLOSSARY, SECURE_STORAGE_NAME } from '@env';
+import { AvatarVoiceStore } from '../../MobX/Avatar_Voice/Avatar_Voice';
+import { SpeechControllerStore } from '../../MobX/Speech_Controller/Speech_Controller';
 
 const VocabularyPage: FunctionComponent = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -186,7 +188,6 @@ const VocabularyPage: FunctionComponent = () => {
                     navigation: navigation,
                     error_mssg:
                         'An error occured while trying generate Vocabulary Data!',
-                    svr_error_mssg: data?.data,
                 });
             } else {
                 setShowSpinner(false);
@@ -243,7 +244,6 @@ const VocabularyPage: FunctionComponent = () => {
 
     const transcribe_text = no_double_clicks({
         execFunc: () => {
-            TextToSpeechStore.clear_speech();
             TextToSpeechStore.play_speech({
                 speech: `
                 Word:
@@ -255,6 +255,10 @@ const VocabularyPage: FunctionComponent = () => {
                 Example:
                 ${vocabulary[vocIndex]?.example}
                 `,
+                isMale: AvatarVoiceStore.is_avatar_male,
+                femaleVoice: AvatarVoiceStore.avatar_female_voice,
+                maleVoice: AvatarVoiceStore.avatar_male_voice,
+                speechRate: SpeechControllerStore.rate,
             });
         },
     });

@@ -13,22 +13,28 @@ const width = '100%';
 const height = 200;
 interface MiniAvatarProps {
     onPressVoice?: DebouncedFuncLeading<() => void>;
+    onPressVoiceLeft?: DebouncedFuncLeading<() => void>;
+    onPressVoiceRight?: DebouncedFuncLeading<() => void>;
     marginHorizontal?: number | 'auto';
     marginTop?: number | 'auto';
     marginBottom?: number | 'auto';
     isSubtitleIcon?: boolean;
     hideIcons?: boolean;
     isHomeWork?: boolean;
+    isWritingTest?: boolean;
 }
 const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
     ({
         onPressVoice,
+        onPressVoiceLeft,
+        onPressVoiceRight,
         marginHorizontal,
         marginTop,
         marginBottom,
         isSubtitleIcon,
         hideIcons,
         isHomeWork,
+        isWritingTest,
     }) => {
         const isMale = isHomeWork
             ? !AvatarVoiceStore?.is_avatar_male || false
@@ -72,6 +78,7 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                             resizeMode={FastImage.resizeMode.contain}
                         />
                         {!hideIcons &&
+                            !isWritingTest &&
                             (isSubtitleIcon ? (
                                 <TouchableOpacity
                                     onPress={onPressVoice}
@@ -95,6 +102,37 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                                     </View>
                                 </TouchableOpacity>
                             ))}
+                        {!hideIcons && isWritingTest && (
+                            <>
+                                <TouchableOpacity
+                                    onPress={onPressVoiceLeft}
+                                    style={[
+                                        styles.voice,
+                                        { left: -9, right: undefined },
+                                    ]}
+                                    activeOpacity={0.75}>
+                                    <View style={styles.voice_icon}>
+                                        <Feather
+                                            name="chevron-left"
+                                            size={22}
+                                            color={Colors.Primary}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={onPressVoiceRight}
+                                    style={styles.voice}
+                                    activeOpacity={0.75}>
+                                    <View style={styles.voice_icon}>
+                                        <Feather
+                                            name="chevron-right"
+                                            size={22}
+                                            color={Colors.Primary}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                        )}
                     </View>
                 )}
                 {!isMale && (
@@ -115,6 +153,7 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                             resizeMode={FastImage.resizeMode.contain}
                         />
                         {!hideIcons &&
+                            !isWritingTest &&
                             (isSubtitleIcon ? (
                                 <TouchableOpacity
                                     onPress={onPressVoice}
@@ -138,6 +177,37 @@ const MiniAvatar: FunctionComponent<MiniAvatarProps> = observer(
                                     </View>
                                 </TouchableOpacity>
                             ))}
+                        {!hideIcons && isWritingTest && (
+                            <>
+                                <TouchableOpacity
+                                    onPress={onPressVoiceLeft}
+                                    style={[
+                                        styles.voice,
+                                        { left: -9, right: undefined },
+                                    ]}
+                                    activeOpacity={0.75}>
+                                    <View style={styles.voice_icon}>
+                                        <Feather
+                                            name="chevron-left"
+                                            size={22}
+                                            color={Colors.Primary}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={onPressVoiceRight}
+                                    style={styles.voice}
+                                    activeOpacity={0.75}>
+                                    <View style={styles.voice_icon}>
+                                        <Feather
+                                            name="chevron-right"
+                                            size={22}
+                                            color={Colors.Primary}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                        )}
                     </View>
                 )}
             </View>
