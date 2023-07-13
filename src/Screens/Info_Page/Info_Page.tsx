@@ -19,6 +19,7 @@ import {
     SECURE_STORAGE_CREDIT_CARD_INFO,
     SECURE_STORAGE_NAME,
     SECURE_STORAGE_SCHEDULE_INFO,
+    SECURE_STORAGE_SPEECH_CONTROLLER,
     SECURE_STORAGE_USER_INFO,
     SECURE_STORAGE_VOICE_INFO,
 } from '@env';
@@ -75,6 +76,10 @@ const InfoPage: FunctionComponent = () => {
                 keychainService: SECURE_STORAGE_NAME,
             });
             await SInfo.deleteItem(SECURE_STORAGE_CREDIT_CARD_INFO, {
+                sharedPreferencesName: SECURE_STORAGE_NAME,
+                keychainService: SECURE_STORAGE_NAME,
+            });
+            await SInfo.deleteItem(SECURE_STORAGE_SPEECH_CONTROLLER, {
                 sharedPreferencesName: SECURE_STORAGE_NAME,
                 keychainService: SECURE_STORAGE_NAME,
             });
